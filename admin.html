@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>RG Photography | Admin Portal</title>
+
+<style>
+:root{
+  --bg:#06101d;
+  --panel:#0b1727;
+  --panel2:#102033;
+  --line:#26394f;
+  --text:#f5f7fb;
+  --muted:#91a5bb;
+  --gold:#d5a52f;
+  --green:#31d583;
+  --red:#ed626c;
+  --blue:#65a8ff;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+/* ================= LOGIN ================= */
+
+.login{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:
+    radial-gradient(circle at top,#152c48,#06101d 60%);
+  padding:20px;
+}
+
+.login-box{
+  width:420px;
+  max-width:100%;
+  background:#0b1727;
+  border:1px solid var(--line);
+  padding:40px;
+}
+
+.logo{
+  font-size:25px;
+  font-weight:bold;
+  letter-spacing:3px;
+}
+
+.logo span{
+  display:block;
+  font-size:9px;
+  letter-spacing:5px;
+  color:#91a5bb;
+  margin-top:10px;
+}
+
+.login-box h1{
+  margin-top:40px;
+  font-size:28px;
+  font-weight:400;
+}
+
+.login-box p{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.field{
+  margin-top:18px;
+}
+
+.field label{
+  display:block;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  color:#b7c5d5;
+  margin-bottom:7px;
+}
+
+.field input{
+  width:100%;
+  padding:13px;
+  background:#071321;
+  color:white;
+  border:1px solid var(--line);
+}
+
+.login-btn{
+  width:100%;
+  margin-top:25px;
+  padding:14px;
+  border:0;
+  background:var(--green);
+  color:#06101d;
+  font-weight:bold;
+}
+
+.error{
+  color:#ff858e;
+  font-size:12px;
+  margin-top:12px;
+}
+
+/* ================= APP ================= */
+
+.app{
+  display:none;
+  min-height:100vh;
+}
+
+.sidebar{
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  width:265px;
+  background:#030c15;
+  border-right:1px solid #1d2c3f;
+  padding:28px 16px;
+}
+
+.side-logo{
+  font-size:25px;
+  font-weight:bold;
+  padding:5px 10px 30px;
+  letter-spacing:2px;
+}
+
+.side-logo small{
+  display:block;
+  font-size:9px;
+  color:#8fa3ba;
+  letter-spacing:5px;
+  margin-top:10px;
+}
+
+.nav button{
+  display:block;
+  width:100%;
+  padding:13px;
+  margin:4px 0;
+  text-align:left;
+  color:#aebdd0;
+  background:none;
+  border:1px solid transparent;
+}
+
+.nav button:hover,
+.nav button.active{
+  background:#102033;
+  border-color:#2b4058;
+  color:white;
+}
+
+.sidebar-bottom{
+  position:absolute;
+  left:16px;
+  right:16px;
+  bottom:20px;
+  border-top:1px solid #1d2c3f;
+  padding-top:20px;
+}
+
+.live{
+  color:var(--green);
+  font-size:11px;
+}
+
+.logout{
+  width:100%;
+  padding:12px;
+  margin-top:15px;
+  color:white;
+  background:none;
+  border:1px solid #2c3c50;
+}
+
+main{
+  margin-left:265px;
+  padding:32px 36px 70px;
+}
+
+/* ================= HEADER ================= */
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:25px;
+}
+
+.eyebrow{
+  color:#9eb8d5;
+  letter-spacing:3px;
+  font-size:11px;
+}
+
+.top h1{
+  font-size:32px;
+  font-weight:400;
+  margin:9px 0 0;
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+}
+
+.btn{
+  padding:11px 16px;
+  border:1px solid #334960;
+  background:transparent;
+  color:white;
+}
+
+.btn.green{
+  background:var(--green);
+  color:#06101d;
+  border-color:var(--green);
+  font-weight:bold;
+}
+
+.btn.gold{
+  background:var(--gold);
+  color:#111;
+  border-color:var(--gold);
+  font-weight:bold;
+}
+
+/* ================= PAGES ================= */
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+/* ================= STATS ================= */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+}
+
+.stat{
+  padding:20px;
+  background:linear-gradient(180deg,#0c192a,#081422);
+  border:1px solid var(--line);
+}
+
+.stat-number{
+  font-size:32px;
+}
+
+.stat-label{
+  margin-top:7px;
+  color:#90a9c3;
+  font-size:9px;
+  letter-spacing:2px;
+}
+
+/* ================= PANELS ================= */
+
+.panel{
+  margin-top:18px;
+  padding:20px;
+  background:linear-gradient(180deg,#0c192a,#081422);
+  border:1px solid var(--line);
+}
+
+.panel h2{
+  margin:0 0 8px;
+  font-size:21px;
+  font-weight:400;
+}
+
+.panel p{
+  color:var(--muted);
+  font-size:12px;
+}
+
+.notice{
+  padding:14px;
+  margin-top:15px;
+  background:#102033;
+  border-left:2px solid var(--blue);
+  color:#bcd0e4;
+  font-size:12px;
+}
+
+/* ================= MEDIA ================= */
+
+.media-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-top:20px;
+}
+
+.media-card{
+  background:#0b1727;
+  border:1px solid var(--line);
+  overflow:hidden;
+}
+
+.preview{
+  height:180px;
+  background:#101f31;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#6e8298;
+  overflow:hidden;
+}
+
+.preview img,
+.preview video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.media-info{
+  padding:14px;
+}
+
+.media-title{
+  font-size:13px;
+  font-weight:bold;
+}
+
+.media-file{
+  color:var(--muted);
+  font-size:10px;
+  margin-top:6px;
+  word-break:break-all;
+}
+
+.media-buttons{
+  display:flex;
+  gap:7px;
+  margin-top:12px;
+}
+
+.small-btn{
+  padding:8px 11px;
+  background:transparent;
+  color:white;
+  border:1px solid #334960;
+  font-size:11px;
+}
+
+.small-btn.danger{
+  color:#ff929a;
+}
+
+/* ================= FILTER ================= */
+
+.filters{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:15px;
+}
+
+.filter{
+  padding:8px 13px;
+  background:#0b1727;
+  color:#aebed0;
+  border:1px solid var(--line);
+}
+
+.filter.active{
+  border-color:var(--gold);
+  color:white;
+}
+
+/* ================= TABLE ================= */
+
+.table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:15px;
+  font-size:12px;
+}
+
+.table th,
+.table td{
+  text-align:left;
+  padding:13px;
+  border-bottom:1px solid var(--line);
+}
+
+.table th{
+  color:#8ea7c1;
+  font-size:10px;
+  letter-spacing:1px;
+}
+
+.badge{
+  color:var(--green);
+  border:1px solid #315440;
+  padding:4px 7px;
+  font-size:9px;
+}
+
+/* ================= SETTINGS ================= */
+
+.settings-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+.setting{
+  padding:16px;
+  border:1px solid var(--line);
+  background:#091625;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.setting strong{
+  display:block;
+  color:white;
+  margin-bottom:7px;
+}
+
+/* ================= TOAST ================= */
+
+.toast{
+  display:none;
+  position:fixed;
+  right:25px;
+  bottom:25px;
+  padding:14px 18px;
+  background:#12243a;
+  border:1px solid #3b5673;
+  color:white;
+  font-size:12px;
+  z-index:100;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:900px){
+
+  .sidebar{
+    width:220px;
+  }
+
+  main{
+    margin-left:220px;
+    padding:25px;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .media-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:650px){
+
+  .sidebar{
+    position:relative;
+    width:100%;
+    height:auto;
+  }
+
+  main{
+    margin-left:0;
+  }
+
+  .stats,
+  .media-grid,
+  .settings-grid{
+    grid-template-columns:1fr;
+  }
+
+  .top{
+    flex-direction:column;
+    gap:15px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ======================================================
+     LOGIN
+====================================================== -->
+
+<section id="loginScreen" class="login">
+
+<div class="login-box">
+
+<div class="logo">
+RG PHOTOGRAPHY
+<span>ADMIN PORTAL · CHENNAI</span>
+</div>
+
+<h1>Admin Login</h1>
+
+<p>
+Manage RG Photography website images, wedding collections,
+Brahmin wedding images and videos.
+</p>
+
+<div class="field">
+<label>Username</label>
+<input id="username" type="text" placeholder="Enter username">
+</div>
+
+<div class="field">
+<label>Password</label>
+<input id="password" type="password" placeholder="Enter password">
+</div>
+
+<button class="login-btn" onclick="login()">
+LOGIN TO ADMIN
+</button>
+
+<div id="loginError" class="error"></div>
+
+</div>
+</section>
+
+
+<!-- ======================================================
+     ADMIN APP
+====================================================== -->
+
+<section id="adminApp" class="app">
+
+<aside class="sidebar">
+
+<div class="side-logo">
+RG PHOTOGRAPHY
+<small>LIVE MEDIA MANAGER</small>
+</div>
+
+<div class="nav">
+
+<button class="active" onclick="openPage('dashboard',this)">
+Dashboard
+</button>
+
+<button onclick="openPage('home',this)">
+Home Page
+</button>
+
+<button onclick="openPage('images',this)">
+Images
+</button>
+
+<button onclick="openPage('videos',this)">
+Videos
+</button>
+
+<button onclick="openPage('sections',this)">
+All Sections
+</button>
+
+<button onclick="openPage('settings',this)">
+Settings
+</button>
+
+</div>
+
+<div class="sidebar-bottom">
+
+<div class="live">
+● LIVE ADMIN MODE
+</div>
+
+<button class="logout" onclick="logout()">
+Logout
+</button>
+
+</div>
+
+</aside>
+
+
+<main>
+
+<!-- ======================================================
+     DASHBOARD
+====================================================== -->
+
+<div id="dashboard" class="page active">
+
+<div class="top">
+
+<div>
+<div class="eyebrow">
+RG PHOTOGRAPHY · LIVE MANAGER
+</div>
+
+<h1>Admin Dashboard</h1>
+</div>
+
+<div class="actions">
+
+<button class="btn"
+onclick="window.open('index.html','_blank')">
+Open Website ↗
+</button>
+
+<button class="btn"
+onclick="location.reload()">
+Refresh
+</button>
+
+</div>
+
+</div>
+
+
+<div class="stats">
+
+<div class="stat">
+<div class="stat-number" id="imageCount">0</div>
+<div class="stat-label">IMAGES</div>
+</div>
+
+<div class="stat">
+<div class="stat-number" id="videoCount">0</div>
+<div class="stat-label">VIDEOS</div>
+</div>
+
+<div class="stat">
+<div class="stat-number" id="hiddenCount">0</div>
+<div class="stat-label">HIDDEN / REMOVED</div>
+</div>
+
+<div class="stat">
+<div class="stat-number">RG</div>
+<div class="stat-label">PHOTOGRAPHY</div>
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<h2>How live publishing works</h2>
+
+<p>
+This admin portal controls the media structure of RG Photography.
+The website uses fixed filenames so replacing an image does not
+require changing the HTML.
+</p>
+
+<div class="notice">
+
+<strong>Fixed filename rule:</strong>
+
+If the website currently uses:
+
+<br><br>
+
+<code>
+assets/weddings/01.jpg
+</code>
+
+<br><br>
+
+the replacement image must also be named:
+
+<strong>01.jpg</strong>
+
+The future GitHub integration will replace the existing file
+and Vercel can deploy the updated website automatically.
+
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<h2>Website Media Map</h2>
+
+<table class="table">
+
+<tr>
+<th>SECTION</th>
+<th>MEDIA</th>
+<th>STATUS</th>
+</tr>
+
+<tr>
+<td>Hero / Home Slider</td>
+<td>3 Images</td>
+<td><span class="badge">READY</span></td>
+</tr>
+
+<tr>
+<td>Wedding</td>
+<td>12 Images</td>
+<td><span class="badge">READY</span></td>
+</tr>
+
+<tr>
+<td>Brahmin Wedding</td>
+<td>12 Images</td>
+<td><span class="badge">READY</span></td>
+</tr>
+
+<tr>
+<td>Portfolio</td>
+<td>15 Images</td>
+<td><span class="badge">READY</span></td>
+</tr>
+
+<tr>
+<td>Services</td>
+<td>Images</td>
+<td><span class="badge">READY</span></td>
+</tr>
+
+<tr>
+<td>Videos</td>
+<td>9 Videos</td>
+<td><span class="badge">READY</span></td>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- ======================================================
+     HOME PAGE
+====================================================== -->
+
+<div id="home" class="page">
+
+<div class="top">
+
+<div>
+<div class="eyebrow">HOME PAGE</div>
+<h1>Hero Images</h1>
+</div>
+
+<button class="btn green"
+onclick="showToast('Select Replace on a hero slot.')">
++ Replace Media
+</button>
+
+</div>
+
+
+<div class="panel">
+
+<h2>Home Hero Slider</h2>
+
+<p>
+These are the three main images displayed in the home page hero.
+Keep their filenames unchanged.
+</p>
+
+<div id="heroGrid" class="media-grid"></div>
+
+</div>
+
+</div>
+
+
+<!-- ======================================================
+     ALL IMAGES
+====================================================== -->
+
+<div id="images" class="page">
+
+<div class="top">
+
+<div>
+<div class="eyebrow">IMAGE LIBRARY</div>
+<h1>All Website Images</h1>
+</div>
+
+</div>
+
+
+<div class="filters">
+
+<button class="filter active"
+onclick="filterImages('all',this)">
+All
+</button>
+
+<button class="filter"
+onclick="filterImages('weddings',this)">
+Weddings
+</button>
+
+<button class="filter"
+onclick="filterImages('brahmin',this)">
+Brahmin
+</button>
+
+<button class="filter"
+onclick="filterImages('portfolio',this)">
+Portfolio
+</button>
+
+<button class="filter"
+onclick="filterImages('services',this)">
+Services
+</button>
+
+</div>
+
+
+<div id="imageGrid" class="media-grid"></div>
+
+</div>
+
+
+<!-- ======================================================
+     VIDEOS
+====================================================== -->
+
+<div id="videos" class="page">
+
+<div class="top">
+
+<div>
+<div class="eyebrow">VIDEO LIBRARY</div>
+<h1>Website Videos</h1>
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<h2>Video Management</h2>
+
+<p>
+Replace videos while keeping the existing filename.
+The future version can upload the video to Vercel Blob or
+another video storage service and update the GitHub manifest.
+</p>
+
+<div id="videoGrid" class="media-grid"></div>
+
+</div>
+
+</div>
+
+
+<!-- ======================================================
+     ALL SECTIONS
+====================================================== -->
+
+<div id="sections" class="page">
+
+<div class="top">
+
+<div>
+<div class="eyebrow">FULL WEBSITE CONTROL</div>
+<h1>All Sections</h1>
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<h2>Website Media Structure</h2>
+
+<table class="table">
+
+<thead>
+
+<tr>
+<th>SECTION</th>
+<th>FOLDER</th>
+<th>EXAMPLE FILE</th>
+<th>ACTION</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td>Hero</td>
+<td>assets/hero/</td>
+<td>01.jpg</td>
+<td>
+<button class="small-btn"
+onclick="openPage('home')">
+Manage
+</button>
+</td>
+</tr>
+
+<tr>
+<td>Wedding</td>
+<td>assets/weddings/</td>
+<td>01.jpg</td>
+<td>
+<button class="small-btn"
+onclick="openPage('images')">
+Manage
+</button>
+</td>
+</tr>
+
+<tr>
+<td>Brahmin Wedding</td>
+<td>assets/weddings/brahmin/</td>
+<td>01.jpg</td>
+<td>
+<button class="small-btn"
+onclick="openPage('images')">
+Manage
+</button>
+</td>
+</tr>
+
+<tr>
+<td>Portfolio</td>
+<td>assets/portfolio/</td>
+<td>01.jpg</td>
+<td>
+<button class="small-btn"
+onclick="openPage('images')">
+Manage
+</button>
+</td>
+</tr>
+
+<tr>
+<td>Services</td>
+<td>assets/services/</td>
+<td>01.jpg</td>
+<td>
+<button class="small-btn"
+onclick="openPage('images')">
+Manage
+</button>
+</td>
+</tr>
+
+<tr>
+<td>Videos</td>
+<td>assets/videos/</td>
+<td>video-01.mp4</td>
+<td>
+<button class="small-btn"
+onclick="openPage('videos')">
+Manage
+</button>
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<div class="panel">
+
+<h2>Replacement Rules</h2>
+
+<div class="settings-grid">
+
+<div class="setting">
+
+<strong>Same Filename</strong>
+
+Replacement files must use the existing slot filename.
+
+</div>
+
+<div class="setting">
+
+<strong>Wedding</strong>
+
+Manage wedding images independently.
+
+</div>
+
+<div class="setting">
+
+<strong>Brahmin Wedding</strong>
+
+Brahmin wedding images have their own folder and slots.
+
+</div>
+
+<div class="setting">
+
+<strong>GitHub + Vercel</strong>
+
+The publishing API can later commit the replacement
+and trigger Vercel deployment.
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ======================================================
+     SETTINGS
+====================================================== -->
+
+<div id="settings" class="page">
+
+<div class="top">
+
+<div>
+<div class="eyebrow">SYSTEM SETTINGS</div>
+<h1>Settings</h1>
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<h2>Admin Account</h2>
+
+<p>
+The current username/password is only a temporary client-side
+login. For production, move authentication to a secure backend.
+</p>
+
+<div class="settings-grid">
+
+<div class="setting">
+<strong>Username</strong>
+rgadmin
+</div>
+
+<div class="setting">
+<strong>Website</strong>
+RG Photography
+</div>
+
+<div class="setting">
+<strong>GitHub</strong>
+Integration Ready
+</div>
+
+<div class="setting">
+<strong>Vercel</strong>
+Integration Ready
+</div>
+
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<h2>GitHub / Vercel Connection</h2>
+
+<p>
+The next stage can connect this portal directly to your GitHub
+repository. When an image is replaced, the admin portal will
+commit the same filename to GitHub and Vercel will deploy the
+updated website.
+</p>
+
+<button class="btn gold"
+onclick="showToast('GitHub/Vercel integration will be connected in the next stage.')">
+Configure Connection
+</button>
+
+</div>
+
+</div>
+
+</main>
+
+</section>
+
+
+<div id="toast" class="toast"></div>
+
+
+<script>
+
+/* ======================================================
+   ADMIN LOGIN
+====================================================== */
+
+const ADMIN_USERNAME = "rgadmin";
+const ADMIN_PASSWORD = "RG@2026";
+
+
+function login(){
+
+const username =
+document.getElementById("username").value.trim();
+
+const password =
+document.getElementById("password").value;
+
+if(
+username === ADMIN_USERNAME &&
+password === ADMIN_PASSWORD
+){
+
+sessionStorage.setItem("rgAdminLogin","true");
+
+document.getElementById("loginScreen").style.display="none";
+
+document.getElementById("adminApp").style.display="block";
+
+render();
+
+}else{
+
+document.getElementById("loginError").innerText =
+"Invalid username or password.";
+
+}
+
+}
+
+
+function logout(){
+
+sessionStorage.removeItem("rgAdminLogin");
+
+location.reload();
+
+}
+
+
+/* ======================================================
+   PAGE NAVIGATION
+====================================================== */
+
+function openPage(page,button){
+
+document
+.querySelectorAll(".page")
+.forEach(p=>p.classList.remove("active"));
+
+document
+.getElementById(page)
+.classList.add("active");
+
+document
+.querySelectorAll(".nav button")
+.forEach(b=>b.classList.remove("active"));
+
+if(button){
+button.classList.add("active");
+}
+
+window.scrollTo(0,0);
+
+}
+
+
+/* ======================================================
+   MEDIA MANIFEST
+====================================================== */
+
+const media = [
+
+/* HERO */
+
+{
+type:"image",
+category:"home",
+section:"hero",
+name:"Hero 01",
+file:"01.jpg",
+path:"assets/hero/01.jpg"
+},
+
+{
+type:"image",
+category:"home",
+section:"hero",
+name:"Hero 02",
+file:"02.jpg",
+path:"assets/hero/02.jpg"
+},
+
+{
+type:"image",
+category:"home",
+section:"hero",
+name:"Hero 03",
+file:"03.jpg",
+path:"assets/hero/03.jpg"
+},
+
+/* WEDDINGS */
+
+...Array.from(
+{length:12},
+(_,i)=>({
+
+type:"image",
+category:"weddings",
+section:"weddings",
+
+name:
+"Wedding "+String(i+1).padStart(2,"0"),
+
+file:
+String(i+1).padStart(2,"0")+".jpg",
+
+path:
+"assets/weddings/"+
+String(i+1).padStart(2,"0")+".jpg"
+
+})
+),
+
+/* BRAHMIN */
+
+...Array.from(
+{length:12},
+(_,i)=>({
+
+type:"image",
+category:"brahmin",
+section:"brahmin",
+
+name:
+"Brahmin Wedding "+
+String(i+1).padStart(2,"0"),
+
+file:
+String(i+1).padStart(2,"0")+".jpg",
+
+path:
+"assets/weddings/brahmin/"+
+String(i+1).padStart(2,"0")+".jpg"
+
+})
+),
+
+/* PORTFOLIO */
+
+...Array.from(
+{length:15},
+(_,i)=>({
+
+type:"image",
+category:"portfolio",
+section:"portfolio",
+
+name:
+"Portfolio "+
+String(i+1).padStart(2,"0"),
+
+file:
+String(i+1).padStart(2,"0")+".jpg",
+
+path:
+"assets/portfolio/"+
+String(i+1).padStart(2,"0")+".jpg"
+
+})
+),
+
+/* SERVICES */
+
+...Array.from(
+{length:8},
+(_,i)=>({
+
+type:"image",
+category:"services",
+section:"services",
+
+name:
+"Service "+
+String(i+1).padStart(2,"0"),
+
+file:
+String(i+1).padStart(2,"0")+".jpg",
+
+path:
+"assets/services/"+
+String(i+1).padStart(2,"0")+".jpg"
+
+})
+),
+
+/* VIDEOS */
+
+...Array.from(
+{length:9},
+(_,i)=>({
+
+type:"video",
+category:"videos",
+section:"videos",
+
+name:
+"Video "+
+String(i+1).padStart(2,"0"),
+
+file:
+"video-"+String(i+1).padStart(2,"0")+".mp4",
+
+path:
+"assets/videos/video-"+
+String(i+1).padStart(2,"0")+".mp4"
+
+})
+)
+
+];
+
+
+/* ======================================================
+   HIDDEN MEDIA
+====================================================== */
+
+let hidden =
+JSON.parse(
+localStorage.getItem("rgHiddenMedia") || "[]"
+);
+
+
+/* ======================================================
+   CREATE MEDIA CARD
+====================================================== */
+
+function createCard(item){
+
+const isHidden =
+hidden.includes(item.path);
+
+return `
+
+<div class="media-card"
+data-category="${item.category}">
+
+<div class="preview">
+
+${
+item.type === "image"
+
+?
+
+`<img
+src="${item.path}"
+alt="${item.name}"
+onerror="this.style.display='none'"
+>`
+
+:
+
+`<span>VIDEO PREVIEW</span>`
+
+}
+
+</div>
+
+<div class="media-info">
+
+<div class="media-title">
+${item.name}
+</div>
+
+<div class="media-file">
+${item.file}
+<br>
+${item.path}
+</div>
+
+<div class="media-buttons">
+
+<button
+class="small-btn"
+onclick="replaceMedia('${item.path}')">
+
+Replace
+
+</button>
+
+<button
+class="small-btn danger"
+onclick="toggleHidden('${item.path}')">
+
+${isHidden ? "Show" : "Hide"}
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* ======================================================
+   RENDER
+====================================================== */
+
+function render(){
+
+const heroes =
+media.filter(
+m=>m.section==="hero"
+);
+
+const images =
+media.filter(
+m=>m.type==="image"
+);
+
+const videos =
+media.filter(
+m=>m.type==="video"
+);
+
+
+document.getElementById("heroGrid").innerHTML =
+heroes.map(createCard).join("");
+
+
+document.getElementById("imageGrid").innerHTML =
+images.map(createCard).join("");
+
+
+document.getElementById("videoGrid").innerHTML =
+videos.map(createCard).join("");
+
+
+document.getElementById("imageCount").innerText =
+images.length;
+
+
+document.getElementById("videoCount").innerText =
+videos.length;
+
+
+document.getElementById("hiddenCount").innerText =
+hidden.length;
+
+}
+
+
+/* ======================================================
+   REPLACE MEDIA
+====================================================== */
+
+function replaceMedia(path){
+
+const input =
+document.createElement("input");
+
+input.type="file";
+
+input.accept =
+path.endsWith(".mp4")
+?
+"video/*"
+:
+"image/*";
+
+
+input.onchange=function(){
+
+if(!input.files.length)return;
+
+const file=input.files[0];
+
+const requiredFilename =
+path.split("/").pop();
+
+
+if(file.name !== requiredFilename){
+
+alert(
+"Filename must remain exactly:\\n\\n"+
+requiredFilename+
+"\\n\\nSelected file:\\n"+
+file.name
+);
+
+return;
+
+}
+
+
+/*
+  TEMPORARY LOCAL PREVIEW
+
+  Later this function will be replaced with:
+
+  GitHub API
+       ↓
+  Commit same filename
+       ↓
+  Vercel deployment
+*/
+
+const reader =
+new FileReader();
+
+reader.onload=function(){
+
+localStorage.setItem(
+"rgPreview:"+path,
+reader.result
+);
+
+showToast(
+file.name+
+" selected successfully."
+);
+
+};
+
+reader.readAsDataURL(file);
+
+};
+
+input.click();
+
+}
+
+
+/* ======================================================
+   HIDE / SHOW
+====================================================== */
+
+function toggleHidden(path){
+
+if(hidden.includes(path)){
+
+hidden =
+hidden.filter(
+x=>x!==path
+);
+
+}else{
+
+hidden.push(path);
+
+}
+
+localStorage.setItem(
+"rgHiddenMedia",
+JSON.stringify(hidden)
+);
+
+render();
+
+showToast(
+hidden.includes(path)
+?
+"Media hidden"
+:
+"Media visible"
+);
+
+}
+
+
+/* ======================================================
+   FILTER
+====================================================== */
+
+function filterImages(category,button){
+
+document
+.querySelectorAll(".filter")
+.forEach(
+b=>b.classList.remove("active")
+);
+
+button.classList.add("active");
+
+
+document
+.querySelectorAll("#imageGrid .media-card")
+.forEach(card=>{
+
+if(
+category==="all" ||
+card.dataset.category===category
+){
+
+card.style.display="block";
+
+}else{
+
+card.style.display="none";
+
+}
+
+});
+
+}
+
+
+/* ======================================================
+   TOAST
+====================================================== */
+
+function showToast(message){
+
+const toast =
+document.getElementById("toast");
+
+toast.innerText=message;
+
+toast.style.display="block";
+
+clearTimeout(window.toastTimer);
+
+window.toastTimer =
+setTimeout(
+()=>{
+toast.style.display="none";
+},
+3000
+);
+
+}
+
+
+/* ======================================================
+   START
+====================================================== */
+
+if(
+sessionStorage.getItem("rgAdminLogin")==="true"
+){
+
+document.getElementById("loginScreen").style.display="none";
+
+document.getElementById("adminApp").style.display="block";
+
+render();
+
+}
+
+</script>
+
+</body>
+</html>

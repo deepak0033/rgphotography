@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Weddings | RG Photography</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+/* =========================================
+   WEDDING PAGE VIEW MORE BUTTONS
+   ========================================= */
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    display: block;
+}
+
+/* Image */
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+/* Wedding name */
+.gallery-item > span {
+    position: absolute;
+    left: 18px;
+    bottom: 18px;
+    z-index: 5;
+
+    background: #111;
+    color: #fff;
+
+    padding: 12px 18px;
+
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+/* Hover effect */
+.gallery-item:hover img {
+    transform: scale(1.03);
+}
+/* =========================================
+   MOBILE
+   ========================================= */
+@media (max-width: 768px) {
+
+    .gallery-item > span {
+        left: 12px;
+        bottom: 12px;
+        padding: 10px 13px;
+        font-size: 9px;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- =========================================
+     HEADER
+     ========================================= -->
+
+<header class="site-header">
+
+    <a class="brand" href="index.html#home">
+        <img
+            src="assets/branding/rg-logo-original.png"
+            alt="RG Photography"
+        >
+        <span>PHOTOGRAPHY</span>
+    </a>
+
+    <button
+        class="menu-toggle"
+        aria-label="Open menu"
+    >
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <nav class="main-nav">
+
+        <a href="index.html#home">HOME</a>
+
+        <a href="weddings.html">WEDDINGS</a>
+
+        <a href="portfolio.html">PORTFOLIO</a>
+
+        <a href="videos.html">VIDEOS</a>
+
+        <a href="index.html#services">SERVICES</a>
+
+        <a href="about.html">ABOUT</a>
+
+        <a
+            class="nav-instagram"
+            href="https://www.instagram.com/rghotography_chennai"
+            target="_blank"
+            rel="noopener"
+        >
+            INSTAGRAM
+        </a>
+
+        <a
+            class="nav-book"
+            href="https://wa.me/919003085856?text=Hi%20RG%20Photography,%20I%20would%20like%20to%20book%20a%20shoot."
+            target="_blank"
+            rel="noopener"
+        >
+            BOOK NOW
+        </a>
+
+    </nav>
+
+</header>
+
+
+<!-- =========================================
+     MAIN
+     ========================================= -->
+
+<main>
+
+<!-- HERO -->
+<section class="page-hero">
+
+    <div class="page-hero-inner">
+
+        <a
+            class="page-back"
+            href="index.html#home"
+        >
+            ← BACK TO HOME
+        </a>
+
+        <p class="eyebrow">
+            WEDDING STORIES
+        </p>
+
+        <h1>
+            Celebrations of
+            <br>
+            <em>every tradition.</em>
+        </h1>
+
+        <p>
+            Explore the wedding collections using the same
+            editorial, cinematic visual language as the main website.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================
+     WEDDING COLLECTIONS
+     ========================================= -->
+
+<section class="section-pad">
+
+    <div class="gallery-grid">
+
+
+        <!-- =====================================
+             01 MARWARI
+             ===================================== -->
+
+        <a
+            class="gallery-item"
+            href="marwari-wedding.html"
+        >
+
+            <img
+                src="assets/images/weddings/marwari wedding/cover1.webp"
+                alt="Marwari wedding"
+            >
+
+            <span>
+                MARWARI
+            </span>
+
+        </a>
+
+
+        <!-- =====================================
+             02 BRAHMIN
+             ===================================== -->
+
+        <a
+            class="gallery-item"
+            href="brahmin-wedding.html"
+        >
+
+            <img
+                src="assets/images/weddings/brahmin wedding/cover1.webp"
+                alt="Brahmin wedding"
+            >
+
+            <span>
+                BRAHMIN
+            </span>
+
+        </a>
+
+
+        <!-- =====================================
+             03 CHRISTIAN
+             ===================================== -->
+
+        <a
+            class="gallery-item"
+            href="christian-wedding.html"
+        >
+
+            <img
+                src="assets/images/weddings/christian Wedding/cover1.webp"
+                alt="Christian wedding"
+            >
+
+            <span>
+                CHRISTIAN
+            </span>
+
+        </a>
+
+
+        <!-- =====================================
+             04 HINDU
+             ===================================== -->
+
+        <a
+            class="gallery-item"
+            href="hindu-wedding.html"
+        >
+
+            <img
+                src="assets/images/weddings/hindu wedding/cover.webp"
+                alt="Hindu wedding"
+            >
+
+            <span>
+                HINDU
+            </span>
+
+        </a>
+
+
+        <!-- =====================================
+             05 MUSLIM
+             ===================================== -->
+
+        <a
+            class="gallery-item"
+            href="muslim-wedding.html"
+        >
+
+            <img
+                src="assets/images/weddings/muslim wedding/cover1.webp"
+                alt="Muslim wedding"
+            >
+
+            <span>
+                MUSLIM
+            </span>
+
+        </a>
+
+
+        <!-- =====================================
+             06 TELUGU
+             ===================================== -->
+
+        <a
+            class="gallery-item"
+            href="telugu-wedding.html"
+        >
+
+            <img
+                src="assets/images/weddings/telugu wedding/cover1.webp"
+                alt="Telugu wedding"
+            >
+
+            <span>
+                TELUGU
+            </span>
+
+        </a>
+
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- =========================================
+     FOOTER
+     ========================================= -->
+
+<footer class="footer">
+
+    <div class="footer-brandline">
+
+        <img
+            class="footer-logo"
+            src="assets/branding/rg-logo-original.png"
+            alt="RG Photography"
+        >
+
+        <strong>
+            RG PHOTOGRAPHY
+        </strong>
+
+    </div>
+
+    <p>
+        RG PHOTOGRAPHY · CHENNAI
+    </p>
+
+    <div class="footer-links">
+
+        <a href="index.html#home">
+            HOME
+        </a>
+
+        <a href="weddings.html">
+            WEDDINGS
+        </a>
+
+        <a href="portfolio.html">
+            PORTFOLIO
+        </a>
+
+        <a href="videos.html">
+            VIDEOS
+        </a>
+
+        <a href="about.html">
+            ABOUT
+        </a>
+
+        <a href="index.html#book">
+            BOOK
+        </a>
+
+    </div>
+
+    
+    <div class="footer-socials" aria-label="Social links">
+      <a class="facebook-button" href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Open Facebook">FACEBOOK</a>
+    </div>
+
+<small>
+        © <span id="year"></span>
+        RG Photography. All rights reserved.
+    </small>
+
+</footer>
+
+
+<script src="script.js"></script>
+
+<script>
+document.getElementById("year").textContent =
+    new Date().getFullYear();
+</script>
+
+</body>
+</html>
