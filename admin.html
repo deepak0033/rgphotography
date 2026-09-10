@@ -1,1245 +1,1138 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <title>RG Photography | Admin Portal</title>
 
 <style>
 
-/* =========================================================
-   ROOT
-========================================================= */
-
 :root{
-
-    --bg:#06101d;
-    --sidebar:#030c15;
-
-    --panel:#0b1727;
-    --panel2:#102033;
-
-    --line:#26394f;
-
-    --text:#f5f7fb;
-    --muted:#91a5bb;
-
-    --gold:#d5a52f;
-    --green:#31d583;
-    --red:#ed626c;
-    --blue:#65a8ff;
-
-    --shadow:0 18px 45px rgba(0,0,0,.25);
-
+  --bg:#06101d;
+  --sidebar:#030c15;
+  --panel:#0b1727;
+  --panel2:#102033;
+  --line:#26394f;
+  --text:#f5f7fb;
+  --muted:#91a5bb;
+  --gold:#d5a52f;
+  --green:#31d583;
+  --red:#ed626c;
+  --blue:#65a8ff;
 }
 
-
-/* =========================================================
-   RESET
-========================================================= */
-
 *{
-    box-sizing:border-box;
+  box-sizing:border-box;
 }
 
 html{
-    scroll-behavior:smooth;
+  scroll-behavior:smooth;
 }
 
 body{
-
-    margin:0;
-
-    background:var(--bg);
-
-    color:var(--text);
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
 }
-
-
-/* =========================================================
-   BUTTONS
-========================================================= */
-
-button,
-a{
-    font-family:inherit;
-}
-
-button{
-    cursor:pointer;
-}
-
-.btn{
-
-    padding:11px 16px;
-
-    border:1px solid #334960;
-
-    background:transparent;
-
-    color:white;
-
-    transition:.2s;
-
-}
-
-.btn:hover{
-
-    background:#102033;
-
-    border-color:#52708f;
-
-}
-
-.btn.green{
-
-    background:var(--green);
-
-    color:#06101d;
-
-    border-color:var(--green);
-
-    font-weight:bold;
-
-}
-
-.btn.gold{
-
-    background:var(--gold);
-
-    color:#111;
-
-    border-color:var(--gold);
-
-    font-weight:bold;
-
-}
-
-.btn.red{
-
-    border-color:#6b3036;
-
-    color:#ff929a;
-
-}
-
 
 /* =========================================================
    LOGIN
 ========================================================= */
 
 .login{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 
-    min-height:100vh;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      #183654 0%,
+      #06101d 58%
+    );
 
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    padding:20px;
-
-    background:
-        radial-gradient(
-            circle at top,
-            #152c48,
-            #06101d 60%
-        );
-
+  padding:30px;
 }
 
 .login-box{
+  width:430px;
+  max-width:100%;
 
-    width:440px;
+  background:rgba(11,23,39,.96);
 
-    max-width:100%;
+  border:1px solid var(--line);
 
-    padding:42px;
+  padding:42px;
 
-    background:#0b1727;
-
-    border:1px solid var(--line);
-
-    box-shadow:var(--shadow);
-
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.35);
 }
 
-.logo{
-
-    font-size:26px;
-
-    font-weight:bold;
-
-    letter-spacing:3px;
-
+.login-brand{
+  font-size:25px;
+  font-weight:bold;
+  letter-spacing:4px;
 }
 
-.logo span{
+.login-brand span{
+  display:block;
+  margin-top:10px;
 
-    display:block;
+  font-size:9px;
+  letter-spacing:5px;
 
-    margin-top:10px;
-
-    color:#91a5bb;
-
-    font-size:9px;
-
-    letter-spacing:5px;
-
+  color:var(--muted);
 }
 
 .login-box h1{
+  margin:40px 0 8px;
 
-    margin-top:40px;
-
-    font-size:30px;
-
-    font-weight:400;
-
+  font-size:30px;
+  font-weight:400;
 }
 
 .login-box p{
-
-    color:var(--muted);
-
-    font-size:13px;
-
-    line-height:1.7;
-
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.7;
 }
 
 .field{
-
-    margin-top:20px;
-
+  margin-top:20px;
 }
 
 .field label{
+  display:block;
 
-    display:block;
+  margin-bottom:8px;
 
-    margin-bottom:8px;
+  color:#b8c7d8;
 
-    color:#b7c5d5;
-
-    font-size:11px;
-
-    text-transform:uppercase;
-
-    letter-spacing:1.5px;
-
+  font-size:10px;
+  letter-spacing:2px;
+  text-transform:uppercase;
 }
 
 .field input{
+  width:100%;
 
-    width:100%;
+  padding:14px;
 
-    padding:14px;
+  background:#071321;
 
-    background:#071321;
+  border:1px solid var(--line);
 
-    color:white;
+  color:white;
 
-    border:1px solid var(--line);
-
-    outline:none;
-
+  outline:none;
 }
 
 .field input:focus{
-
-    border-color:var(--gold);
-
+  border-color:var(--blue);
 }
 
 .login-btn{
+  width:100%;
 
-    width:100%;
+  margin-top:25px;
 
-    margin-top:26px;
+  padding:15px;
 
-    padding:15px;
+  background:var(--green);
 
-    border:0;
+  border:0;
 
-    background:var(--green);
+  color:#06101d;
 
-    color:#06101d;
+  font-weight:bold;
 
-    font-weight:bold;
+  cursor:pointer;
+}
 
-    letter-spacing:1px;
-
+.login-btn:hover{
+  filter:brightness(1.05);
 }
 
 .error{
+  margin-top:12px;
 
-    min-height:18px;
+  color:#ff8d96;
 
-    margin-top:12px;
-
-    color:#ff858e;
-
-    font-size:12px;
-
+  font-size:12px;
 }
 
-
 /* =========================================================
-   APPLICATION
+   APP
 ========================================================= */
 
 .app{
-
-    display:none;
-
-    min-height:100vh;
-
+  display:none;
+  min-height:100vh;
 }
-
 
 /* =========================================================
    SIDEBAR
 ========================================================= */
 
 .sidebar{
+  position:fixed;
 
-    position:fixed;
+  top:0;
+  left:0;
+  bottom:0;
 
-    left:0;
-    top:0;
-    bottom:0;
+  width:270px;
 
-    width:270px;
+  padding:30px 16px;
 
-    padding:28px 16px;
+  background:var(--sidebar);
 
-    background:var(--sidebar);
+  border-right:1px solid #1d2c3f;
 
-    border-right:1px solid #1d2c3f;
+  overflow-y:auto;
 
-    z-index:50;
-
+  z-index:50;
 }
 
-.side-logo{
+.side-brand{
+  padding:5px 12px 28px;
 
-    padding:5px 12px 28px;
+  font-size:25px;
+  font-weight:bold;
 
-    font-size:24px;
-
-    font-weight:bold;
-
-    letter-spacing:2px;
-
+  letter-spacing:3px;
 }
 
-.side-logo small{
+.side-brand small{
+  display:block;
 
-    display:block;
+  margin-top:11px;
 
-    margin-top:10px;
+  color:#8fa3ba;
 
-    color:#8fa3ba;
+  font-size:9px;
 
-    font-size:9px;
-
-    letter-spacing:5px;
-
+  letter-spacing:5px;
 }
 
-.nav{
+.nav-title{
+  padding:20px 12px 7px;
 
-    display:flex;
+  color:#60758b;
 
-    flex-direction:column;
+  font-size:9px;
 
-    gap:3px;
+  letter-spacing:2px;
 
+  text-transform:uppercase;
 }
 
 .nav button{
+  display:block;
 
-    width:100%;
+  width:100%;
 
-    padding:13px 14px;
+  margin:3px 0;
 
-    text-align:left;
+  padding:13px 14px;
 
-    color:#aebdd0;
+  background:transparent;
 
-    background:none;
+  border:1px solid transparent;
 
-    border:1px solid transparent;
+  color:#aebdd0;
 
-    transition:.2s;
+  text-align:left;
 
+  cursor:pointer;
+
+  font-size:13px;
 }
 
 .nav button:hover,
 .nav button.active{
+  background:#102033;
 
-    background:#102033;
+  border-color:#2b4058;
 
-    border-color:#2b4058;
-
-    color:white;
-
+  color:white;
 }
 
-.nav-group-title{
-
-    margin:22px 12px 7px;
-
-    color:#60768e;
-
-    font-size:9px;
-
-    letter-spacing:2px;
-
-    text-transform:uppercase;
-
+.nav button.section-item{
+  padding-left:28px;
+  font-size:12px;
 }
 
 .sidebar-bottom{
+  position:sticky;
 
-    position:absolute;
+  margin-top:35px;
 
-    left:16px;
-    right:16px;
-    bottom:20px;
+  padding-top:20px;
 
-    padding-top:18px;
-
-    border-top:1px solid #1d2c3f;
-
+  border-top:1px solid #1d2c3f;
 }
 
 .live{
+  color:var(--green);
 
-    color:var(--green);
-
-    font-size:11px;
-
+  font-size:11px;
 }
 
 .logout{
+  width:100%;
 
-    width:100%;
+  margin-top:15px;
 
-    margin-top:14px;
+  padding:12px;
 
-    padding:12px;
+  background:transparent;
 
-    color:white;
+  border:1px solid #2c3c50;
 
-    background:none;
+  color:white;
 
-    border:1px solid #2c3c50;
-
+  cursor:pointer;
 }
 
 .logout:hover{
-
-    border-color:var(--red);
-
-    color:#ff929a;
-
+  border-color:var(--red);
+  color:#ff9ca4;
 }
-
 
 /* =========================================================
    MAIN
 ========================================================= */
 
 main{
+  margin-left:270px;
 
-    margin-left:270px;
+  padding:34px 38px 80px;
 
-    padding:32px 36px 70px;
-
+  max-width:1700px;
 }
-
 
 /* =========================================================
    TOP HEADER
 ========================================================= */
 
 .top{
+  display:flex;
 
-    display:flex;
+  justify-content:space-between;
 
-    justify-content:space-between;
+  align-items:flex-start;
 
-    align-items:flex-start;
+  gap:20px;
 
-    gap:20px;
-
-    margin-bottom:25px;
-
+  margin-bottom:28px;
 }
 
 .eyebrow{
+  color:#9eb8d5;
 
-    color:#9eb8d5;
+  font-size:10px;
 
-    letter-spacing:3px;
+  letter-spacing:3px;
 
-    font-size:11px;
-
+  text-transform:uppercase;
 }
 
 .top h1{
+  margin:8px 0 0;
 
-    margin:9px 0 0;
+  font-size:34px;
 
-    font-size:32px;
-
-    font-weight:400;
-
+  font-weight:400;
 }
 
 .actions{
+  display:flex;
 
-    display:flex;
+  gap:9px;
 
-    gap:10px;
-
-    flex-wrap:wrap;
-
+  flex-wrap:wrap;
 }
 
+.btn{
+  padding:11px 16px;
+
+  background:transparent;
+
+  border:1px solid #334960;
+
+  color:white;
+
+  cursor:pointer;
+}
+
+.btn:hover{
+  background:#102033;
+}
+
+.btn.green{
+  background:var(--green);
+
+  color:#06101d;
+
+  border-color:var(--green);
+
+  font-weight:bold;
+}
+
+.btn.gold{
+  background:var(--gold);
+
+  color:#111;
+
+  border-color:var(--gold);
+
+  font-weight:bold;
+}
 
 /* =========================================================
-   PAGES
+   PAGE SYSTEM
 ========================================================= */
 
 .page{
-
-    display:none;
-
+  display:none;
 }
 
 .page.active{
-
-    display:block;
-
+  display:block;
 }
-
 
 /* =========================================================
    STATS
 ========================================================= */
 
 .stats{
+  display:grid;
 
-    display:grid;
+  grid-template-columns:
+    repeat(4,minmax(0,1fr));
 
-    grid-template-columns:
-        repeat(4,1fr);
+  gap:14px;
 
-    gap:14px;
-
+  margin-bottom:18px;
 }
 
 .stat{
+  padding:22px;
 
-    padding:20px;
+  background:
+    linear-gradient(
+      180deg,
+      #0c192a,
+      #081422
+    );
 
-    background:
-        linear-gradient(
-            180deg,
-            #0c192a,
-            #081422
-        );
-
-    border:1px solid var(--line);
-
+  border:1px solid var(--line);
 }
 
 .stat-number{
-
-    font-size:32px;
-
+  font-size:34px;
+  line-height:1;
 }
 
 .stat-label{
+  margin-top:9px;
 
-    margin-top:7px;
+  color:#90a9c3;
 
-    color:#90a9c3;
+  font-size:9px;
 
-    font-size:9px;
-
-    letter-spacing:2px;
-
+  letter-spacing:2px;
 }
-
 
 /* =========================================================
    PANELS
 ========================================================= */
 
 .panel{
+  margin-top:18px;
 
-    margin-top:18px;
+  padding:22px;
 
-    padding:20px;
+  background:
+    linear-gradient(
+      180deg,
+      #0c192a,
+      #081422
+    );
 
-    background:
-        linear-gradient(
-            180deg,
-            #0c192a,
-            #081422
-        );
-
-    border:1px solid var(--line);
-
+  border:1px solid var(--line);
 }
 
 .panel h2{
+  margin:0 0 8px;
 
-    margin:0 0 8px;
+  font-size:21px;
 
-    font-size:21px;
-
-    font-weight:400;
-
-}
-
-.panel h3{
-
-    font-size:15px;
-
-    font-weight:400;
-
+  font-weight:400;
 }
 
 .panel p{
+  color:var(--muted);
 
-    color:var(--muted);
+  font-size:12px;
 
-    font-size:12px;
-
-    line-height:1.7;
-
+  line-height:1.7;
 }
 
 .notice{
+  margin-top:16px;
 
-    margin-top:15px;
+  padding:15px;
 
-    padding:14px;
+  background:#102033;
 
-    background:#102033;
+  border-left:2px solid var(--blue);
 
-    border-left:2px solid var(--blue);
+  color:#bcd0e4;
 
-    color:#bcd0e4;
+  font-size:12px;
 
-    font-size:12px;
-
-    line-height:1.7;
-
+  line-height:1.7;
 }
-
 
 /* =========================================================
-   QUICK SECTION GRID
+   QUICK COLLECTIONS
 ========================================================= */
 
-.section-grid{
+.collection-grid{
+  display:grid;
 
-    display:grid;
+  grid-template-columns:
+    repeat(3,minmax(0,1fr));
 
-    grid-template-columns:
-        repeat(3,1fr);
+  gap:14px;
 
-    gap:14px;
-
-    margin-top:18px;
-
+  margin-top:18px;
 }
 
-.section-card{
+.collection{
+  padding:18px;
 
-    position:relative;
+  background:#091625;
 
-    padding:20px;
-
-    background:#0b1727;
-
-    border:1px solid var(--line);
-
-    transition:.2s;
-
+  border:1px solid var(--line);
 }
 
-.section-card:hover{
+.collection-number{
+  color:var(--gold);
 
-    transform:translateY(-2px);
+  font-size:11px;
 
-    border-color:#49657f;
-
+  letter-spacing:2px;
 }
 
-.section-number{
+.collection h3{
+  margin:10px 0 6px;
 
-    color:var(--gold);
+  font-size:17px;
 
-    font-size:10px;
-
-    letter-spacing:2px;
-
+  font-weight:400;
 }
 
-.section-card h3{
+.collection p{
+  margin:0 0 14px;
 
-    margin:10px 0 7px;
+  color:var(--muted);
 
-    font-size:17px;
-
+  font-size:11px;
 }
 
-.section-card p{
+.collection button{
+  padding:9px 12px;
 
-    min-height:38px;
+  background:transparent;
 
-    color:var(--muted);
+  border:1px solid #334960;
 
-    font-size:11px;
+  color:white;
 
+  cursor:pointer;
 }
-
-.section-path{
-
-    margin:12px 0;
-
-    padding:9px;
-
-    background:#071321;
-
-    color:#8da6be;
-
-    font-size:9px;
-
-    word-break:break-all;
-
-    border:1px solid #1d3045;
-
-}
-
-.section-actions{
-
-    display:flex;
-
-    gap:7px;
-
-    flex-wrap:wrap;
-
-}
-
 
 /* =========================================================
    MEDIA GRID
 ========================================================= */
 
 .media-grid{
+  display:grid;
 
-    display:grid;
+  grid-template-columns:
+    repeat(3,minmax(0,1fr));
 
-    grid-template-columns:
-        repeat(3,1fr);
+  gap:14px;
 
-    gap:14px;
-
-    margin-top:20px;
-
+  margin-top:20px;
 }
 
 .media-card{
+  overflow:hidden;
 
-    overflow:hidden;
+  background:#0b1727;
 
-    background:#0b1727;
+  border:1px solid var(--line);
 
-    border:1px solid var(--line);
+  transition:.2s;
+}
 
+.media-card:hover{
+  border-color:#45627e;
+  transform:translateY(-2px);
 }
 
 .preview{
+  position:relative;
 
-    height:190px;
+  height:220px;
 
-    display:flex;
+  background:#101f31;
 
-    justify-content:center;
+  display:flex;
 
-    align-items:center;
+  align-items:center;
 
-    overflow:hidden;
+  justify-content:center;
 
-    background:#101f31;
-
-    color:#6e8298;
-
+  overflow:hidden;
 }
 
-.preview img{
+.preview img,
+.preview video{
+  width:100%;
+  height:100%;
 
-    width:100%;
+  object-fit:cover;
 
-    height:100%;
-
-    object-fit:cover;
-
+  display:block;
 }
 
-.preview.empty{
+.preview-placeholder{
+  padding:20px;
 
-    flex-direction:column;
+  text-align:center;
 
-    gap:8px;
+  color:#70869c;
 
+  font-size:11px;
 }
 
-.preview.empty strong{
+.status{
+  position:absolute;
 
-    color:#7890a8;
+  top:10px;
+  right:10px;
 
-    font-size:11px;
+  padding:5px 8px;
 
+  background:#071321;
+
+  border:1px solid #315440;
+
+  color:var(--green);
+
+  font-size:8px;
+
+  letter-spacing:1px;
 }
 
-.preview.empty span{
+.status.pending{
+  color:var(--gold);
 
-    color:#50677e;
-
-    font-size:9px;
-
+  border-color:#6c5623;
 }
 
 .media-info{
-
-    padding:14px;
-
+  padding:15px;
 }
 
 .media-title{
+  font-size:13px;
 
-    font-size:13px;
-
-    font-weight:bold;
-
+  font-weight:bold;
 }
 
 .media-category{
+  margin-top:4px;
 
-    margin-top:4px;
+  color:var(--gold);
 
-    color:var(--gold);
+  font-size:9px;
 
-    font-size:9px;
+  letter-spacing:1px;
 
-    text-transform:uppercase;
-
-    letter-spacing:1px;
-
+  text-transform:uppercase;
 }
 
 .media-file{
+  margin-top:7px;
 
-    margin-top:7px;
+  color:var(--muted);
 
-    color:var(--muted);
+  font-size:10px;
 
-    font-size:10px;
+  line-height:1.5;
 
-    line-height:1.5;
-
-    word-break:break-all;
-
+  word-break:break-all;
 }
 
 .media-buttons{
+  display:flex;
 
-    display:flex;
+  gap:7px;
 
-    gap:7px;
+  flex-wrap:wrap;
 
-    flex-wrap:wrap;
-
-    margin-top:12px;
-
+  margin-top:13px;
 }
 
 .small-btn{
+  padding:8px 11px;
 
-    padding:8px 11px;
+  background:transparent;
 
-    background:transparent;
+  border:1px solid #334960;
 
-    color:white;
+  color:white;
 
-    border:1px solid #334960;
+  font-size:10px;
 
-    font-size:11px;
-
+  cursor:pointer;
 }
 
 .small-btn:hover{
+  background:#102033;
+}
 
-    border-color:#5a7896;
-
+.small-btn.gold{
+  color:var(--gold);
 }
 
 .small-btn.danger{
-
-    color:#ff929a;
-
+  color:#ff929a;
 }
 
+.small-btn.green{
+  color:var(--green);
+}
 
 /* =========================================================
    FILTERS
 ========================================================= */
 
 .filters{
+  display:flex;
 
-    display:flex;
+  gap:7px;
 
-    gap:8px;
+  flex-wrap:wrap;
 
-    flex-wrap:wrap;
-
-    margin-top:15px;
-
+  margin-top:17px;
 }
 
 .filter{
+  padding:9px 13px;
 
-    padding:8px 13px;
+  background:#0b1727;
 
-    background:#0b1727;
+  border:1px solid var(--line);
 
-    color:#aebed0;
+  color:#aebed0;
 
-    border:1px solid var(--line);
-
+  cursor:pointer;
 }
 
 .filter:hover,
 .filter.active{
+  border-color:var(--gold);
 
-    border-color:var(--gold);
-
-    color:white;
-
+  color:white;
 }
-
 
 /* =========================================================
    SEARCH
 ========================================================= */
 
 .search-box{
+  width:100%;
 
-    width:100%;
+  margin-top:15px;
 
-    margin-top:15px;
+  padding:13px 14px;
 
+  background:#071321;
+
+  border:1px solid var(--line);
+
+  color:white;
+
+  outline:none;
 }
 
-.search-box input{
-
-    width:100%;
-
-    padding:12px 14px;
-
-    background:#071321;
-
-    border:1px solid var(--line);
-
-    color:white;
-
-    outline:none;
-
+.search-box:focus{
+  border-color:var(--blue);
 }
 
-.search-box input:focus{
+/* =========================================================
+   SECTION CARDS
+========================================================= */
 
-    border-color:var(--gold);
+.section-list{
+  display:grid;
 
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+  gap:14px;
+
+  margin-top:18px;
 }
 
+.section-card{
+  padding:20px;
+
+  background:#091625;
+
+  border:1px solid var(--line);
+}
+
+.section-card-head{
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:flex-start;
+
+  gap:15px;
+}
+
+.section-card h3{
+  margin:0;
+
+  font-size:17px;
+
+  font-weight:400;
+}
+
+.section-card .type{
+  color:var(--gold);
+
+  font-size:9px;
+
+  letter-spacing:2px;
+}
+
+.section-path{
+  margin-top:12px;
+
+  padding:10px;
+
+  background:#050e18;
+
+  color:#89a4be;
+
+  font-size:10px;
+
+  word-break:break-all;
+}
+
+.section-card p{
+  margin:12px 0;
+
+  color:var(--muted);
+
+  font-size:11px;
+}
+
+.section-actions{
+  display:flex;
+
+  gap:7px;
+
+  flex-wrap:wrap;
+}
 
 /* =========================================================
    TABLE
 ========================================================= */
 
 .table-wrap{
-
-    overflow-x:auto;
-
+  overflow-x:auto;
 }
 
 .table{
+  width:100%;
 
-    width:100%;
+  border-collapse:collapse;
 
-    border-collapse:collapse;
+  margin-top:15px;
 
-    margin-top:15px;
-
-    font-size:12px;
-
+  font-size:11px;
 }
 
 .table th,
 .table td{
+  padding:13px;
 
-    padding:13px;
+  border-bottom:1px solid var(--line);
 
-    text-align:left;
-
-    border-bottom:1px solid var(--line);
-
-    white-space:nowrap;
-
+  text-align:left;
 }
 
 .table th{
+  color:#8ea7c1;
 
-    color:#8ea7c1;
+  font-size:9px;
 
-    font-size:10px;
-
-    letter-spacing:1px;
-
+  letter-spacing:1px;
 }
 
 .badge{
+  display:inline-block;
 
-    display:inline-block;
+  padding:4px 7px;
 
-    padding:4px 7px;
+  color:var(--green);
 
-    color:var(--green);
+  border:1px solid #315440;
 
-    border:1px solid #315440;
+  font-size:8px;
 
-    font-size:9px;
-
+  letter-spacing:1px;
 }
-
 
 /* =========================================================
    SETTINGS
 ========================================================= */
 
 .settings-grid{
+  display:grid;
 
-    display:grid;
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
 
-    grid-template-columns:
-        repeat(2,1fr);
+  gap:14px;
 
-    gap:14px;
-
+  margin-top:18px;
 }
 
 .setting{
+  padding:17px;
 
-    padding:16px;
+  background:#091625;
 
-    border:1px solid var(--line);
+  border:1px solid var(--line);
 
-    background:#091625;
+  color:var(--muted);
 
-    color:var(--muted);
+  font-size:12px;
 
-    font-size:12px;
-
+  line-height:1.6;
 }
 
 .setting strong{
+  display:block;
 
-    display:block;
+  margin-bottom:6px;
 
-    margin-bottom:7px;
-
-    color:white;
-
+  color:white;
 }
-
 
 /* =========================================================
    TOAST
 ========================================================= */
 
 .toast{
+  position:fixed;
 
-    display:none;
+  right:25px;
+  bottom:25px;
 
-    position:fixed;
+  display:none;
 
-    right:25px;
+  max-width:360px;
 
-    bottom:25px;
+  padding:14px 18px;
 
-    max-width:360px;
+  background:#12243a;
 
-    padding:14px 18px;
+  border:1px solid #3b5673;
 
-    background:#12243a;
+  color:white;
 
-    border:1px solid #3b5673;
+  font-size:12px;
 
-    color:white;
+  z-index:1000;
 
-    font-size:12px;
-
-    z-index:1000;
-
-    box-shadow:var(--shadow);
-
+  box-shadow:0 15px 50px rgba(0,0,0,.35);
 }
 
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal{
+  position:fixed;
+
+  inset:0;
+
+  display:none;
+
+  align-items:center;
+
+  justify-content:center;
+
+  padding:25px;
+
+  background:rgba(0,0,0,.72);
+
+  z-index:500;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.modal-box{
+  width:600px;
+
+  max-width:100%;
+
+  max-height:90vh;
+
+  overflow:auto;
+
+  padding:25px;
+
+  background:#0b1727;
+
+  border:1px solid var(--line);
+}
+
+.modal-head{
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  gap:15px;
+}
+
+.modal-head h2{
+  margin:0;
+
+  font-size:22px;
+
+  font-weight:400;
+}
+
+.close{
+  padding:7px 10px;
+
+  background:transparent;
+
+  border:1px solid var(--line);
+
+  color:white;
+
+  cursor:pointer;
+}
+
+.upload-area{
+  margin-top:20px;
+
+  padding:30px;
+
+  text-align:center;
+
+  background:#071321;
+
+  border:1px dashed #3b5673;
+}
+
+.upload-area input{
+  color:white;
+}
+
+.upload-note{
+  margin-top:12px;
+
+  color:var(--muted);
+
+  font-size:11px;
+
+  line-height:1.6;
+}
 
 /* =========================================================
-   MOBILE
+   DESKTOP ONLY
 ========================================================= */
+
+/*
+   This portal is intentionally designed for desktop use.
+   Mobile public website is NOT being managed here.
+*/
 
 @media(max-width:1100px){
 
-    .stats{
+  .sidebar{
+    width:230px;
+  }
 
-        grid-template-columns:
-            repeat(2,1fr);
+  main{
+    margin-left:230px;
+    padding:25px;
+  }
 
-    }
+  .media-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
 
-    .section-grid{
-
-        grid-template-columns:
-            repeat(2,1fr);
-
-    }
-
-    .media-grid{
-
-        grid-template-columns:
-            repeat(2,1fr);
-
-    }
+  .collection-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
 
 }
 
+@media(max-width:750px){
 
-@media(max-width:800px){
+  /*
+    Admin remains desktop-oriented.
+    We do not redesign this as a mobile admin.
+  */
 
-    .sidebar{
+  .sidebar{
+    position:relative;
 
-        position:relative;
+    width:100%;
 
-        width:100%;
+    height:auto;
+  }
 
-        height:auto;
+  main{
+    margin-left:0;
+  }
 
-        min-height:auto;
+  .stats,
+  .media-grid,
+  .collection-grid,
+  .section-list,
+  .settings-grid{
+    grid-template-columns:1fr;
+  }
 
-        padding:20px;
-
-    }
-
-    .sidebar-bottom{
-
-        position:relative;
-
-        left:auto;
-        right:auto;
-        bottom:auto;
-
-        margin-top:20px;
-
-    }
-
-    main{
-
-        margin-left:0;
-
-        padding:25px 18px 60px;
-
-    }
-
-    .nav{
-
-        display:grid;
-
-        grid-template-columns:
-            repeat(2,1fr);
-
-    }
-
-    .top{
-
-        flex-direction:column;
-
-    }
-
-    .section-grid,
-    .media-grid,
-    .settings-grid{
-
-        grid-template-columns:1fr;
-
-    }
-
-}
-
-
-@media(max-width:520px){
-
-    .stats{
-
-        grid-template-columns:1fr;
-
-    }
-
-    .nav{
-
-        grid-template-columns:1fr;
-
-    }
-
-    .login-box{
-
-        padding:28px 22px;
-
-    }
-
-}
-
-
-/* =========================================================
-   HIDDEN
-========================================================= */
-
-.hidden-card{
-
-    opacity:.45;
+  .top{
+    flex-direction:column;
+  }
 
 }
 
@@ -1247,1002 +1140,1157 @@ main{
 
 </head>
 
-
 <body>
 
 
-<!-- =======================================================
+<!-- =========================================================
      LOGIN
-======================================================= -->
+========================================================= -->
 
 <section id="loginScreen" class="login">
 
-    <div class="login-box">
+  <div class="login-box">
 
-        <div class="logo">
+    <div class="login-brand">
+      RG PHOTOGRAPHY
 
-            RG PHOTOGRAPHY
+      <span>
+        ADMIN PORTAL · CHENNAI
+      </span>
+    </div>
 
-            <span>
-                ADMIN PORTAL · CHENNAI
-            </span>
+    <h1>Admin Login</h1>
 
-        </div>
+    <p>
+      Manage the RG Photography website media,
+      wedding collections, portfolio and cinematic videos.
+    </p>
 
+    <div class="field">
 
-        <h1>
-            Admin Login
-        </h1>
+      <label>Username</label>
 
-
-        <p>
-
-            Manage the complete RG Photography
-            website media library, wedding collections,
-            portfolio collections, services and videos.
-
-        </p>
-
-
-        <div class="field">
-
-            <label>
-                Username
-            </label>
-
-            <input
-                id="username"
-                type="text"
-                placeholder="Enter username"
-            >
-
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                Password
-            </label>
-
-            <input
-                id="password"
-                type="password"
-                placeholder="Enter password"
-            >
-
-        </div>
-
-
-        <button
-            class="login-btn"
-            onclick="login()"
-        >
-
-            LOGIN TO ADMIN
-
-        </button>
-
-
-        <div
-            id="loginError"
-            class="error"
-        ></div>
+      <input
+        id="username"
+        type="text"
+        placeholder="Enter username"
+        autocomplete="username"
+      >
 
     </div>
+
+    <div class="field">
+
+      <label>Password</label>
+
+      <input
+        id="password"
+        type="password"
+        placeholder="Enter password"
+        autocomplete="current-password"
+      >
+
+    </div>
+
+    <button
+      class="login-btn"
+      onclick="login()"
+    >
+      LOGIN TO ADMIN
+    </button>
+
+    <div
+      id="loginError"
+      class="error"
+    ></div>
+
+  </div>
 
 </section>
 
 
+<!-- =========================================================
+     ADMIN APPLICATION
+========================================================= -->
 
-<!-- =======================================================
-     ADMIN APP
-======================================================= -->
-
-<section
-    id="adminApp"
-    class="app"
->
+<section id="adminApp" class="app">
 
 
-<!-- =======================================================
+<!-- =========================================================
      SIDEBAR
-======================================================= -->
+========================================================= -->
 
 <aside class="sidebar">
 
+  <div class="side-brand">
 
-    <div class="side-logo">
+    RG PHOTOGRAPHY
 
-        RG PHOTOGRAPHY
+    <small>
+      LIVE MEDIA MANAGER
+    </small>
 
-        <small>
-            LIVE MEDIA MANAGER
-        </small>
+  </div>
 
+
+  <div class="nav">
+
+    <button
+      class="active"
+      onclick="openPage('dashboard',this)"
+    >
+      Dashboard
+    </button>
+
+    <button
+      onclick="openPage('home',this)"
+    >
+      Home Page
+    </button>
+
+
+    <div class="nav-title">
+      Weddings
     </div>
 
+    <button
+      class="section-item"
+      onclick="openWedding('haldi')"
+    >
+      Haldi
+    </button>
 
-    <div class="nav">
+    <button
+      class="section-item"
+      onclick="openWedding('brahmin')"
+    >
+      Brahmin
+    </button>
 
+    <button
+      class="section-item"
+      onclick="openWedding('christian')"
+    >
+      Christian
+    </button>
 
-        <button
-            class="active"
-            onclick="openPage('dashboard',this)"
-        >
-            Dashboard
-        </button>
+    <button
+      class="section-item"
+      onclick="openWedding('hindu')"
+    >
+      Hindu
+    </button>
 
+    <button
+      class="section-item"
+      onclick="openWedding('muslim')"
+    >
+      Muslim
+    </button>
 
-        <button
-            onclick="openPage('home',this)"
-        >
-            Home Page
-        </button>
-
-
-        <div class="nav-group-title">
-            Weddings
-        </div>
-
-
-        <button
-            onclick="openPage('weddings',this)"
-        >
-            Wedding Collections
-        </button>
-
-
-        <button
-            onclick="openPage('haldi',this)"
-        >
-            Haldi
-        </button>
-
-
-        <button
-            onclick="openPage('brahmin',this)"
-        >
-            Brahmin
-        </button>
+    <button
+      class="section-item"
+      onclick="openWedding('telugu')"
+    >
+      Telugu
+    </button>
 
 
-        <button
-            onclick="openPage('christian',this)"
-        >
-            Christian
-        </button>
-
-
-        <button
-            onclick="openPage('hindu',this)"
-        >
-            Hindu
-        </button>
-
-
-        <button
-            onclick="openPage('muslim',this)"
-        >
-            Muslim
-        </button>
-
-
-        <button
-            onclick="openPage('telugu',this)"
-        >
-            Telugu
-        </button>
-
-
-        <div class="nav-group-title">
-            Portfolio
-        </div>
-
-
-        <button
-            onclick="openPage('portfolio',this)"
-        >
-            Portfolio
-        </button>
-
-
-        <button
-            onclick="openPage('prewedding',this)"
-        >
-            Pre-Wedding
-        </button>
-
-
-        <button
-            onclick="openPage('postwedding',this)"
-        >
-            Post-Wedding
-        </button>
-
-
-        <button
-            onclick="openPage('baby',this)"
-        >
-            Baby Shoot
-        </button>
-
-
-        <button
-            onclick="openPage('maternity',this)"
-        >
-            Maternity
-        </button>
-
-
-        <div class="nav-group-title">
-            Website
-        </div>
-
-
-        <button
-            onclick="openPage('services',this)"
-        >
-            Services
-        </button>
-
-
-        <button
-            onclick="openPage('videos',this)"
-        >
-            Videos
-        </button>
-
-
-        <button
-            onclick="openPage('sections',this)"
-        >
-            All Sections
-        </button>
-
-
-        <button
-            onclick="openPage('settings',this)"
-        >
-            Settings
-        </button>
-
-
+    <div class="nav-title">
+      Portfolio
     </div>
 
+    <button
+      class="section-item"
+      onclick="openPortfolio('prewedding')"
+    >
+      Pre-Wedding
+    </button>
 
-    <div class="sidebar-bottom">
+    <button
+      class="section-item"
+      onclick="openPortfolio('postwedding')"
+    >
+      Post-Wedding
+    </button>
 
-        <div class="live">
-            ● LIVE ADMIN MODE
-        </div>
+    <button
+      class="section-item"
+      onclick="openPortfolio('baby')"
+    >
+      Baby Shoot
+    </button>
+
+    <button
+      class="section-item"
+      onclick="openPortfolio('maternity')"
+    >
+      Maternity
+    </button>
 
 
-        <button
-            class="logout"
-            onclick="logout()"
-        >
-            Logout
-        </button>
-
+    <div class="nav-title">
+      Website
     </div>
+
+    <button
+      onclick="openPage('images',this)"
+    >
+      Images
+    </button>
+
+    <button
+      onclick="openPage('services',this)"
+    >
+      Services
+    </button>
+
+    <button
+      onclick="openPage('videos',this)"
+    >
+      Videos
+    </button>
+
+    <button
+      onclick="openPage('sections',this)"
+    >
+      All Sections
+    </button>
+
+    <button
+      onclick="openPage('settings',this)"
+    >
+      Settings
+    </button>
+
+  </div>
+
+
+  <div class="sidebar-bottom">
+
+    <div class="live">
+      ● LIVE ADMIN MODE
+    </div>
+
+    <button
+      class="logout"
+      onclick="logout()"
+    >
+      Logout
+    </button>
+
+  </div>
 
 </aside>
 
 
-
-<!-- =======================================================
+<!-- =========================================================
      MAIN
-======================================================= -->
+========================================================= -->
 
 <main>
 
 
-<!-- =======================================================
+<!-- =========================================================
      DASHBOARD
-======================================================= -->
+========================================================= -->
 
 <div
-    id="dashboard"
-    class="page active"
+  id="dashboard"
+  class="page active"
 >
 
+  <div class="top">
 
-    <div class="top">
+    <div>
 
-        <div>
+      <div class="eyebrow">
+        RG PHOTOGRAPHY · LIVE MANAGER
+      </div>
 
-            <div class="eyebrow">
-                RG PHOTOGRAPHY · LIVE MANAGER
-            </div>
+      <h1>
+        Admin Dashboard
+      </h1>
 
-            <h1>
-                Admin Dashboard
-            </h1>
+    </div>
 
-        </div>
+    <div class="actions">
+
+      <button
+        class="btn"
+        onclick="openWebsite()"
+      >
+        Open Website ↗
+      </button>
+
+      <button
+        class="btn"
+        onclick="render()"
+      >
+        Refresh
+      </button>
+
+    </div>
+
+  </div>
 
 
-        <div class="actions">
+  <div class="stats">
 
-            <button
-                class="btn green"
-                onclick="openWebsite()"
-            >
-                Open Website ↗
-            </button>
+    <div class="stat">
 
-            <button
-                class="btn"
-                onclick="location.reload()"
-            >
-                Refresh
-            </button>
+      <div
+        class="stat-number"
+        id="imageCount"
+      >
+        0
+      </div>
 
-        </div>
+      <div class="stat-label">
+        WEBSITE IMAGES
+      </div>
 
     </div>
 
 
+    <div class="stat">
 
-    <div class="stats">
+      <div
+        class="stat-number"
+        id="videoCount"
+      >
+        0
+      </div>
 
-
-        <div class="stat">
-
-            <div
-                class="stat-number"
-                id="imageCount"
-            >
-                0
-            </div>
-
-            <div class="stat-label">
-                IMAGE SLOTS
-            </div>
-
-        </div>
-
-
-        <div class="stat">
-
-            <div
-                class="stat-number"
-                id="videoCount"
-            >
-                0
-            </div>
-
-            <div class="stat-label">
-                VIDEO SLOTS
-            </div>
-
-        </div>
-
-
-        <div class="stat">
-
-            <div
-                class="stat-number"
-                id="categoryCount"
-            >
-                0
-            </div>
-
-            <div class="stat-label">
-                CATEGORIES
-            </div>
-
-        </div>
-
-
-        <div class="stat">
-
-            <div
-                class="stat-number"
-                id="hiddenCount"
-            >
-                0
-            </div>
-
-            <div class="stat-label">
-                HIDDEN MEDIA
-            </div>
-
-        </div>
-
+      <div class="stat-label">
+        WEBSITE VIDEOS
+      </div>
 
     </div>
 
 
+    <div class="stat">
 
-    <div class="panel">
+      <div
+        class="stat-number"
+        id="hiddenCount"
+      >
+        0
+      </div>
 
-        <h2>
-            Website Media Control
-        </h2>
-
-        <p>
-
-            This admin portal is organised around
-            the actual RG Photography website sections.
-            Each section has its own asset path and
-            website page link.
-
-        </p>
-
-
-        <div class="notice">
-
-            <strong>
-                Important:
-            </strong>
-
-            The browser version can select a replacement
-            image and save a temporary local preview.
-            Permanent replacement inside the website
-            repository requires the GitHub/Vercel
-            publishing connection.
-
-        </div>
+      <div class="stat-label">
+        HIDDEN MEDIA
+      </div>
 
     </div>
 
 
+    <div class="stat">
 
-    <div class="panel">
+      <div class="stat-number">
+        RG
+      </div>
 
-        <h2>
-            Main Website Sections
-        </h2>
-
-        <div
-            id="dashboardSections"
-            class="section-grid"
-        ></div>
+      <div class="stat-label">
+        PHOTOGRAPHY
+      </div>
 
     </div>
 
-
-</div>
-
+  </div>
 
 
-<!-- =======================================================
-     HOME
-======================================================= -->
+  <div class="panel">
 
-<div
-    id="home"
-    class="page"
->
+    <h2>
+      Website Media Manager
+    </h2>
 
-    <div class="top">
+    <p>
+      This portal is connected to the same asset structure
+      used by the RG Photography website.
+    </p>
 
-        <div>
+    <div class="notice">
 
-            <div class="eyebrow">
-                HOME PAGE
-            </div>
+      <strong>
+        Current publishing architecture
+      </strong>
 
-            <h1>
-                Hero Slider
-            </h1>
+      <br><br>
 
-        </div>
+      Admin Portal
 
+      →
 
-        <button
-            class="btn green"
-            onclick="showToast('Select Replace on a hero slot.')"
-        >
-            + Replace Media
-        </button>
+      Secure API
 
-    </div>
+      →
 
+      GitHub Repository
 
-    <div class="panel">
+      →
 
-        <h2>
-            Home Hero Images
-        </h2>
+      Vercel Deployment
 
-        <p>
-            Three main hero images used by the homepage.
-        </p>
+      <br><br>
 
-        <div
-            id="heroGrid"
-            class="media-grid"
-        ></div>
+      The current HTML version displays the real website
+      assets and provides local replacement previews.
+      GitHub publishing will be connected through a secure
+      server-side API in the next stage.
 
     </div>
 
+  </div>
+
+
+  <div class="panel">
+
+    <h2>
+      Website Collections
+    </h2>
+
+    <div
+      class="collection-grid"
+      id="dashboardCollections"
+    ></div>
+
+  </div>
+
+
+  <div class="panel">
+
+    <h2>
+      Publishing Rules
+    </h2>
+
+    <table class="table">
+
+      <thead>
+
+        <tr>
+
+          <th>
+            RULE
+          </th>
+
+          <th>
+            PURPOSE
+          </th>
+
+          <th>
+            STATUS
+          </th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr>
+
+          <td>
+            Existing filename
+          </td>
+
+          <td>
+            Replacements keep the website slot unchanged.
+          </td>
+
+          <td>
+            <span class="badge">
+              READY
+            </span>
+          </td>
+
+        </tr>
+
+        <tr>
+
+          <td>
+            Existing folder
+          </td>
+
+          <td>
+            Images stay inside the website's real asset structure.
+          </td>
+
+          <td>
+            <span class="badge">
+              READY
+            </span>
+          </td>
+
+        </tr>
+
+        <tr>
+
+          <td>
+            GitHub publishing
+          </td>
+
+          <td>
+            Secure API will commit the replacement file.
+          </td>
+
+          <td>
+            <span class="badge">
+              NEXT STAGE
+            </span>
+          </td>
+
+        </tr>
+
+        <tr>
+
+          <td>
+            Vercel deployment
+          </td>
+
+          <td>
+            GitHub commit triggers production deployment.
+          </td>
+
+          <td>
+            <span class="badge">
+              READY
+            </span>
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
 </div>
 
 
-
-<!-- =======================================================
-     WEDDINGS OVERVIEW
-======================================================= -->
+<!-- =========================================================
+     HOME PAGE
+========================================================= -->
 
 <div
-    id="weddings"
-    class="page"
+  id="home"
+  class="page"
 >
 
-    <div class="top">
+  <div class="top">
 
-        <div>
+    <div>
 
-            <div class="eyebrow">
-                WEDDING STORIES
-            </div>
+      <div class="eyebrow">
+        HOME PAGE
+      </div>
 
-            <h1>
-                Wedding Collections
-            </h1>
-
-        </div>
+      <h1>
+        Home Page Manager
+      </h1>
 
     </div>
 
+    <div class="actions">
 
-    <div class="panel">
-
-        <h2>
-            All Wedding Categories
-        </h2>
-
-        <p>
-            Manage every wedding collection separately.
-        </p>
-
-
-        <div
-            id="weddingSectionGrid"
-            class="section-grid"
-        ></div>
+      <button
+        class="btn"
+        onclick="openWebsite()"
+      >
+        Open Website ↗
+      </button>
 
     </div>
 
+  </div>
+
+
+  <div class="panel">
+
+    <h2>
+      Hero Images
+    </h2>
+
+    <p>
+      These three images are used by the current
+      RG Photography homepage hero slider.
+    </p>
+
+    <div
+      id="heroGrid"
+      class="media-grid"
+    ></div>
+
+  </div>
+
 </div>
 
 
-
-<!-- =======================================================
-     INDIVIDUAL WEDDING PAGES
-======================================================= -->
-
-<div
-    id="haldi"
-    class="page"
->
-    <div id="haldiContent"></div>
-</div>
-
+<!-- =========================================================
+     ALL IMAGES
+========================================================= -->
 
 <div
-    id="brahmin"
-    class="page"
->
-    <div id="brahminContent"></div>
-</div>
-
-
-<div
-    id="christian"
-    class="page"
->
-    <div id="christianContent"></div>
-</div>
-
-
-<div
-    id="hindu"
-    class="page"
->
-    <div id="hinduContent"></div>
-</div>
-
-
-<div
-    id="muslim"
-    class="page"
->
-    <div id="muslimContent"></div>
-</div>
-
-
-<div
-    id="telugu"
-    class="page"
->
-    <div id="teluguContent"></div>
-</div>
-
-
-
-<!-- =======================================================
-     PORTFOLIO OVERVIEW
-======================================================= -->
-
-<div
-    id="portfolio"
-    class="page"
+  id="images"
+  class="page"
 >
 
-    <div class="top">
+  <div class="top">
 
-        <div>
+    <div>
 
-            <div class="eyebrow">
-                PORTFOLIO
-            </div>
+      <div class="eyebrow">
+        IMAGE LIBRARY
+      </div>
 
-            <h1>
-                Portfolio Collections
-            </h1>
-
-        </div>
+      <h1>
+        All Website Images
+      </h1>
 
     </div>
 
-
-    <div class="panel">
-
-        <h2>
-            Photography Portfolio
-        </h2>
-
-        <p>
-            Manage each portfolio collection separately.
-        </p>
+  </div>
 
 
-        <div
-            id="portfolioSectionGrid"
-            class="section-grid"
-        ></div>
+  <input
+    id="imageSearch"
+    class="search-box"
+    placeholder="Search image, filename or section..."
+    oninput="renderImages()"
+  >
 
-    </div>
+
+  <div
+    class="filters"
+    id="imageFilters"
+  ></div>
+
+
+  <div
+    id="imageGrid"
+    class="media-grid"
+  ></div>
 
 </div>
 
 
-
-<!-- =======================================================
-     PORTFOLIO INDIVIDUAL
-======================================================= -->
-
-<div
-    id="prewedding"
-    class="page"
->
-    <div id="preweddingContent"></div>
-</div>
-
-
-<div
-    id="postwedding"
-    class="page"
->
-    <div id="postweddingContent"></div>
-</div>
-
-
-<div
-    id="baby"
-    class="page"
->
-    <div id="babyContent"></div>
-</div>
-
-
-<div
-    id="maternity"
-    class="page"
->
-    <div id="maternityContent"></div>
-</div>
-
-
-
-<!-- =======================================================
+<!-- =========================================================
      SERVICES
-======================================================= -->
+========================================================= -->
 
 <div
-    id="services"
-    class="page"
+  id="services"
+  class="page"
 >
 
-    <div class="top">
+  <div class="top">
 
-        <div>
+    <div>
 
-            <div class="eyebrow">
-                WEBSITE SERVICES
-            </div>
+      <div class="eyebrow">
+        WEBSITE SERVICES
+      </div>
 
-            <h1>
-                Services
-            </h1>
-
-        </div>
+      <h1>
+        Services Manager
+      </h1>
 
     </div>
 
+    <button
+      class="btn"
+      onclick="openWebsite()"
+    >
+      Open Website ↗
+    </button>
 
-    <div class="panel">
+  </div>
 
-        <h2>
-            Services Media
-        </h2>
 
-        <p>
-            Manage the service section media assets.
-        </p>
+  <div class="panel">
 
-        <div
-            id="servicesGrid"
-            class="media-grid"
-        ></div>
+    <h2>
+      Services Section
+    </h2>
+
+    <p>
+      Manage service-related website media.
+      The text and service layout remain controlled by
+      the website HTML until the content API is added.
+    </p>
+
+    <div
+      id="serviceGrid"
+      class="media-grid"
+    ></div>
+
+  </div>
+
+
+  <div class="panel">
+
+    <h2>
+      Current Services
+    </h2>
+
+    <div class="collection-grid">
+
+      <div class="collection">
+        <div class="collection-number">01</div>
+        <h3>Wedding Photography</h3>
+        <p>Wedding day photography coverage.</p>
+      </div>
+
+      <div class="collection">
+        <div class="collection-number">02</div>
+        <h3>Candid Photography</h3>
+        <p>Natural moments and emotions.</p>
+      </div>
+
+      <div class="collection">
+        <div class="collection-number">03</div>
+        <h3>Traditional Photography</h3>
+        <p>Classic ceremonies and rituals.</p>
+      </div>
+
+      <div class="collection">
+        <div class="collection-number">04</div>
+        <h3>Cinematography</h3>
+        <p>Cinematic wedding films.</p>
+      </div>
+
+      <div class="collection">
+        <div class="collection-number">05</div>
+        <h3>Pre-Wedding</h3>
+        <p>Creative couple sessions.</p>
+      </div>
+
+      <div class="collection">
+        <div class="collection-number">06</div>
+        <h3>Baby & Maternity</h3>
+        <p>Family and milestone photography.</p>
+      </div>
 
     </div>
+
+  </div>
 
 </div>
 
 
+<!-- =========================================================
+     WEDDING MANAGER
+========================================================= -->
 
-<!-- =======================================================
+<div
+  id="weddings"
+  class="page"
+>
+
+  <div class="top">
+
+    <div>
+
+      <div class="eyebrow">
+        WEDDING COLLECTION
+      </div>
+
+      <h1 id="weddingTitle">
+        Wedding Manager
+      </h1>
+
+    </div>
+
+    <div class="actions">
+
+      <button
+        class="btn"
+        onclick="openWebsite()"
+      >
+        Open Website ↗
+      </button>
+
+      <button
+        class="btn"
+        onclick="renderWeddingPage()"
+      >
+        Refresh
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="panel">
+
+    <h2 id="weddingHeading">
+      Wedding Images
+    </h2>
+
+    <p id="weddingDescription">
+      Manage the selected wedding collection.
+    </p>
+
+    <div
+      id="weddingGrid"
+      class="media-grid"
+    ></div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================================
+     PORTFOLIO MANAGER
+========================================================= -->
+
+<div
+  id="portfolio"
+  class="page"
+>
+
+  <div class="top">
+
+    <div>
+
+      <div class="eyebrow">
+        PORTFOLIO COLLECTION
+      </div>
+
+      <h1 id="portfolioTitle">
+        Portfolio Manager
+      </h1>
+
+    </div>
+
+    <div class="actions">
+
+      <button
+        class="btn"
+        onclick="openWebsite()"
+      >
+        Open Website ↗
+      </button>
+
+      <button
+        class="btn"
+        onclick="renderPortfolioPage()"
+      >
+        Refresh
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="panel">
+
+    <h2 id="portfolioHeading">
+      Portfolio Images
+    </h2>
+
+    <p id="portfolioDescription">
+      Manage the selected portfolio collection.
+    </p>
+
+    <div
+      id="portfolioGrid"
+      class="media-grid"
+    ></div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================================
      VIDEOS
-======================================================= -->
+========================================================= -->
 
 <div
-    id="videos"
-    class="page"
+  id="videos"
+  class="page"
 >
 
-    <div class="top">
+  <div class="top">
 
-        <div>
+    <div>
 
-            <div class="eyebrow">
-                VIDEO LIBRARY
-            </div>
+      <div class="eyebrow">
+        CINEMATIC VIDEO
+      </div>
 
-            <h1>
-                Website Videos
-            </h1>
-
-        </div>
+      <h1>
+        Video Manager
+      </h1>
 
     </div>
 
+    <button
+      class="btn"
+      onclick="openWebsite()"
+    >
+      Open Website ↗
+    </button>
 
-    <div class="panel">
+  </div>
 
-        <h2>
-            Video Management
-        </h2>
 
-        <p>
-            Manage website video slots.
-        </p>
+  <div class="panel">
 
-        <div
-            id="videoGrid"
-            class="media-grid"
-        ></div>
+    <h2>
+      Website Videos
+    </h2>
 
-    </div>
+    <p>
+      Current website videos are displayed from the
+      website's video assets. Large video publishing
+      will later use secure storage/API integration.
+    </p>
+
+    <div
+      id="videoGrid"
+      class="media-grid"
+    ></div>
+
+  </div>
 
 </div>
 
 
-
-<!-- =======================================================
+<!-- =========================================================
      ALL SECTIONS
-======================================================= -->
+========================================================= -->
 
 <div
-    id="sections"
-    class="page"
+  id="sections"
+  class="page"
 >
 
-    <div class="top">
+  <div class="top">
 
-        <div>
+    <div>
 
-            <div class="eyebrow">
-                FULL WEBSITE CONTROL
-            </div>
+      <div class="eyebrow">
+        FULL WEBSITE CONTROL
+      </div>
 
-            <h1>
-                All Sections
-            </h1>
-
-        </div>
+      <h1>
+        All Sections
+      </h1>
 
     </div>
 
-
-    <div class="panel">
-
-        <h2>
-            Complete Website Map
-        </h2>
+  </div>
 
 
-        <div class="table-wrap">
+  <div class="panel">
 
-            <table class="table">
+    <h2>
+      Website Structure
+    </h2>
 
-                <thead>
+    <p>
+      Every important website collection is listed here
+      so the admin portal remains connected to the same
+      folder structure.
+    </p>
 
-                    <tr>
+    <div
+      id="sectionList"
+      class="section-list"
+    ></div>
 
-                        <th>
-                            SECTION
-                        </th>
-
-                        <th>
-                            CATEGORY
-                        </th>
-
-                        <th>
-                            ASSET FOLDER
-                        </th>
-
-                        <th>
-                            WEBSITE PAGE
-                        </th>
-
-                        <th>
-                            STATUS
-                        </th>
-
-                        <th>
-                            ACTION
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody id="sectionTable">
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
+  </div>
 
 </div>
 
 
-
-<!-- =======================================================
+<!-- =========================================================
      SETTINGS
-======================================================= -->
+========================================================= -->
 
 <div
-    id="settings"
-    class="page"
+  id="settings"
+  class="page"
 >
 
-    <div class="top">
+  <div class="top">
 
-        <div>
+    <div>
 
-            <div class="eyebrow">
-                SYSTEM SETTINGS
-            </div>
+      <div class="eyebrow">
+        SYSTEM SETTINGS
+      </div>
 
-            <h1>
-                Settings
-            </h1>
-
-        </div>
+      <h1>
+        Settings
+      </h1>
 
     </div>
 
-
-    <div class="panel">
-
-        <h2>
-            Admin Account
-        </h2>
-
-        <p>
-            Current authentication is client-side only.
-            Production authentication should use a secure backend.
-        </p>
+  </div>
 
 
-        <div class="settings-grid">
+  <div class="panel">
+
+    <h2>
+      Repository
+    </h2>
+
+    <div class="settings-grid">
+
+      <div class="setting">
+
+        <strong>
+          Website
+        </strong>
+
+        RG Photography
+
+      </div>
 
 
-            <div class="setting">
+      <div class="setting">
 
-                <strong>
-                    Username
-                </strong>
+        <strong>
+          Production
+        </strong>
 
-                rgadmin
+        Vercel
 
-            </div>
-
-
-            <div class="setting">
-
-                <strong>
-                    Website
-                </strong>
-
-                RG Photography
-
-            </div>
+      </div>
 
 
-            <div class="setting">
+      <div class="setting">
 
-                <strong>
-                    Website Manager
-                </strong>
+        <strong>
+          Source Control
+        </strong>
 
-                Active
+        GitHub
 
-            </div>
-
-
-            <div class="setting">
-
-                <strong>
-                    Media Structure
-                </strong>
-
-                Connected to website paths
-
-            </div>
+      </div>
 
 
-        </div>
+      <div class="setting">
+
+        <strong>
+          Admin Portal
+        </strong>
+
+        admin.html
+
+      </div>
 
     </div>
 
-
-    <div class="panel">
-
-        <h2>
-            GitHub / Vercel Publishing
-        </h2>
-
-        <p>
-
-            The final publishing system can connect this
-            portal to the GitHub repository. A replacement
-            image can then be committed to the exact
-            asset path and Vercel can deploy the update.
-
-        </p>
+  </div>
 
 
-        <button
-            class="btn gold"
-            onclick="showToast('GitHub/Vercel publishing connection is ready for the next integration stage.')"
-        >
-            Configure Publishing
+  <div class="panel">
 
-        </button>
+    <h2>
+      GitHub + Vercel Connection
+    </h2>
+
+    <p>
+      The secure publishing connection will be added
+      without exposing your GitHub token inside this HTML file.
+    </p>
+
+    <div class="notice">
+
+      <strong>
+        Recommended architecture
+      </strong>
+
+      <br><br>
+
+      admin.html
+
+      →
+
+      Vercel API
+
+      →
+
+      GitHub Contents API
+
+      →
+
+      Commit
+
+      →
+
+      Vercel deployment
+
+      <br><br>
+
+      GitHub credentials should be stored as Vercel
+      Environment Variables, never inside this page.
 
     </div>
+
+  </div>
+
+
+  <div class="panel">
+
+    <h2>
+      Current Admin Mode
+    </h2>
+
+    <div class="settings-grid">
+
+      <div class="setting">
+
+        <strong>
+          Image Preview
+        </strong>
+
+        Connected to website asset paths.
+
+      </div>
+
+      <div class="setting">
+
+        <strong>
+          Replacement Preview
+        </strong>
+
+        Enabled locally.
+
+      </div>
+
+      <div class="setting">
+
+        <strong>
+          GitHub Publishing
+        </strong>
+
+        Not connected yet.
+
+      </div>
+
+      <div class="setting">
+
+        <strong>
+          Vercel Deployment
+        </strong>
+
+        Ready for GitHub integration.
+
+      </div>
+
+    </div>
+
+  </div>
 
 </div>
 
@@ -2252,84 +2300,189 @@ main{
 </section>
 
 
+<!-- =========================================================
+     UPLOAD MODAL
+========================================================= -->
 
 <div
-    id="toast"
-    class="toast"
-></div>
+  id="uploadModal"
+  class="modal"
+>
 
+  <div class="modal-box">
+
+    <div class="modal-head">
+
+      <h2>
+        Replace Media
+      </h2>
+
+      <button
+        class="close"
+        onclick="closeUpload()"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div
+      id="uploadDetails"
+      class="upload-note"
+    ></div>
+
+
+    <div class="upload-area">
+
+      <input
+        id="fileInput"
+        type="file"
+      >
+
+      <div class="upload-note">
+
+        Select the replacement file.
+
+        <br>
+
+        The filename must match the existing
+        website slot exactly.
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="actions"
+      style="margin-top:18px"
+    >
+
+      <button
+        class="btn"
+        onclick="closeUpload()"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="btn green"
+        onclick="processUpload()"
+      >
+        Preview Replacement
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div
+  id="toast"
+  class="toast"
+></div>
 
 
 <script>
 
 /* =========================================================
-   ADMIN LOGIN
+   CONFIGURATION
 ========================================================= */
 
-const ADMIN_USERNAME = "rgadmin";
+/*
+  IMPORTANT:
+  These are website asset paths, not the old admin paths.
 
+  The current RG website uses:
+  assets/images/main-1.jpg
+  assets/images/main-2.jpg
+  assets/images/main-3.jpg
+
+  Wedding collection paths are based on the current
+  website files.
+*/
+
+const WEBSITE_URL = "index.html";
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+/*
+  TEMPORARY FRONTEND LOGIN ONLY.
+
+  DO NOT use this as production security.
+
+  Later:
+  admin.html
+      ↓
+  /api/login
+      ↓
+  Secure server-side authentication
+*/
+
+const ADMIN_USERNAME = "rgadmin";
 const ADMIN_PASSWORD = "RG@2026";
 
 
 function login(){
 
-    const username =
-        document
-        .getElementById("username")
-        .value
-        .trim();
+  const username =
+    document.getElementById("username")
+      .value
+      .trim();
 
+  const password =
+    document.getElementById("password")
+      .value;
 
-    const password =
-        document
-        .getElementById("password")
-        .value;
+  if(
+    username === ADMIN_USERNAME &&
+    password === ADMIN_PASSWORD
+  ){
 
+    sessionStorage.setItem(
+      "rgAdminLogin",
+      "true"
+    );
 
-    if(
-        username === ADMIN_USERNAME &&
-        password === ADMIN_PASSWORD
-    ){
+    document.getElementById(
+      "loginScreen"
+    ).style.display="none";
 
-        sessionStorage
-            .setItem(
-                "rgAdminLogin",
-                "true"
-            );
+    document.getElementById(
+      "adminApp"
+    ).style.display="block";
 
+    render();
 
-        document
-            .getElementById("loginScreen")
-            .style.display = "none";
+  }else{
 
+    document.getElementById(
+      "loginError"
+    ).innerText =
+      "Invalid username or password.";
 
-        document
-            .getElementById("adminApp")
-            .style.display = "block";
-
-
-        render();
-
-    }
-
-    else{
-
-        document
-            .getElementById("loginError")
-            .innerText =
-            "Invalid username or password.";
-
-    }
+  }
 
 }
 
 
 function logout(){
 
-    sessionStorage
-        .removeItem("rgAdminLogin");
+  sessionStorage.removeItem(
+    "rgAdminLogin"
+  );
 
-    location.reload();
+  location.reload();
 
 }
 
@@ -2340,10 +2493,10 @@ function logout(){
 
 function openWebsite(){
 
-    window.open(
-        "index.html",
-        "_blank"
-    );
+  window.open(
+    WEBSITE_URL,
+    "_blank"
+  );
 
 }
 
@@ -2352,448 +2505,456 @@ function openWebsite(){
    PAGE NAVIGATION
 ========================================================= */
 
-function openPage(page,button){
+function openPage(
+  page,
+  button
+){
 
-    document
-        .querySelectorAll(".page")
-        .forEach(
-            p =>
-            p.classList.remove("active")
-        );
-
-
-    const target =
-        document.getElementById(page);
-
-
-    if(target){
-
-        target.classList.add("active");
-
-    }
-
-
-    document
-        .querySelectorAll(".nav button")
-        .forEach(
-            b =>
-            b.classList.remove("active")
-        );
-
-
-    if(button){
-
-        button.classList.add("active");
-
-    }
-
-
-    window.scrollTo(
-        0,
-        0
+  document
+    .querySelectorAll(".page")
+    .forEach(
+      p=>p.classList.remove("active")
     );
+
+  const target =
+    document.getElementById(page);
+
+  if(target){
+    target.classList.add("active");
+  }
+
+  document
+    .querySelectorAll(".nav button")
+    .forEach(
+      b=>b.classList.remove("active")
+    );
+
+  if(button){
+    button.classList.add("active");
+  }
+
+  window.scrollTo(0,0);
 
 }
 
 
 /* =========================================================
-   WEBSITE SECTIONS
+   MEDIA DATA
 ========================================================= */
 
-const sections = [
+/*
+  HOME
+*/
 
-    {
-        id:"hero",
-        number:"01",
-        name:"Home Hero",
-        category:"Home",
-        folder:"assets/images/",
-        page:"index.html",
-        pageLabel:"Homepage",
-        description:"Three main homepage hero images.",
-        slots:3
-    },
+const heroMedia = [
 
+  {
+    type:"image",
+    category:"home",
+    section:"Home Hero",
+    name:"Hero 01",
+    file:"main-1.jpg",
+    path:"assets/images/main-1.jpg"
+  },
 
-    {
-        id:"haldi",
-        number:"02",
-        name:"Haldi",
-        category:"Wedding",
-        folder:"assets/images/weddings/haldi/",
-        page:"marwari-wedding.html",
-        pageLabel:"Haldi Wedding",
-        description:"Haldi wedding photography collection.",
-        slots:12
-    },
+  {
+    type:"image",
+    category:"home",
+    section:"Home Hero",
+    name:"Hero 02",
+    file:"main-2.jpg",
+    path:"assets/images/main-2.jpg"
+  },
 
+  {
+    type:"image",
+    category:"home",
+    section:"Home Hero",
+    name:"Hero 03",
+    file:"main-3.jpg",
+    path:"assets/images/main-3.jpg"
+  }
 
-    {
-        id:"brahmin",
-        number:"03",
-        name:"Brahmin Wedding",
-        category:"Wedding",
-        folder:"assets/images/weddings/brahmin wedding/",
-        page:"brahmin-wedding.html",
-        pageLabel:"Brahmin Wedding",
-        description:"Traditional Brahmin wedding collection.",
-        slots:12
-    },
+];
 
 
-    {
-        id:"christian",
-        number:"04",
-        name:"Christian Wedding",
-        category:"Wedding",
-        folder:"assets/images/weddings/christian Wedding/",
-        page:"christian-wedding.html",
-        pageLabel:"Christian Wedding",
-        description:"Christian wedding photography collection.",
-        slots:12
-    },
+/*
+  WEDDINGS
+*/
+
+const weddingCollections = {
+
+  haldi:{
+    name:"Haldi",
+    folder:"assets/images/weddings/haldi/",
+    page:"marwari-wedding.html",
+    cover:"assets/images/weddings/marwari wedding/cover1.webp",
+    note:"Haldi wedding collection."
+  },
+
+  brahmin:{
+    name:"Brahmin",
+    folder:"assets/images/weddings/brahmin wedding/",
+    page:"brahmin-wedding.html",
+    cover:"assets/images/weddings/brahmin wedding/cover1.webp",
+    note:"Traditional Brahmin wedding photography."
+  },
+
+  christian:{
+    name:"Christian",
+    folder:"assets/images/weddings/christian Wedding/",
+    page:"christian-wedding.html",
+    cover:"assets/images/weddings/christian Wedding/cover1.webp",
+    note:"Christian wedding photography."
+  },
+
+  hindu:{
+    name:"Hindu",
+    folder:"assets/images/weddings/hindu wedding/",
+    page:"hindu-wedding.html",
+    cover:"assets/images/weddings/hindu wedding/cover.webp",
+    note:"Traditional Hindu wedding photography."
+  },
+
+  muslim:{
+    name:"Muslim",
+    folder:"assets/images/weddings/muslim wedding/",
+    page:"muslim-wedding.html",
+    cover:"assets/images/weddings/muslim wedding/cover1.webp",
+    note:"Muslim wedding photography."
+  },
+
+  telugu:{
+    name:"Telugu",
+    folder:"assets/images/weddings/telugu wedding/",
+    page:"telugu-wedding.html",
+    cover:"assets/images/weddings/telugu wedding/cover1.webp",
+    note:"Traditional Telugu wedding photography."
+  }
+
+};
 
 
-    {
-        id:"hindu",
-        number:"05",
-        name:"Hindu Wedding",
-        category:"Wedding",
-        folder:"assets/images/weddings/hindu wedding/",
-        page:"hindu-wedding.html",
-        pageLabel:"Hindu Wedding",
-        description:"Traditional Hindu wedding collection.",
-        slots:12
-    },
+/*
+  PORTFOLIO
+*/
+
+const portfolioCollections = {
+
+  prewedding:{
+    name:"Pre-Wedding",
+    folder:"assets/images/pre-wedding/",
+    page:"pre-wedding.html",
+    cover:"assets/images/pre-wedding/cover.jpg",
+    note:"Pre-wedding photography collection."
+  },
+
+  postwedding:{
+    name:"Post-Wedding",
+    folder:"assets/images/post-wedding/",
+    page:"post-wedding.html",
+    cover:"assets/images/post-wedding/cover.jpg",
+    note:"Post-wedding photography collection."
+  },
+
+  baby:{
+    name:"Baby Shoot",
+    folder:"assets/images/baby/",
+    page:"baby.html",
+    cover:"assets/images/baby/cover.jpg",
+    note:"Baby photography collection."
+  },
+
+  maternity:{
+    name:"Maternity",
+    folder:"assets/images/maternity/",
+    page:"maternity.html",
+    cover:"assets/images/maternity/cover.jpg",
+    note:"Maternity photography collection."
+  }
+
+};
 
 
-    {
-        id:"muslim",
-        number:"06",
-        name:"Muslim Wedding",
-        category:"Wedding",
-        folder:"assets/images/weddings/muslim wedding/",
-        page:"muslim-wedding.html",
-        pageLabel:"Muslim Wedding",
-        description:"Muslim wedding photography collection.",
-        slots:12
-    },
+/*
+  SERVICES
+*/
+
+const serviceMedia = [
+
+  {
+    type:"image",
+    category:"services",
+    section:"Services",
+    name:"Service 01",
+    file:"01.jpg",
+    path:"assets/images/services/01.jpg"
+  },
+
+  {
+    type:"image",
+    category:"services",
+    section:"Services",
+    name:"Service 02",
+    file:"02.jpg",
+    path:"assets/images/services/02.jpg"
+  },
+
+  {
+    type:"image",
+    category:"services",
+    section:"Services",
+    name:"Service 03",
+    file:"03.jpg",
+    path:"assets/images/services/03.jpg"
+  },
+
+  {
+    type:"image",
+    category:"services",
+    section:"Services",
+    name:"Service 04",
+    file:"04.jpg",
+    path:"assets/images/services/04.jpg"
+  }
+
+];
 
 
-    {
-        id:"telugu",
-        number:"07",
-        name:"Telugu Wedding",
-        category:"Wedding",
-        folder:"assets/images/weddings/telugu wedding/",
-        page:"telugu-wedding.html",
-        pageLabel:"Telugu Wedding",
-        description:"Traditional Telugu wedding collection.",
-        slots:12
-    },
+/*
+  VIDEOS
 
+  These are prepared for the current website's
+  video library. Existing website versions contain
+  video assets under assets/vedeos/ and assets/videos/.
+*/
 
-    {
-        id:"prewedding",
-        number:"08",
-        name:"Pre-Wedding",
-        category:"Portfolio",
-        folder:"assets/images/pre-wedding/",
-        page:"pre-wedding.html",
-        pageLabel:"Pre-Wedding",
-        description:"Pre-wedding photography collection.",
-        slots:12
-    },
+const videos = [
 
+  {
+    type:"video",
+    category:"videos",
+    section:"Videos",
+    name:"Wedding Film",
+    file:"video-01.mp4",
+    path:"assets/vedeos/video-01.mp4"
+  },
 
-    {
-        id:"postwedding",
-        number:"09",
-        name:"Post-Wedding",
-        category:"Portfolio",
-        folder:"assets/images/post-wedding/",
-        page:"post-wedding.html",
-        pageLabel:"Post-Wedding",
-        description:"Post-wedding photography collection.",
-        slots:12
-    },
+  {
+    type:"video",
+    category:"videos",
+    section:"Videos",
+    name:"Post Wedding Memories",
+    file:"video-02.mp4",
+    path:"assets/vedeos/video-02.mp4"
+  },
 
+  {
+    type:"video",
+    category:"videos",
+    section:"Videos",
+    name:"Beautiful Memories",
+    file:"video-03.mp4",
+    path:"assets/vedeos/video-03.mp4"
+  },
 
-    {
-        id:"baby",
-        number:"10",
-        name:"Baby Shoot",
-        category:"Portfolio",
-        folder:"assets/images/baby/",
-        page:"baby.html",
-        pageLabel:"Baby Shoot",
-        description:"Baby photography collection.",
-        slots:12
-    },
-
-
-    {
-        id:"maternity",
-        number:"11",
-        name:"Maternity Shoot",
-        category:"Portfolio",
-        folder:"assets/images/maternity/",
-        page:"maternity.html",
-        pageLabel:"Maternity",
-        description:"Maternity photography collection.",
-        slots:12
-    },
-
-
-    {
-        id:"services",
-        number:"12",
-        name:"Services",
-        category:"Website",
-        folder:"assets/images/services/",
-        page:"index.html#services",
-        pageLabel:"Services",
-        description:"Website services section media.",
-        slots:8
-    },
-
-
-    {
-        id:"videos",
-        number:"13",
-        name:"Videos",
-        category:"Website",
-        folder:"assets/videos/",
-        page:"videos.html",
-        pageLabel:"Videos",
-        description:"Website video library.",
-        slots:9
-    }
+  {
+    type:"video",
+    category:"videos",
+    section:"Videos",
+    name:"Wedding Story",
+    file:"vedio-04.mp4",
+    path:"assets/vedeos/vedio-04.mp4"
+  }
 
 ];
 
 
 /* =========================================================
-   MEDIA MANIFEST
+   CREATE WEDDING SLOT LIST
 ========================================================= */
 
-const media = [];
-
-
-/* HERO */
-
-for(
-    let i=1;
-    i<=3;
-    i++
+function makeWeddingMedia(
+  key
 ){
 
-    media.push({
+  const data =
+    weddingCollections[key];
 
-        type:"image",
+  const items=[];
 
-        category:"home",
+  /*
+    Cover is always shown first.
+  */
 
-        section:"hero",
+  items.push({
 
-        name:
-            "Hero " +
-            String(i)
-            .padStart(2,"0"),
+    type:"image",
 
-        file:
-            String(i)
-            .padStart(2,"0") +
-            ".jpg",
+    category:key,
 
-        path:
-            "assets/images/" +
-            String(i)
-            .padStart(2,"0") +
-            ".jpg"
+    section:data.name,
+
+    name:data.name+" Cover",
+
+    file:data.cover
+      .split("/")
+      .pop(),
+
+    path:data.cover
+
+  });
+
+
+  /*
+    Additional numbered slots.
+
+    They are useful when the actual collection contains
+    numbered images. Missing files automatically show
+    "Asset not found" instead of a broken layout.
+  */
+
+  for(
+    let i=1;
+    i<=20;
+    i++
+  ){
+
+    const number =
+      String(i).padStart(2,"0");
+
+    items.push({
+
+      type:"image",
+
+      category:key,
+
+      section:data.name,
+
+      name:data.name+" "+number,
+
+      file:number+".jpg",
+
+      path:
+        data.folder+
+        number+
+        ".jpg"
 
     });
+
+  }
+
+  return items;
 
 }
 
 
 /* =========================================================
-   CATEGORY SLOT CREATOR
+   CREATE PORTFOLIO SLOT LIST
 ========================================================= */
 
-function createCategoryMedia(
-    sectionId,
-    sectionName,
-    folder,
-    count
+function makePortfolioMedia(
+  key
 ){
 
-    for(
-        let i=1;
-        i<=count;
-        i++
-    ){
+  const data =
+    portfolioCollections[key];
 
-        media.push({
+  const items=[];
 
-            type:"image",
 
-            category:sectionId,
+  items.push({
 
-            section:sectionId,
+    type:"image",
 
-            name:
-                sectionName +
-                " " +
-                String(i)
-                .padStart(2,"0"),
+    category:key,
 
-            file:
-                String(i)
-                .padStart(2,"0") +
-                ".jpg",
+    section:data.name,
 
-            path:
-                folder +
-                String(i)
-                .padStart(2,"0") +
-                ".jpg"
+    name:data.name+" Cover",
 
-        });
+    file:data.cover
+      .split("/")
+      .pop(),
 
-    }
+    path:data.cover
+
+  });
+
+
+  for(
+    let i=1;
+    i<=20;
+    i++
+  ){
+
+    const number =
+      String(i).padStart(2,"0");
+
+    items.push({
+
+      type:"image",
+
+      category:key,
+
+      section:data.name,
+
+      name:data.name+" "+number,
+
+      file:number+".jpg",
+
+      path:
+        data.folder+
+        number+
+        ".jpg"
+
+    });
+
+  }
+
+  return items;
 
 }
 
 
-/* WEDDINGS */
+/* =========================================================
+   ALL MEDIA
+========================================================= */
 
-createCategoryMedia(
-    "haldi",
-    "Haldi",
-    "assets/images/weddings/haldi/",
-    12
-);
+function allImageMedia(){
 
+  let result=[];
 
-createCategoryMedia(
-    "brahmin",
-    "Brahmin Wedding",
-    "assets/images/weddings/brahmin wedding/",
-    12
-);
+  result =
+    result.concat(heroMedia);
+
+  result =
+    result.concat(serviceMedia);
 
 
-createCategoryMedia(
-    "christian",
-    "Christian Wedding",
-    "assets/images/weddings/christian Wedding/",
-    12
-);
+  Object.keys(weddingCollections)
+    .forEach(key=>{
 
-
-createCategoryMedia(
-    "hindu",
-    "Hindu Wedding",
-    "assets/images/weddings/hindu wedding/",
-    12
-);
-
-
-createCategoryMedia(
-    "muslim",
-    "Muslim Wedding",
-    "assets/images/weddings/muslim wedding/",
-    12
-);
-
-
-createCategoryMedia(
-    "telugu",
-    "Telugu Wedding",
-    "assets/images/weddings/telugu wedding/",
-    12
-);
-
-
-/* PORTFOLIO */
-
-createCategoryMedia(
-    "prewedding",
-    "Pre-Wedding",
-    "assets/images/pre-wedding/",
-    12
-);
-
-
-createCategoryMedia(
-    "postwedding",
-    "Post-Wedding",
-    "assets/images/post-wedding/",
-    12
-);
-
-
-createCategoryMedia(
-    "baby",
-    "Baby Shoot",
-    "assets/images/baby/",
-    12
-);
-
-
-createCategoryMedia(
-    "maternity",
-    "Maternity",
-    "assets/images/maternity/",
-    12
-);
-
-
-/* SERVICES */
-
-createCategoryMedia(
-    "services",
-    "Service",
-    "assets/images/services/",
-    8
-);
-
-
-/* VIDEOS */
-
-for(
-    let i=1;
-    i<=9;
-    i++
-){
-
-    media.push({
-
-        type:"video",
-
-        category:"videos",
-
-        section:"videos",
-
-        name:
-            "Video " +
-            String(i)
-            .padStart(2,"0"),
-
-        file:
-            "video-" +
-            String(i)
-            .padStart(2,"0") +
-            ".mp4",
-
-        path:
-            "assets/videos/video-" +
-            String(i)
-            .padStart(2,"0") +
-            ".mp4"
+      result =
+        result.concat(
+          makeWeddingMedia(key)
+        );
 
     });
+
+
+  Object.keys(portfolioCollections)
+    .forEach(key=>{
+
+      result =
+        result.concat(
+          makePortfolioMedia(key)
+        );
+
+    });
+
+
+  return result;
 
 }
 
@@ -2802,130 +2963,30 @@ for(
    HIDDEN MEDIA
 ========================================================= */
 
-let hidden = JSON.parse(
-
-    localStorage
-        .getItem("rgHiddenMedia") ||
-        "[]"
-
-);
+let hidden =
+  JSON.parse(
+    localStorage.getItem(
+      "rgHiddenMedia"
+    ) || "[]"
+  );
 
 
 /* =========================================================
-   CREATE SECTION CARD
+   LOCAL PREVIEW REPLACEMENTS
 ========================================================= */
 
-function createSectionCard(section){
+function previewKey(path){
 
-    return `
-
-        <div class="section-card">
-
-            <div class="section-number">
-                ${section.number}
-            </div>
-
-            <h3>
-                ${section.name}
-            </h3>
-
-            <p>
-                ${section.description}
-            </p>
-
-            <div class="section-path">
-                ${section.folder}
-            </div>
-
-            <div class="section-actions">
-
-                <button
-                    class="small-btn"
-                    onclick="openSection('${section.id}')"
-                >
-                    Manage Media
-                </button>
-
-                <button
-                    class="small-btn"
-                    onclick="openExternalPage('${section.page}')"
-                >
-                    Open Website ↗
-                </button>
-
-            </div>
-
-        </div>
-
-    `;
+  return "rgPreview:"+path;
 
 }
 
 
-/* =========================================================
-   OPEN SECTION
-========================================================= */
+function getPreview(path){
 
-function openSection(id){
-
-    const pageMap = {
-
-        hero:"home",
-
-        haldi:"haldi",
-
-        brahmin:"brahmin",
-
-        christian:"christian",
-
-        hindu:"hindu",
-
-        muslim:"muslim",
-
-        telugu:"telugu",
-
-        prewedding:"prewedding",
-
-        postwedding:"postwedding",
-
-        baby:"baby",
-
-        maternity:"maternity",
-
-        services:"services",
-
-        videos:"videos"
-
-    };
-
-
-    const page =
-        pageMap[id];
-
-
-    if(!page){
-
-        return;
-
-    }
-
-
-    openPage(page);
-
-
-}
-
-
-/* =========================================================
-   OPEN WEBSITE PAGE
-========================================================= */
-
-function openExternalPage(path){
-
-    window.open(
-        path,
-        "_blank"
-    );
+  return localStorage.getItem(
+    previewKey(path)
+  );
 
 }
 
@@ -2934,704 +2995,1010 @@ function openExternalPage(path){
    CREATE MEDIA CARD
 ========================================================= */
 
-function createCard(item){
+function createCard(
+  item
+){
 
-    const isHidden =
-        hidden.includes(item.path);
+  const isHidden =
+    hidden.includes(item.path);
 
+  const preview =
+    getPreview(item.path);
 
-    const previewKey =
-        "rgPreview:" +
-        item.path;
-
-
-    const savedPreview =
-        localStorage
-            .getItem(previewKey);
+  const previewSource =
+    preview || item.path;
 
 
-    let previewHTML = "";
+  let previewHTML="";
 
 
-    if(savedPreview){
+  if(item.type==="image"){
 
-        previewHTML = `
+    previewHTML=`
 
-            <img
-                src="${savedPreview}"
-                alt="${item.name}"
-            >
+      <img
+        src="${previewSource}"
+        alt="${escapeHTML(item.name)}"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+      >
 
-        `;
-
-    }
-
-    else if(item.type === "image"){
-
-        previewHTML = `
-
-            <img
-                src="${item.path}"
-                alt="${item.name}"
-                onerror="
-                    this.parentElement.classList.add('empty');
-                    this.style.display='none';
-                    this.parentElement.insertAdjacentHTML(
-                        'beforeend',
-                        '<strong>IMAGE SLOT</strong><span>${item.file}</span>'
-                    );
-                "
-            >
-
-        `;
-
-    }
-
-    else{
-
-        previewHTML = `
-
-            <div
-                style="
-                    display:flex;
-                    flex-direction:column;
-                    align-items:center;
-                    gap:8px;
-                "
-            >
-
-                <strong>
-                    VIDEO SLOT
-                </strong>
-
-                <span>
-                    ${item.file}
-                </span>
-
-            </div>
-
-        `;
-
-    }
-
-
-    return `
-
-        <div
-            class="media-card
-            ${isHidden ? "hidden-card" : ""}"
-            data-category="${item.category}"
-        >
-
-            <div class="preview">
-
-                ${previewHTML}
-
-            </div>
-
-
-            <div class="media-info">
-
-                <div class="media-title">
-                    ${item.name}
-                </div>
-
-
-                <div class="media-category">
-                    ${item.category}
-                </div>
-
-
-                <div class="media-file">
-
-                    ${item.file}
-
-                    <br>
-
-                    ${item.path}
-
-                </div>
-
-
-                <div class="media-buttons">
-
-                    <button
-                        class="small-btn"
-                        onclick="
-                            replaceMedia('${item.path}')
-                        "
-                    >
-                        Replace
-                    </button>
-
-
-                    <button
-                        class="small-btn"
-                        onclick="
-                            previewMedia('${item.path}')
-                        "
-                    >
-                        Preview
-                    </button>
-
-
-                    <button
-                        class="small-btn danger"
-                        onclick="
-                            toggleHidden('${item.path}')
-                        "
-                    >
-
-                        ${isHidden ? "Show" : "Hide"}
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
+      <div
+        class="preview-placeholder"
+        style="display:none"
+      >
+        Asset not found.<br>
+        ${escapeHTML(item.path)}
+      </div>
 
     `;
 
-}
+  }else{
+
+    previewHTML=`
+
+      <video
+        controls
+        preload="metadata"
+        src="${previewSource}"
+      ></video>
+
+    `;
+
+  }
 
 
-/* =========================================================
-   RENDER MEDIA
-========================================================= */
+  return `
 
-function render(){
+    <div
+      class="media-card"
+      data-category="${escapeHTML(item.category)}"
+    >
 
-    const heroes =
-        media.filter(
-            m =>
-            m.section === "hero"
-        );
+      <div class="preview">
 
+        ${previewHTML}
 
-    const images =
-        media.filter(
-            m =>
-            m.type === "image"
-        );
+        <div
+          class="status ${preview ? "pending":""}"
+        >
+          ${preview ? "LOCAL PREVIEW":"LIVE"}
+        </div>
 
-
-    const videos =
-        media.filter(
-            m =>
-            m.type === "video"
-        );
+      </div>
 
 
-    document
-        .getElementById("heroGrid")
-        .innerHTML =
-        heroes
-            .map(createCard)
-            .join("");
+      <div class="media-info">
+
+        <div class="media-title">
+          ${escapeHTML(item.name)}
+        </div>
+
+        <div class="media-category">
+          ${escapeHTML(item.section)}
+        </div>
+
+        <div class="media-file">
+
+          ${escapeHTML(item.file)}
+
+          <br>
+
+          ${escapeHTML(item.path)}
+
+        </div>
 
 
-    document
-        .getElementById("servicesGrid")
-        .innerHTML =
-        images
-            .filter(
-                m =>
-                m.section === "services"
-            )
-            .map(createCard)
-            .join("");
+        <div class="media-buttons">
+
+          <button
+            class="small-btn"
+            onclick='openUpload(${JSON.stringify(item.path)})'
+          >
+            Replace
+          </button>
 
 
-    document
-        .getElementById("videoGrid")
-        .innerHTML =
-        videos
-            .map(createCard)
-            .join("");
+          <button
+            class="small-btn"
+            onclick='openCollectionPage(${JSON.stringify(item)})'
+          >
+            Open Page ↗
+          </button>
 
 
-    document
-        .getElementById("imageCount")
-        .innerText =
-        images.length;
+          <button
+            class="small-btn danger"
+            onclick='toggleHidden(${JSON.stringify(item.path)})'
+          >
+            ${isHidden ? "Show":"Hide"}
+          </button>
 
 
-    document
-        .getElementById("videoCount")
-        .innerText =
-        videos.length;
+          ${
+            preview
+            ?
+            `
+            <button
+              class="small-btn gold"
+              onclick='clearPreview(${JSON.stringify(item.path)})'
+            >
+              Reset Preview
+            </button>
+            `
+            :
+            ""
+          }
 
+        </div>
 
-    document
-        .getElementById("categoryCount")
-        .innerText =
-        sections.length;
+      </div>
 
+    </div>
 
-    document
-        .getElementById("hiddenCount")
-        .innerText =
-        hidden.length;
-
-
-    renderDashboardSections();
-
-    renderWeddingSections();
-
-    renderPortfolioSections();
-
-    renderIndividualPages();
-
-    renderSectionTable();
-
-}
-
-
-/* =========================================================
-   DASHBOARD SECTION CARDS
-========================================================= */
-
-function renderDashboardSections(){
-
-    document
-        .getElementById("dashboardSections")
-        .innerHTML =
-        sections
-            .map(createSectionCard)
-            .join("");
+  `;
 
 }
 
 
 /* =========================================================
-   WEDDING SECTION CARDS
+   HTML ESCAPE
 ========================================================= */
 
-function renderWeddingSections(){
+function escapeHTML(
+  value
+){
 
-    const weddingIds = [
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
-        "haldi",
-        "brahmin",
-        "christian",
-        "hindu",
-        "muslim",
-        "telugu"
+}
 
+
+/* =========================================================
+   RENDER HOME
+========================================================= */
+
+function renderHome(){
+
+  document.getElementById(
+    "heroGrid"
+  ).innerHTML =
+    heroMedia
+      .map(createCard)
+      .join("");
+
+}
+
+
+/* =========================================================
+   IMAGE FILTERS
+========================================================= */
+
+function renderImageFilters(){
+
+  const categories = [
+
+    ["all","All"],
+
+    ["home","Home"],
+
+    ["haldi","Haldi"],
+
+    ["brahmin","Brahmin"],
+
+    ["christian","Christian"],
+
+    ["hindu","Hindu"],
+
+    ["muslim","Muslim"],
+
+    ["telugu","Telugu"],
+
+    ["prewedding","Pre-Wedding"],
+
+    ["postwedding","Post-Wedding"],
+
+    ["baby","Baby"],
+
+    ["maternity","Maternity"],
+
+    ["services","Services"]
+
+  ];
+
+
+  document.getElementById(
+    "imageFilters"
+  ).innerHTML =
+
+    categories
+      .map(
+        ([key,label],index)=>`
+
+          <button
+            class="filter ${index===0 ? "active":""}"
+            data-filter="${key}"
+            onclick="filterImages('${key}',this)"
+          >
+            ${label}
+          </button>
+
+        `
+      )
+      .join("");
+
+}
+
+
+/* =========================================================
+   RENDER ALL IMAGES
+========================================================= */
+
+let currentImageFilter="all";
+
+
+function renderImages(){
+
+  const query =
+    document.getElementById(
+      "imageSearch"
+    )
+    .value
+    .toLowerCase()
+    .trim();
+
+
+  let items =
+    allImageMedia();
+
+
+  if(
+    currentImageFilter !== "all"
+  ){
+
+    items =
+      items.filter(
+        item=>
+          item.category ===
+          currentImageFilter
+      );
+
+  }
+
+
+  if(query){
+
+    items =
+      items.filter(
+        item=>
+          item.name
+            .toLowerCase()
+            .includes(query)
+
+          ||
+
+          item.file
+            .toLowerCase()
+            .includes(query)
+
+          ||
+
+          item.path
+            .toLowerCase()
+            .includes(query)
+
+          ||
+
+          item.section
+            .toLowerCase()
+            .includes(query)
+      );
+
+  }
+
+
+  document.getElementById(
+    "imageGrid"
+  ).innerHTML =
+
+    items
+      .map(createCard)
+      .join("");
+
+
+}
+
+
+function filterImages(
+  category,
+  button
+){
+
+  currentImageFilter =
+    category;
+
+  document
+    .querySelectorAll(
+      "#imageFilters .filter"
+    )
+    .forEach(
+      b=>b.classList.remove("active")
+    );
+
+  button.classList.add("active");
+
+  renderImages();
+
+}
+
+
+/* =========================================================
+   WEDDING PAGE
+========================================================= */
+
+let currentWedding="haldi";
+
+
+function openWedding(
+  key
+){
+
+  currentWedding=key;
+
+  openPage("weddings");
+
+  renderWeddingPage();
+
+}
+
+
+function renderWeddingPage(){
+
+  const data =
+    weddingCollections[
+      currentWedding
     ];
 
+  if(!data)return;
 
-    document
-        .getElementById("weddingSectionGrid")
-        .innerHTML =
-        sections
-            .filter(
-                s =>
-                weddingIds
-                .includes(s.id)
-            )
-            .map(createSectionCard)
-            .join("");
+
+  document.getElementById(
+    "weddingTitle"
+  ).innerText =
+    data.name+
+    " Wedding Manager";
+
+
+  document.getElementById(
+    "weddingHeading"
+  ).innerText =
+    data.name+
+    " Wedding Images";
+
+
+  document.getElementById(
+    "weddingDescription"
+  ).innerText =
+    data.note+
+    " Manage images using the actual website asset path.";
+
+
+  document.getElementById(
+    "weddingGrid"
+  ).innerHTML =
+
+    makeWeddingMedia(
+      currentWedding
+    )
+    .map(createCard)
+    .join("");
 
 }
 
 
 /* =========================================================
-   PORTFOLIO SECTION CARDS
+   PORTFOLIO PAGE
 ========================================================= */
 
-function renderPortfolioSections(){
+let currentPortfolio="prewedding";
 
-    const portfolioIds = [
 
-        "prewedding",
-        "postwedding",
-        "baby",
-        "maternity"
+function openPortfolio(
+  key
+){
 
+  currentPortfolio=key;
+
+  openPage("portfolio");
+
+  renderPortfolioPage();
+
+}
+
+
+function renderPortfolioPage(){
+
+  const data =
+    portfolioCollections[
+      currentPortfolio
     ];
 
-
-    document
-        .getElementById("portfolioSectionGrid")
-        .innerHTML =
-        sections
-            .filter(
-                s =>
-                portfolioIds
-                .includes(s.id)
-            )
-            .map(createSectionCard)
-            .join("");
-
-}
+  if(!data)return;
 
 
-/* =========================================================
-   INDIVIDUAL SECTION PAGE
-========================================================= */
-
-function renderIndividualPages(){
-
-    const ids = [
-
-        "haldi",
-        "brahmin",
-        "christian",
-        "hindu",
-        "muslim",
-        "telugu",
-
-        "prewedding",
-        "postwedding",
-        "baby",
-        "maternity"
-
-    ];
+  document.getElementById(
+    "portfolioTitle"
+  ).innerText =
+    data.name+
+    " Manager";
 
 
-    ids.forEach(id => {
-
-        const section =
-            sections.find(
-                s =>
-                s.id === id
-            );
+  document.getElementById(
+    "portfolioHeading"
+  ).innerText =
+    data.name+
+    " Images";
 
 
-        const container =
-            document
-                .getElementById(
-                    id + "Content"
-                );
+  document.getElementById(
+    "portfolioDescription"
+  ).innerText =
+    data.note;
 
 
-        if(!section || !container){
+  document.getElementById(
+    "portfolioGrid"
+  ).innerHTML =
 
-            return;
-
-        }
-
-
-        const sectionMedia =
-            media.filter(
-                m =>
-                m.section === id
-            );
-
-
-        container.innerHTML = `
-
-            <div class="top">
-
-                <div>
-
-                    <div class="eyebrow">
-                        ${section.category}
-                    </div>
-
-                    <h1>
-                        ${section.name}
-                    </h1>
-
-                </div>
-
-
-                <div class="actions">
-
-                    <button
-                        class="btn green"
-                        onclick="
-                            openExternalPage(
-                                '${section.page}'
-                            )
-                        "
-                    >
-                        Open Website ↗
-                    </button>
-
-
-                    <button
-                        class="btn"
-                        onclick="
-                            showToast(
-                                '${section.folder}'
-                            )
-                        "
-                    >
-                        Asset Path
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <div class="panel">
-
-                <h2>
-                    ${section.name} Media Library
-                </h2>
-
-                <p>
-                    ${section.description}
-                </p>
-
-
-                <div class="notice">
-
-                    <strong>
-                        Asset folder:
-                    </strong>
-
-                    ${section.folder}
-
-                    <br><br>
-
-                    Keep the original filename when
-                    replacing a media slot.
-
-                </div>
-
-
-                <div
-                    class="media-grid"
-                    id="${id}Grid"
-                ></div>
-
-            </div>
-
-        `;
-
-
-        document
-            .getElementById(id + "Grid")
-            .innerHTML =
-            sectionMedia
-                .map(createCard)
-                .join("");
-
-    });
+    makePortfolioMedia(
+      currentPortfolio
+    )
+    .map(createCard)
+    .join("");
 
 }
 
 
 /* =========================================================
-   SECTION TABLE
+   SERVICES
 ========================================================= */
 
-function renderSectionTable(){
+function renderServices(){
 
-    const table =
-        document
-            .getElementById(
-                "sectionTable"
-            );
+  document.getElementById(
+    "serviceGrid"
+  ).innerHTML =
 
-
-    table.innerHTML =
-        sections.map(section => `
-
-            <tr>
-
-                <td>
-                    <strong>
-                        ${section.name}
-                    </strong>
-                </td>
-
-
-                <td>
-                    ${section.category}
-                </td>
-
-
-                <td>
-                    ${section.folder}
-                </td>
-
-
-                <td>
-                    ${section.pageLabel}
-                </td>
-
-
-                <td>
-                    <span class="badge">
-                        CONNECTED
-                    </span>
-                </td>
-
-
-                <td>
-
-                    <button
-                        class="small-btn"
-                        onclick="
-                            openSection(
-                                '${section.id}'
-                            )
-                        "
-                    >
-                        Manage
-                    </button>
-
-
-                    <button
-                        class="small-btn"
-                        onclick="
-                            openExternalPage(
-                                '${section.page}'
-                            )
-                        "
-                    >
-                        Website ↗
-                    </button>
-
-                </td>
-
-            </tr>
-
-        `).join("");
+    serviceMedia
+      .map(createCard)
+      .join("");
 
 }
 
 
 /* =========================================================
-   REPLACE MEDIA
+   VIDEOS
 ========================================================= */
 
-function replaceMedia(path){
+function renderVideos(){
 
-    const input =
-        document.createElement(
-            "input"
-        );
+  document.getElementById(
+    "videoGrid"
+  ).innerHTML =
 
-
-    input.type = "file";
-
-
-    input.accept =
-        path.endsWith(".mp4")
-        ? "video/*"
-        : "image/*";
-
-
-    input.onchange = function(){
-
-        if(!input.files.length){
-
-            return;
-
-        }
-
-
-        const file =
-            input.files[0];
-
-
-        const requiredFilename =
-            path
-                .split("/")
-                .pop();
-
-
-        if(
-            file.name !==
-            requiredFilename
-        ){
-
-            alert(
-
-                "Filename must remain exactly:\n\n" +
-
-                requiredFilename +
-
-                "\n\nSelected file:\n" +
-
-                file.name
-
-            );
-
-            return;
-
-        }
-
-
-        const reader =
-            new FileReader();
-
-
-        reader.onload =
-            function(){
-
-                localStorage.setItem(
-
-                    "rgPreview:" +
-                    path,
-
-                    reader.result
-
-                );
-
-
-                showToast(
-
-                    file.name +
-                    " selected successfully. " +
-                    "Local preview updated."
-
-                );
-
-
-                render();
-
-            };
-
-
-        reader.readAsDataURL(
-            file
-        );
-
-    };
-
-
-    input.click();
+    videos
+      .map(createCard)
+      .join("");
 
 }
 
 
 /* =========================================================
-   PREVIEW MEDIA
+   COLLECTION DASHBOARD
 ========================================================= */
 
-function previewMedia(path){
+function renderDashboardCollections(){
 
-    const saved =
-        localStorage.getItem(
-            "rgPreview:" + path
-        );
+  const list = [
 
+    {
+      number:"01",
+      name:"Home Page",
+      description:"Three main hero images.",
+      action:"openPage('home')"
+    },
 
-    if(saved){
+    {
+      number:"02",
+      name:"Haldi",
+      description:"Haldi wedding collection.",
+      action:"openWedding('haldi')"
+    },
 
-        window.open(
-            saved,
-            "_blank"
-        );
+    {
+      number:"03",
+      name:"Brahmin",
+      description:"Brahmin wedding collection.",
+      action:"openWedding('brahmin')"
+    },
 
-        return;
+    {
+      number:"04",
+      name:"Christian",
+      description:"Christian wedding collection.",
+      action:"openWedding('christian')"
+    },
 
+    {
+      number:"05",
+      name:"Hindu",
+      description:"Hindu wedding collection.",
+      action:"openWedding('hindu')"
+    },
+
+    {
+      number:"06",
+      name:"Muslim",
+      description:"Muslim wedding collection.",
+      action:"openWedding('muslim')"
+    },
+
+    {
+      number:"07",
+      name:"Telugu",
+      description:"Telugu wedding collection.",
+      action:"openWedding('telugu')"
+    },
+
+    {
+      number:"08",
+      name:"Pre-Wedding",
+      description:"Pre-wedding photography.",
+      action:"openPortfolio('prewedding')"
+    },
+
+    {
+      number:"09",
+      name:"Post-Wedding",
+      description:"Post-wedding photography.",
+      action:"openPortfolio('postwedding')"
+    },
+
+    {
+      number:"10",
+      name:"Baby Shoot",
+      description:"Baby photography.",
+      action:"openPortfolio('baby')"
+    },
+
+    {
+      number:"11",
+      name:"Maternity",
+      description:"Maternity photography.",
+      action:"openPortfolio('maternity')"
+    },
+
+    {
+      number:"12",
+      name:"Videos",
+      description:"Cinematic video library.",
+      action:"openPage('videos')"
     }
 
+  ];
 
-    window.open(
-        path,
-        "_blank"
+
+  document.getElementById(
+    "dashboardCollections"
+  ).innerHTML =
+
+    list
+      .map(
+        item=>`
+
+          <div class="collection">
+
+            <div class="collection-number">
+              ${item.number}
+            </div>
+
+            <h3>
+              ${item.name}
+            </h3>
+
+            <p>
+              ${item.description}
+            </p>
+
+            <button
+              onclick="${item.action}"
+            >
+              Manage Media →
+            </button>
+
+          </div>
+
+        `
+      )
+      .join("");
+
+}
+
+
+/* =========================================================
+   ALL SECTION LIST
+========================================================= */
+
+function renderSections(){
+
+  const sections = [
+
+    {
+      name:"Home Hero",
+      type:"HOME",
+      folder:"assets/images/",
+      example:"main-1.jpg / main-2.jpg / main-3.jpg",
+      action:"openPage('home')"
+    },
+
+    {
+      name:"Haldi",
+      type:"WEDDING",
+      folder:"assets/images/weddings/haldi/",
+      example:"cover1.webp / numbered images",
+      action:"openWedding('haldi')"
+    },
+
+    {
+      name:"Brahmin Wedding",
+      type:"WEDDING",
+      folder:"assets/images/weddings/brahmin wedding/",
+      example:"cover1.webp",
+      action:"openWedding('brahmin')"
+    },
+
+    {
+      name:"Christian Wedding",
+      type:"WEDDING",
+      folder:"assets/images/weddings/christian Wedding/",
+      example:"cover1.webp",
+      action:"openWedding('christian')"
+    },
+
+    {
+      name:"Hindu Wedding",
+      type:"WEDDING",
+      folder:"assets/images/weddings/hindu wedding/",
+      example:"cover.webp",
+      action:"openWedding('hindu')"
+    },
+
+    {
+      name:"Muslim Wedding",
+      type:"WEDDING",
+      folder:"assets/images/weddings/muslim wedding/",
+      example:"cover1.webp",
+      action:"openWedding('muslim')"
+    },
+
+    {
+      name:"Telugu Wedding",
+      type:"WEDDING",
+      folder:"assets/images/weddings/telugu wedding/",
+      example:"cover1.webp",
+      action:"openWedding('telugu')"
+    },
+
+    {
+      name:"Pre-Wedding",
+      type:"PORTFOLIO",
+      folder:"assets/images/pre-wedding/",
+      example:"cover.jpg",
+      action:"openPortfolio('prewedding')"
+    },
+
+    {
+      name:"Post-Wedding",
+      type:"PORTFOLIO",
+      folder:"assets/images/post-wedding/",
+      example:"cover.jpg",
+      action:"openPortfolio('postwedding')"
+    },
+
+    {
+      name:"Baby Shoot",
+      type:"PORTFOLIO",
+      folder:"assets/images/baby/",
+      example:"cover.jpg",
+      action:"openPortfolio('baby')"
+    },
+
+    {
+      name:"Maternity",
+      type:"PORTFOLIO",
+      folder:"assets/images/maternity/",
+      example:"cover.jpg",
+      action:"openPortfolio('maternity')"
+    },
+
+    {
+      name:"Services",
+      type:"WEBSITE",
+      folder:"assets/images/services/",
+      example:"01.jpg",
+      action:"openPage('services')"
+    },
+
+    {
+      name:"Videos",
+      type:"VIDEO",
+      folder:"assets/vedeos/",
+      example:"video-01.mp4",
+      action:"openPage('videos')"
+    }
+
+  ];
+
+
+  document.getElementById(
+    "sectionList"
+  ).innerHTML =
+
+    sections
+      .map(
+        item=>`
+
+          <div class="section-card">
+
+            <div class="section-card-head">
+
+              <div>
+
+                <div class="type">
+                  ${item.type}
+                </div>
+
+                <h3>
+                  ${item.name}
+                </h3>
+
+              </div>
+
+              <span class="badge">
+                READY
+              </span>
+
+            </div>
+
+
+            <div class="section-path">
+              ${item.folder}
+            </div>
+
+
+            <p>
+              Example:
+              ${item.example}
+            </p>
+
+
+            <div class="section-actions">
+
+              <button
+                class="small-btn"
+                onclick="${item.action}"
+              >
+                Manage
+              </button>
+
+            </div>
+
+          </div>
+
+        `
+      )
+      .join("");
+
+}
+
+
+/* =========================================================
+   UPLOAD / REPLACE
+========================================================= */
+
+let uploadTarget=null;
+
+
+function openUpload(
+  path
+){
+
+  uploadTarget=path;
+
+
+  const filename =
+    path.split("/").pop();
+
+
+  document.getElementById(
+    "uploadDetails"
+  ).innerHTML = `
+
+    <strong>
+      Target file:
+    </strong>
+
+    ${escapeHTML(filename)}
+
+    <br><br>
+
+    <strong>
+      Website path:
+    </strong>
+
+    ${escapeHTML(path)}
+
+  `;
+
+
+  const input =
+    document.getElementById(
+      "fileInput"
     );
+
+  input.value="";
+
+  input.accept =
+    path.toLowerCase()
+      .endsWith(".mp4")
+      ?
+      "video/*"
+      :
+      "image/*";
+
+
+  document.getElementById(
+    "uploadModal"
+  ).classList.add("show");
+
+}
+
+
+function closeUpload(){
+
+  document.getElementById(
+    "uploadModal"
+  ).classList.remove("show");
+
+  uploadTarget=null;
+
+}
+
+
+function processUpload(){
+
+  if(!uploadTarget){
+
+    showToast(
+      "No media slot selected."
+    );
+
+    return;
+
+  }
+
+
+  const input =
+    document.getElementById(
+      "fileInput"
+    );
+
+
+  if(!input.files.length){
+
+    showToast(
+      "Please select a file."
+    );
+
+    return;
+
+  }
+
+
+  const file =
+    input.files[0];
+
+
+  const requiredFilename =
+    uploadTarget
+      .split("/")
+      .pop();
+
+
+  if(
+    file.name !==
+    requiredFilename
+  ){
+
+    alert(
+
+      "Filename must remain exactly:\n\n"+
+      requiredFilename+
+      "\n\nSelected file:\n"+
+      file.name
+
+    );
+
+    return;
+
+  }
+
+
+  /*
+    Local preview only.
+
+    Future:
+      File
+        ↓
+      Secure Vercel API
+        ↓
+      GitHub Contents API
+        ↓
+      Commit
+        ↓
+      Vercel deployment
+  */
+
+  const reader =
+    new FileReader();
+
+
+  reader.onload=function(){
+
+    localStorage.setItem(
+      previewKey(uploadTarget),
+      reader.result
+    );
+
+
+    showToast(
+      "Replacement preview created. GitHub publishing will be connected next."
+    );
+
+
+    closeUpload();
+
+    render();
+
+  };
+
+
+  reader.readAsDataURL(file);
+
+}
+
+
+/* =========================================================
+   CLEAR LOCAL PREVIEW
+========================================================= */
+
+function clearPreview(
+  path
+){
+
+  localStorage.removeItem(
+    previewKey(path)
+  );
+
+  render();
+
+  showToast(
+    "Local preview reset."
+  );
 
 }
 
@@ -3640,48 +4007,189 @@ function previewMedia(path){
    HIDE / SHOW
 ========================================================= */
 
-function toggleHidden(path){
+function toggleHidden(
+  path
+){
+
+  if(
+    hidden.includes(path)
+  ){
+
+    hidden =
+      hidden.filter(
+        x=>x!==path
+      );
+
+  }else{
+
+    hidden.push(path);
+
+  }
+
+
+  localStorage.setItem(
+    "rgHiddenMedia",
+    JSON.stringify(hidden)
+  );
+
+
+  render();
+
+
+  showToast(
+
+    hidden.includes(path)
+      ?
+      "Media hidden in admin preview."
+      :
+      "Media shown."
+
+  );
+
+}
+
+
+/* =========================================================
+   OPEN COLLECTION PAGE
+========================================================= */
+
+function openCollectionPage(
+  item
+){
+
+  let page=null;
+
+
+  Object.keys(
+    weddingCollections
+  )
+  .forEach(key=>{
+
+    const data =
+      weddingCollections[key];
 
     if(
-        hidden.includes(path)
+      item.path.startsWith(
+        data.folder
+      )
+      ||
+      item.path ===
+      data.cover
     ){
 
-        hidden =
-            hidden.filter(
-                x =>
-                x !== path
-            );
+      page=data.page;
 
     }
 
-    else{
+  });
 
-        hidden.push(path);
+
+  Object.keys(
+    portfolioCollections
+  )
+  .forEach(key=>{
+
+    const data =
+      portfolioCollections[key];
+
+    if(
+      item.path.startsWith(
+        data.folder
+      )
+      ||
+      item.path ===
+      data.cover
+    ){
+
+      page=data.page;
 
     }
 
+  });
 
-    localStorage.setItem(
 
-        "rgHiddenMedia",
+  if(
+    item.category==="home"
+  ){
 
-        JSON.stringify(hidden)
+    page="index.html";
 
+  }
+
+
+  if(page){
+
+    window.open(
+      page,
+      "_blank"
     );
 
-
-    render();
-
+  }else{
 
     showToast(
-
-        hidden.includes(path)
-
-        ? "Media hidden"
-
-        : "Media visible"
-
+      "Collection page not configured."
     );
+
+  }
+
+}
+
+
+/* =========================================================
+   DASHBOARD COUNTS
+========================================================= */
+
+function updateCounts(){
+
+  const images =
+    allImageMedia();
+
+
+  document.getElementById(
+    "imageCount"
+  ).innerText =
+    images.length;
+
+
+  document.getElementById(
+    "videoCount"
+  ).innerText =
+    videos.length;
+
+
+  document.getElementById(
+    "hiddenCount"
+  ).innerText =
+    hidden.length;
+
+}
+
+
+/* =========================================================
+   MASTER RENDER
+========================================================= */
+
+function render(){
+
+  renderHome();
+
+  renderImageFilters();
+
+  renderImages();
+
+  renderServices();
+
+  renderVideos();
+
+  renderSections();
+
+  renderDashboardCollections();
+
+  renderWeddingPage();
+
+  renderPortfolioPage();
+
+  updateCounts();
 
 }
 
@@ -3690,78 +4198,89 @@ function toggleHidden(path){
    TOAST
 ========================================================= */
 
-function showToast(message){
+function showToast(
+  message
+){
 
-    const toast =
-        document
-            .getElementById(
-                "toast"
-            );
-
-
-    toast.innerText =
-        message;
-
-
-    toast.style.display =
-        "block";
-
-
-    clearTimeout(
-        window.toastTimer
+  const toast =
+    document.getElementById(
+      "toast"
     );
 
 
-    window.toastTimer =
-        setTimeout(
-            () => {
+  toast.innerText =
+    message;
 
-                toast.style.display =
-                    "none";
 
-            },
-            3500
-        );
+  toast.style.display =
+    "block";
+
+
+  clearTimeout(
+    window.toastTimer
+  );
+
+
+  window.toastTimer =
+    setTimeout(
+      ()=>{
+        toast.style.display=
+          "none";
+      },
+      3500
+    );
 
 }
 
 
 /* =========================================================
-   START
+   START APPLICATION
 ========================================================= */
 
 if(
-
-    sessionStorage
-        .getItem(
-            "rgAdminLogin"
-        ) === "true"
-
+  sessionStorage.getItem(
+    "rgAdminLogin"
+  ) === "true"
 ){
 
-    document
-        .getElementById(
-            "loginScreen"
-        )
-        .style.display =
-        "none";
+  document.getElementById(
+    "loginScreen"
+  ).style.display="none";
 
 
-    document
-        .getElementById(
-            "adminApp"
-        )
-        .style.display =
-        "block";
+  document.getElementById(
+    "adminApp"
+  ).style.display="block";
 
 
-    render();
+  render();
 
 }
 
+
+/* =========================================================
+   ENTER KEY LOGIN
+========================================================= */
+
+document
+  .getElementById("password")
+  .addEventListener(
+    "keydown",
+    function(event){
+
+      if(
+        event.key==="Enter"
+      ){
+
+        login();
+
+      }
+
+    }
+  );
+
+
 </script>
 
-
 </body>
-
 </html>
