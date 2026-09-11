@@ -17849,3 +17849,116 @@ footer .admin-page-btn {
         padding: 16px 14px;
     }
 }
+/* =========================================================
+   ABOUT PAGE — MOBILE FIX
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .about {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 100%;
+        gap: 35px;
+        margin: 0 auto;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .about-image {
+        width: 100%;
+        max-width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .about-image img {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        display: block;
+        object-fit: contain;
+    }
+
+    .about-copy {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        text-align: left;
+        box-sizing: border-box;
+    }
+
+    .about-copy h2 {
+        margin: 0 0 18px;
+        font-size: 46px;
+        line-height: 1.05;
+        letter-spacing: -0.5px;
+    }
+
+    .about-copy .eyebrow {
+        margin: 0 0 22px;
+        font-size: 11px;
+        line-height: 1.6;
+        letter-spacing: 2.5px;
+    }
+
+    .about-copy p {
+        margin: 0 0 20px;
+        font-size: 17px;
+        line-height: 1.6;
+        text-align: left;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE — 600px
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .about {
+        gap: 28px;
+        padding: 0;
+    }
+
+    .about-image {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .about-image img {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        object-fit: contain;
+    }
+
+    .about-copy {
+        width: 100%;
+        padding: 0;
+    }
+
+    .about-copy h2 {
+        font-size: 40px;
+        line-height: 1.05;
+        margin-bottom: 16px;
+    }
+
+    .about-copy .eyebrow {
+        font-size: 10px;
+        line-height: 1.6;
+        letter-spacing: 2.2px;
+        margin-bottom: 18px;
+    }
+
+    .about-copy p {
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+}
