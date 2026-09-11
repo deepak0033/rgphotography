@@ -735,7 +735,7 @@ document.getElementById("rgEnquiryForm").addEventListener("submit", function(e) 
   const name = document.getElementById("rgName").value.trim();
   const phone = document.getElementById("rgPhone").value.trim();
   const date = document.getElementById("rgDate").value;
-  const message = document.getElementById("rgMessage").value.trim();
+  const eventType = document.getElementById("eventType").value.trim();
 
   const whatsappMessage =
 `Hello RG Photography,
@@ -745,9 +745,7 @@ I would like to make an enquiry.
 Name: ${name}
 Phone: ${phone}
 Event / Wedding Date: ${date}
-
-Event Details:
-${message}
+Event Type: ${eventType}`;
 
 Please share your availability and packages.`;
 
