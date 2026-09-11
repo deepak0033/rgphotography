@@ -17460,3 +17460,71 @@ footer .admin-page-btn {
         letter-spacing: 1.2px !important;
     }
 }
+/* ================= RG ENQUIRY FORM ================= */
+
+.rg-enquiry-form {
+    max-width: 1100px;
+    margin: 50px auto 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.rg-enquiry-form input,
+.rg-enquiry-form textarea {
+    width: 100%;
+    border: 1px solid #29384d;
+    background: #17263a;
+    color: #fff;
+    padding: 18px 16px;
+    font-family: "Cormorant Garamond", Georgia, serif !important;
+    font-size: 16px;
+    outline: none;
+    transition: .25s ease;
+}
+
+.rg-enquiry-form input::placeholder,
+.rg-enquiry-form textarea::placeholder {
+    color: #718198;
+}
+
+.rg-enquiry-form input:focus,
+.rg-enquiry-form textarea:focus {
+    border-color: var(--gold);
+}
+
+.rg-enquiry-form textarea {
+    resize: vertical;
+    min-height: 110px;
+}
+
+.rg-enquiry-form button {
+    width: 100%;
+    min-height: 56px;
+    margin-top: 8px;
+    border: 0;
+    background: #eef2f7;
+    color: #080808;
+    font-family: "Cormorant Garamond", Georgia, serif !important;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .25s ease;
+}
+
+.rg-enquiry-form button:hover {
+    background: #25D366;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+    .rg-enquiry-form {
+        margin-top: 35px;
+    }
+
+    .rg-enquiry-form input,
+    .rg-enquiry-form textarea {
+        padding: 16px 14px;
+    }
+}
