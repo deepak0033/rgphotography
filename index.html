@@ -731,35 +731,31 @@
 
 <script>
 document.getElementById("rgEnquiryForm").addEventListener("submit", function(e) {
+    e.preventDefault();
 
-  e.preventDefault();
+    const name = document.getElementById("rgName").value.trim();
+    const phone = document.getElementById("rgPhone").value.trim();
+    const date = document.getElementById("rgDate").value;
+    const eventType = document.getElementById("eventType").value.trim();
 
-  const name = document.getElementById("rgName").value.trim();
-  const phone = document.getElementById("rgPhone").value.trim();
-  const date = document.getElementById("rgDate").value;
-  const eventType = document.getElementById("eventType").value.trim();
-
-  const whatsappMessage =
-`Hello RG Photography,
+    const whatsappMessage = `Hello RG Photography,
 
 I would like to make an enquiry.
 
 Name: ${name}
 Phone: ${phone}
 Event / Wedding Date: ${date}
-Event Type: ${eventType}`;
+Event Type: ${eventType}
 
 Please share your availability and packages.`;
 
-  const whatsappURL =
-    "https://wa.me/+918248578568" +
-    encodeURIComponent(whatsappMessage);
+    const whatsappURL =
+        "https://wa.me/918248578568?text=" +
+        encodeURIComponent(whatsappMessage);
 
-  window.open(whatsappURL, "_blank");
-
+    window.open(whatsappURL, "_blank");
 });
 </script>
-
 
   </main>
 
