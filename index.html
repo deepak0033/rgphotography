@@ -672,16 +672,93 @@
     </section>
 
 
-    <!-- ================= BOOK ================= -->
- <section class="section-pad about-cta">
-    <div class="booking-inner">
-      <p class="eyebrow">LET'S CREATE SOMETHING TIMELESS</p>
-      <h2>Your date.<br><em>Your story.</em></h2>
-      <p>For availability and packages, connect directly with RG Photography in Chennai.</p>
-      <a class="btn btn-whatsapp" href="https://wa.me/918248578568" target="_blank" rel="noopener">WHATSAPP RG PHOTOGRAPHY</a>
-      <a class="btn btn-instagram" href="https://www.instagram.com/rgphotography_chennai?igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener">FOLLOW ON INSTAGRAM</a>
-    </div>
-  </section>
+    <!-- ================= BOOK / ENQUIRY ================= -->
+<section class="section-pad about-cta" id="book">
+
+  <div class="booking-inner">
+
+    <p class="eyebrow">LET'S CREATE SOMETHING TIMELESS</p>
+
+    <h2>
+      Your date.<br>
+      <em>Your story.</em>
+    </h2>
+
+    <p>
+      For availability and packages, connect directly with RG Photography in Chennai.
+    </p>
+
+    <form class="rg-enquiry-form" id="rgEnquiryForm">
+
+      <input
+        type="text"
+        id="rgName"
+        placeholder="Your Name"
+        required
+      >
+
+      <input
+        type="tel"
+        id="rgPhone"
+        placeholder="Phone Number"
+        required
+      >
+
+      <input
+        type="date"
+        id="rgDate"
+        required
+      >
+
+      <textarea
+        id="rgMessage"
+        placeholder="Tell us about your event..."
+        rows="5"
+        required
+      ></textarea>
+
+      <button type="submit">
+        ➤ Send Enquiry on WhatsApp
+      </button>
+
+    </form>
+
+  </div>
+
+</section>
+
+<script>
+document.getElementById("rgEnquiryForm").addEventListener("submit", function(e) {
+
+  e.preventDefault();
+
+  const name = document.getElementById("rgName").value.trim();
+  const phone = document.getElementById("rgPhone").value.trim();
+  const date = document.getElementById("rgDate").value;
+  const message = document.getElementById("rgMessage").value.trim();
+
+  const whatsappMessage =
+`Hello RG Photography,
+
+I would like to make an enquiry.
+
+Name: ${name}
+Phone: ${phone}
+Event / Wedding Date: ${date}
+
+Event Details:
+${message}
+
+Please share your availability and packages.`;
+
+  const whatsappURL =
+    "https://wa.me/918248578568?text=" +
+    encodeURIComponent(whatsappMessage);
+
+  window.open(whatsappURL, "_blank");
+
+});
+</script>
 
 
   </main>
