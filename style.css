@@ -17785,3 +17785,67 @@ footer .admin-page-btn {
     letter-spacing: normal !important;
     font-style: normal !important;
 }
+.date-field {
+    position: relative;
+    width: 100%;
+    min-height: 60px;
+    border: 1px solid #29384d;
+    background: #17263a;
+    box-sizing: border-box;
+}
+
+.date-field .date-text {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #718198;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 16px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.date-field input[type="date"] {
+    position: relative;
+    width: 100%;
+    height: 60px;
+    border: 0;
+    background: transparent;
+    color: transparent;
+    padding: 18px 16px;
+    box-sizing: border-box;
+    outline: none;
+    cursor: pointer;
+    font-family: Arial, sans-serif !important;
+    font-size: 16px !important;
+}
+
+.date-field input[type="date"]:valid {
+    color: #fff;
+}
+
+.date-field input[type="date"]:valid + .date-text {
+    display: none;
+}
+
+.date-field input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 1;
+}
+
+@media (max-width: 600px) {
+    .date-field {
+        min-height: 60px;
+    }
+
+    .date-field .date-text {
+        left: 14px;
+        font-size: 16px;
+    }
+
+    .date-field input[type="date"] {
+        height: 60px;
+        padding: 16px 14px;
+    }
+}
