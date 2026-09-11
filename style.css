@@ -17667,3 +17667,12 @@ footer .admin-page-btn {
         margin-bottom: 20px;
     }
 }
+/* ---------- ENQUIRY FORM NORMAL INPUT TEXT ---------- */
+.rg-enquiry-form input[type="tel"],
+.rg-enquiry-form input[type="date"] {
+    font-family: Arial, sans-serif !important;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    letter-spacing: normal !important;
+    font-style: normal !important;
+}
