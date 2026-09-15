@@ -1,271 +1,372 @@
+import crypto from "crypto";
+
+const SESSION_COOKIE = "rg_admin_session";
+const SESSION_HOURS = 8;
+
+function json(res, status, data) {
+  return res.status(status).json(data);
+}
+
+function githubHeaders() {
+  return {
+    Accept: "application/vnd.github+json",
+    Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+    "X-GitHub-Api-Version": "2022-11-28",
+    "Content-Type": "application/json"
+  };
+}
+
+function getCookie(req, name) {
+  const cookie = req.headers.cookie || "";
+
+  const part = cookie
+    .split(";")
+    .map(v => v.trim())
+    .find(v => v.startsWith(name + "="));
+
+  return part ? decodeURIComponent(part.slice(name.length + 1)) : null;
+}
+
+function signSession(username, timestamp) {
+  const secret = process.env.ADMIN_SESSION_SECRET;
+
+  return crypto
+    .createHmac("sha256", secret)
+    .update(`${username}.${timestamp}`)
+    .digest("hex");
+}
+
+function createSession(username) {
+  const timestamp = Date.now().toString();
+  const signature = signSession(username, timestamp);
+
+  return Buffer
+    .from(`${username}.${timestamp}.${signature}`)
+    .toString("base64url");
+}
+
+function verifySession(req) {
+  try {
+    const session = getCookie(req, SESSION_COOKIE);
+
+    if (!session) return false;
+
+    const decoded = Buffer
+      .from(session, "base64url")
+      .toString("utf8");
+
+    const parts = decoded.split(".");
+
+    if (parts.length !== 3) return false;
+
+    const [username, timestamp, signature] = parts;
+
+    const age = Date.now() - Number(timestamp);
+
+    if (!Number.isFinite(age)) return false;
+
+    if (age > SESSION_HOURS * 60 * 60 * 1000) {
+      return false;
+    }
+
+    const expected = signSession(username, timestamp);
+
+    return crypto.timingSafeEqual(
+      Buffer.from(signature),
+      Buffer.from(expected)
+    );
+  } catch {
+    return false;
+  }
+}
+
+function setSessionCookie(res, username) {
+  const session = createSession(username);
+
+  res.setHeader(
+    "Set-Cookie",
+    `${SESSION_COOKIE}=${encodeURIComponent(session)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${SESSION_HOURS * 60 * 60}`
+  );
+}
+
+function clearSessionCookie(res) {
+  res.setHeader(
+    "Set-Cookie",
+    `${SESSION_COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`
+  );
+}
+
+function allowedPath(path) {
+  if (typeof path !== "string") return false;
+
+  const allowedPrefixes = [
+    "assets/images/baby/",
+    "assets/images/maternity/",
+    "assets/images/pre-wedding/",
+    "assets/images/post-wedding/",
+    "assets/images/weddings/",
+    "assets/images/main-"
+  ];
+
+  const allowedExtensions = [
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".webp"
+  ];
+
+  const prefixOK = allowedPrefixes.some(prefix =>
+    path.startsWith(prefix)
+  );
+
+  const extensionOK = allowedExtensions.some(ext =>
+    path.toLowerCase().endsWith(ext)
+  );
+
+  return prefixOK && extensionOK;
+}
+
+async function githubGet(path) {
+  const owner = process.env.GITHUB_OWNER;
+  const repo = process.env.GITHUB_REPO;
+  const branch = process.env.GITHUB_BRANCH || "main";
+
+  const encodedPath = path
+    .split("/")
+    .map(encodeURIComponent)
+    .join("/");
+
+  const url =
+    `https://api.github.com/repos/${owner}/${repo}/contents/${encodedPath}?ref=${encodeURIComponent(branch)}`;
+
+  const response = await fetch(url, {
+    headers: githubHeaders()
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      data.message || `GitHub request failed: ${response.status}`
+    );
+  }
+
+  return data;
+}
+
+async function githubUpdate(path, content, message) {
+  const owner = process.env.GITHUB_OWNER;
+  const repo = process.env.GITHUB_REPO;
+  const branch = process.env.GITHUB_BRANCH || "main";
+
+  const current = await githubGet(path);
+
+  const encodedPath = path
+    .split("/")
+    .map(encodeURIComponent)
+    .join("/");
+
+  const url =
+    `https://api.github.com/repos/${owner}/${repo}/contents/${encodedPath}`;
+
+  const response = await fetch(url, {
+    method: "PUT",
+    headers: githubHeaders(),
+    body: JSON.stringify({
+      message,
+      content,
+      branch,
+      sha: current.sha
+    })
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      data.message || `GitHub update failed: ${response.status}`
+    );
+  }
+
+  return data;
+}
+
+async function githubDelete(path, message) {
+  const owner = process.env.GITHUB_OWNER;
+  const repo = process.env.GITHUB_REPO;
+  const branch = process.env.GITHUB_BRANCH || "main";
+
+  const current = await githubGet(path);
+
+  const encodedPath = path
+    .split("/")
+    .map(encodeURIComponent)
+    .join("/");
+
+  const url =
+    `https://api.github.com/repos/${owner}/${repo}/contents/${encodedPath}`;
+
+  const response = await fetch(url, {
+    method: "DELETE",
+    headers: githubHeaders(),
+    body: JSON.stringify({
+      message,
+      branch,
+      sha: current.sha
+    })
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      data.message || `GitHub delete failed: ${response.status}`
+    );
+  }
+
+  return data;
+}
+
 export default async function handler(req, res) {
   try {
     const {
       GITHUB_TOKEN,
       GITHUB_OWNER,
       GITHUB_REPO,
-      GITHUB_BRANCH
+      ADMIN_USER,
+      ADMIN_PASSWORD,
+      ADMIN_SESSION_SECRET
     } = process.env;
 
-    if (!GITHUB_TOKEN || !GITHUB_OWNER || !GITHUB_REPO) {
-      return res.status(500).json({
+    if (
+      !GITHUB_TOKEN ||
+      !GITHUB_OWNER ||
+      !GITHUB_REPO ||
+      !ADMIN_USER ||
+      !ADMIN_PASSWORD ||
+      !ADMIN_SESSION_SECRET
+    ) {
+      return json(res, 500, {
         ok: false,
-        error: "GitHub environment variables are not configured."
+        error: "Required Vercel environment variables are not configured."
       });
     }
 
-    const branch = GITHUB_BRANCH || "main";
+    const action = req.body?.action;
 
-    const allowedPrefixes = [
-      "assets/images/baby/",
-      "assets/images/maternity/",
-      "assets/images/pre-wedding/",
-      "assets/images/post-wedding/",
-      "assets/images/weddings/",
-      "assets/images/main-1.jpg",
-      "assets/images/main-2.jpg",
-      "assets/images/main-3.jpg",
-      "assets/videos/"
-    ];
+    /*
+     * LOGIN
+     */
+    if (req.method === "POST" && action === "login") {
+      const username = String(req.body?.username || "");
+      const password = String(req.body?.password || "");
 
-    const allowedExtensions = [
-      ".jpg",
-      ".jpeg",
-      ".png",
-      ".webp",
-      ".mp4",
-      ".webm"
-    ];
+      if (
+        username !== ADMIN_USER ||
+        password !== ADMIN_PASSWORD
+      ) {
+        return json(res, 401, {
+          ok: false,
+          error: "Invalid username or password."
+        });
+      }
 
-    function isAllowedPath(filePath) {
-      if (typeof filePath !== "string") return false;
+      setSessionCookie(res, username);
 
-      const prefixOK = allowedPrefixes.some(prefix =>
-        filePath.startsWith(prefix)
-      );
-
-      const extensionOK = allowedExtensions.some(ext =>
-        filePath.toLowerCase().endsWith(ext)
-      );
-
-      return prefixOK && extensionOK;
-    }
-
-    function githubHeaders() {
-      return {
-        Accept: "application/vnd.github+json",
-        Authorization: `Bearer ${GITHUB_TOKEN}`,
-        "X-GitHub-Api-Version": "2026-03-10",
-        "Content-Type": "application/json"
-      };
-    }
-
-    async function getFile(path) {
-      const url =
-        `https://api.github.com/repos/` +
-        `${encodeURIComponent(GITHUB_OWNER)}/` +
-        `${encodeURIComponent(GITHUB_REPO)}/contents/` +
-        `${path.split("/").map(encodeURIComponent).join("/")}` +
-        `?ref=${encodeURIComponent(branch)}`;
-
-      const response = await fetch(url, {
-        headers: githubHeaders()
+      return json(res, 200, {
+        ok: true,
+        authenticated: true
       });
-
-      if (!response.ok) {
-        const text = await response.text();
-
-        throw new Error(
-          `GitHub GET failed (${response.status}): ${text}`
-        );
-      }
-
-      return response.json();
     }
 
-    async function putFile(path, contentBase64, message, sha) {
-      const url =
-        `https://api.github.com/repos/` +
-        `${encodeURIComponent(GITHUB_OWNER)}/` +
-        `${encodeURIComponent(GITHUB_REPO)}/contents/` +
-        `${path.split("/").map(encodeURIComponent).join("/")}`;
+    /*
+     * LOGOUT
+     */
+    if (req.method === "POST" && action === "logout") {
+      clearSessionCookie(res);
 
-      const payload = {
-        message,
-        content: contentBase64,
-        branch,
-        sha
-      };
-
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: githubHeaders(),
-        body: JSON.stringify(payload)
+      return json(res, 200, {
+        ok: true
       });
-
-      const text = await response.text();
-
-      let data;
-
-      try {
-        data = JSON.parse(text);
-      } catch {
-        data = { raw: text };
-      }
-
-      if (!response.ok) {
-        throw new Error(
-          `GitHub PUT failed (${response.status}): ` +
-          (data.message || text)
-        );
-      }
-
-      return data;
     }
 
-    async function deleteFile(path, message, sha) {
-      const url =
-        `https://api.github.com/repos/` +
-        `${encodeURIComponent(GITHUB_OWNER)}/` +
-        `${encodeURIComponent(GITHUB_REPO)}/contents/` +
-        `${path.split("/").map(encodeURIComponent).join("/")}`;
-
-      const response = await fetch(url, {
-        method: "DELETE",
-        headers: githubHeaders(),
-        body: JSON.stringify({
-          message,
-          branch,
-          sha
-        })
-      });
-
-      const text = await response.text();
-
-      let data;
-
-      try {
-        data = JSON.parse(text);
-      } catch {
-        data = { raw: text };
-      }
-
-      if (!response.ok) {
-        throw new Error(
-          `GitHub DELETE failed (${response.status}): ` +
-          (data.message || text)
-        );
-      }
-
-      return data;
-    }
-
-    /* =========================
-       GET
-       Check whether API works
-    ========================= */
-
+    /*
+     * CHECK SESSION / API STATUS
+     */
     if (req.method === "GET") {
-      return res.status(200).json({
+      return json(res, 200, {
         ok: true,
         connected: true,
+        authenticated: verifySession(req),
         owner: GITHUB_OWNER,
         repo: GITHUB_REPO,
-        branch
+        branch: process.env.GITHUB_BRANCH || "main"
       });
     }
 
-    /* =========================
-       POST
-       Replace / Remove media
-    ========================= */
+    /*
+     * ALL WRITE ACTIONS REQUIRE LOGIN
+     */
+    if (!verifySession(req)) {
+      return json(res, 401, {
+        ok: false,
+        error: "Admin session expired or not authenticated."
+      });
+    }
 
     if (req.method !== "POST") {
-      res.setHeader("Allow", "GET, POST");
-      return res.status(405).json({
+      return json(res, 405, {
         ok: false,
         error: "Method not allowed."
       });
     }
 
-    const body = req.body || {};
+    const path = req.body?.path;
 
-    const action = body.action;
-    const path = body.path;
-
-    if (!action) {
-      return res.status(400).json({
+    if (!allowedPath(path)) {
+      return json(res, 400, {
         ok: false,
-        error: "Missing action."
+        error: "This file path is not allowed."
       });
     }
 
-    if (!path || !isAllowedPath(path)) {
-      return res.status(400).json({
-        ok: false,
-        error: "File path is not allowed.",
-        path
-      });
-    }
-
-    /* =========================
-       REPLACE / UPLOAD
-    ========================= */
-
-    if (action === "replace" || action === "upload") {
-      const content = body.content;
+    /*
+     * REPLACE IMAGE
+     */
+    if (action === "replace") {
+      const content = String(req.body?.content || "");
 
       if (!content) {
-        return res.status(400).json({
+        return json(res, 400, {
           ok: false,
-          error: "Missing Base64 file content."
+          error: "Missing file content."
         });
       }
 
-      let current;
-
-      try {
-        current = await getFile(path);
-      } catch (error) {
-        if (action === "replace") {
-          throw error;
-        }
-
-        current = null;
-      }
-
-      const result = await putFile(
+      const result = await githubUpdate(
         path,
         content,
-        body.message ||
-          `Admin: ${action} ${path}`,
-        current?.sha
+        `Admin: replace ${path}`
       );
 
-      return res.status(200).json({
+      return json(res, 200, {
         ok: true,
-        action,
+        action: "replace",
         path,
-        commit: result.commit?.sha || null,
-        content: result.content?.path || path
+        commit: result.commit?.sha || null
       });
     }
 
-    /* =========================
-       REMOVE
-    ========================= */
-
+    /*
+     * REMOVE IMAGE
+     */
     if (action === "remove") {
-      const current = await getFile(path);
-
-      const result = await deleteFile(
+      const result = await githubDelete(
         path,
-        body.message ||
-          `Admin: remove ${path}`,
-        current.sha
+        `Admin: remove ${path}`
       );
 
-      return res.status(200).json({
+      return json(res, 200, {
         ok: true,
         action: "remove",
         path,
@@ -273,15 +374,15 @@ export default async function handler(req, res) {
       });
     }
 
-    return res.status(400).json({
+    return json(res, 400, {
       ok: false,
-      error: `Unknown action: ${action}`
+      error: "Unknown action."
     });
 
   } catch (error) {
     console.error(error);
 
-    return res.status(500).json({
+    return json(res, 500, {
       ok: false,
       error: error?.message || "Server error."
     });
