@@ -18319,3 +18319,81 @@ footer .admin-page-btn {
         margin-bottom: 20px;
     }
 }
+/* =========================
+   RG ENQUIRY DATE FIELD
+   ========================= */
+
+.rg-date-field {
+    position: relative;
+    width: 100%;
+    height: 72px;
+    margin: 0 0 14px;
+}
+
+.rg-date-field input[type="date"] {
+    width: 100%;
+    height: 72px;
+    box-sizing: border-box;
+
+    background: #17283f;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 0;
+
+    color: #8da0ba;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 18px;
+    font-weight: 400;
+
+    padding: 0 54px 0 18px;
+
+    outline: none;
+    text-align: left;
+    text-align-last: left;
+
+    color-scheme: dark;
+    appearance: auto;
+    -webkit-appearance: auto;
+}
+
+.rg-date-field input[type="date"]:focus {
+    border-color: #b88932;
+}
+
+.rg-date-field input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+/* Custom placeholder */
+.rg-date-field .date-placeholder {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    color: #7890ad;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 18px;
+    font-weight: 400;
+
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+/* Hide placeholder when date is selected */
+.rg-date-field input[type="date"]:valid + .date-placeholder {
+    opacity: 0;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .rg-date-field,
+    .rg-date-field input[type="date"] {
+        height: 72px;
+    }
+
+    .rg-date-field input[type="date"],
+    .rg-date-field .date-placeholder {
+        font-size: 18px;
+    }
+}
