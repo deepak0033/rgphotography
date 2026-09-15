@@ -3425,5 +3425,28 @@ document
 
 </script>
 <script src="admin-live.js"></script>
+<script>
+const RJ_API = "/api/media";
+
+async function testRJConnection() {
+  try {
+    const response = await fetch(RJ_API);
+    const data = await response.json();
+
+    if (data.ok) {
+      console.log("✅ GitHub connected:", data);
+      return true;
+    }
+
+    console.error("❌ API error:", data.error);
+    return false;
+  } catch (error) {
+    console.error("❌ Connection failed:", error);
+    return false;
+  }
+}
+
+testRJConnection();
+</script>
 </body>
 </html>
