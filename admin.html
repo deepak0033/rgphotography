@@ -1340,7 +1340,7 @@ main{
     </button>
 
     <button
-      onclick="openPage('services',this)"
+      onclick="openPage('videos',this)"
     >
       
       Videos
@@ -1420,7 +1420,7 @@ main{
 
       <button
         class="btn"
-        onclick="render()"
+        onclick="render(true)"
       >
         Refresh
       </button>
@@ -2103,6 +2103,34 @@ main{
 
   </div>
 
+  <div class="panel">
+
+    <h2>Complete Asset Preview</h2>
+
+    <p>
+      Live preview of every image and video currently found in the
+      RG Photography asset folders. Images are lazy-loaded for performance.
+    </p>
+
+    <input
+      id="allMediaSearch"
+      class="search-box"
+      placeholder="Search any image, video, filename or section..."
+      oninput="renderAllMediaPreview()"
+    >
+
+    <div
+      class="filters"
+      id="allMediaFilters"
+    ></div>
+
+    <div
+      id="allMediaGrid"
+      class="media-grid"
+    ></div>
+
+  </div>
+
 </div>
 
 
@@ -2388,571 +2416,198 @@ main{
 <script>
 
 /* =========================================================
-   CONFIGURATION
+   LIVE WEBSITE ASSET DISCOVERY
 ========================================================= */
 
-/*
-  IMPORTANT:
-  These are website asset paths, not the old admin paths.
-
-  The current RG website uses:
-  assets/images/main-1.jpg
-  assets/images/main-2.jpg
-  assets/images/main-3.jpg
-
-  Wedding collection paths are based on the current
-  website files.
-*/
-
+/* The admin reads the real GitHub asset tree instead of guessing filenames. */
 const WEBSITE_URL = "index.html";
+const GITHUB_REPO = "deepak0033/rgphotography";
+const GITHUB_BRANCH = "main";
+const GITHUB_TREE_API = `https://api.github.com/repos/${GITHUB_REPO}/git/trees/${GITHUB_BRANCH}?recursive=1`;
 
+let assetManifest = [];
+let assetManifestLoaded = false;
+let assetManifestLoading = null;
+let assetLoadError = "";
 
 /* =========================================================
    LOGIN
 ========================================================= */
 
-/*
-  TEMPORARY FRONTEND LOGIN ONLY.
-
-  DO NOT use this as production security.
-
-  Later:
-  admin.html
-      ↓
-  /api/login
-      ↓
-  Secure server-side authentication
-*/
-
 const ADMIN_USERNAME = "rgadmin";
 const ADMIN_PASSWORD = "RG@2026";
 
-
 function login(){
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value;
 
-  const username =
-    document.getElementById("username")
-      .value
-      .trim();
-
-  const password =
-    document.getElementById("password")
-      .value;
-
-  if(
-    username === ADMIN_USERNAME &&
-    password === ADMIN_PASSWORD
-  ){
-
-    sessionStorage.setItem(
-      "rgAdminLogin",
-      "true"
-    );
-
-    document.getElementById(
-      "loginScreen"
-    ).style.display="none";
-
-    document.getElementById(
-      "adminApp"
-    ).style.display="block";
-
+  if(username === ADMIN_USERNAME && password === ADMIN_PASSWORD){
+    sessionStorage.setItem("rgAdminLogin","true");
+    document.getElementById("loginScreen").style.display="none";
+    document.getElementById("adminApp").style.display="block";
     render();
-
   }else{
-
-    document.getElementById(
-      "loginError"
-    ).innerText =
-      "Invalid username or password.";
-
+    document.getElementById("loginError").innerText = "Invalid username or password.";
   }
-
 }
-
 
 function logout(){
-
-  sessionStorage.removeItem(
-    "rgAdminLogin"
-  );
-
+  sessionStorage.removeItem("rgAdminLogin");
   location.reload();
-
 }
-
 
 /* =========================================================
    WEBSITE
 ========================================================= */
 
 function openWebsite(){
-
-  window.open(
-    WEBSITE_URL,
-    "_blank"
-  );
-
+  window.open(WEBSITE_URL,"_blank");
 }
-
 
 /* =========================================================
    PAGE NAVIGATION
 ========================================================= */
 
-function openPage(
-  page,
-  button
-){
-
-  document
-    .querySelectorAll(".page")
-    .forEach(
-      p=>p.classList.remove("active")
-    );
-
-  const target =
-    document.getElementById(page);
-
-  if(target){
-    target.classList.add("active");
-  }
-
-  document
-    .querySelectorAll(".nav button")
-    .forEach(
-      b=>b.classList.remove("active")
-    );
-
-  if(button){
-    button.classList.add("active");
-  }
-
+function openPage(page,button){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  const target=document.getElementById(page);
+  if(target) target.classList.add("active");
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+  if(button) button.classList.add("active");
   window.scrollTo(0,0);
-
 }
 
-
 /* =========================================================
-   MEDIA DATA
+   COLLECTION CONFIGURATION
 ========================================================= */
-
-/*
-  HOME
-*/
-
-const heroMedia = [
-
-  {
-    type:"image",
-    category:"home",
-    section:"Home Hero",
-    name:"Hero 01",
-    file:"main-1.jpg",
-    path:"assets/images/main-1.jpg"
-  },
-
-  {
-    type:"image",
-    category:"home",
-    section:"Home Hero",
-    name:"Hero 02",
-    file:"main-2.jpg",
-    path:"assets/images/main-2.jpg"
-  },
-
-  {
-    type:"image",
-    category:"home",
-    section:"Home Hero",
-    name:"Hero 03",
-    file:"main-3.jpg",
-    path:"assets/images/main-3.jpg"
-  }
-
-];
-
-
-/*
-  WEDDINGS
-*/
 
 const weddingCollections = {
-
-  haldi:{
-    name:"Haldi",
-    folder:"assets/images/weddings/haldi/",
-    page:"marwari-wedding.html",
-    cover:"assets/images/weddings/marwari wedding/cover1.webp",
-    note:"Haldi wedding collection."
-  },
-
-  brahmin:{
-    name:"Brahmin",
-    folder:"assets/images/weddings/brahmin wedding/",
-    page:"brahmin-wedding.html",
-    cover:"assets/images/weddings/brahmin wedding/cover1.webp",
-    note:"Traditional Brahmin wedding photography."
-  },
-
-  christian:{
-    name:"Christian",
-    folder:"assets/images/weddings/christian Wedding/",
-    page:"christian-wedding.html",
-    cover:"assets/images/weddings/christian Wedding/cover1.webp",
-    note:"Christian wedding photography."
-  },
-
-  hindu:{
-    name:"Hindu",
-    folder:"assets/images/weddings/hindu wedding/",
-    page:"hindu-wedding.html",
-    cover:"assets/images/weddings/hindu wedding/cover.webp",
-    note:"Traditional Hindu wedding photography."
-  },
-
-  muslim:{
-    name:"Muslim",
-    folder:"assets/images/weddings/muslim wedding/",
-    page:"muslim-wedding.html",
-    cover:"assets/images/weddings/muslim wedding/cover1.webp",
-    note:"Muslim wedding photography."
-  },
-
-  telugu:{
-    name:"Telugu",
-    folder:"assets/images/weddings/telugu wedding/",
-    page:"telugu-wedding.html",
-    cover:"assets/images/weddings/telugu wedding/cover1.webp",
-    note:"Traditional Telugu wedding photography."
-  }
-
+  haldi:{name:"Haldi",folder:"assets/images/weddings/marwari wedding/",page:"marwari-wedding.html",note:"Haldi / Marwari wedding collection."},
+  brahmin:{name:"Brahmin",folder:"assets/images/weddings/brahmin wedding/",page:"brahmin-wedding.html",note:"Traditional Brahmin wedding photography."},
+  christian:{name:"Christian",folder:"assets/images/weddings/christian Wedding/",page:"christian-wedding.html",note:"Christian wedding photography."},
+  hindu:{name:"Hindu",folder:"assets/images/weddings/hindu wedding/",page:"hindu-wedding.html",note:"Traditional Hindu wedding photography."},
+  muslim:{name:"Muslim",folder:"assets/images/weddings/muslim wedding/",page:"muslim-wedding.html",note:"Muslim wedding photography."},
+  telugu:{name:"Telugu",folder:"assets/images/weddings/telugu wedding/",page:"telugu-wedding.html",note:"Traditional Telugu wedding photography."}
 };
-
-
-/*
-  PORTFOLIO
-*/
 
 const portfolioCollections = {
-
-  prewedding:{
-    name:"Pre-Wedding",
-    folder:"assets/images/pre-wedding/",
-    page:"pre-wedding.html",
-    cover:"assets/images/pre-wedding/cover.jpg",
-    note:"Pre-wedding photography collection."
-  },
-
-  postwedding:{
-    name:"Post-Wedding",
-    folder:"assets/images/post-wedding/",
-    page:"post-wedding.html",
-    cover:"assets/images/post-wedding/cover.jpg",
-    note:"Post-wedding photography collection."
-  },
-
-  baby:{
-    name:"Baby Shoot",
-    folder:"assets/images/baby/",
-    page:"baby.html",
-    cover:"assets/images/baby/cover.jpg",
-    note:"Baby photography collection."
-  },
-
-  maternity:{
-    name:"Maternity",
-    folder:"assets/images/maternity/",
-    page:"maternity.html",
-    cover:"assets/images/maternity/cover.jpg",
-    note:"Maternity photography collection."
-  }
-
+  prewedding:{name:"Pre-Wedding",folder:"assets/images/pre-wedding/",page:"pre-wedding.html",note:"Pre-wedding photography collection."},
+  postwedding:{name:"Post-Wedding",folder:"assets/images/post-wedding/",page:"post-wedding.html",note:"Post-wedding photography collection."},
+  baby:{name:"Baby Shoot",folder:"assets/images/baby/",page:"baby-photography.html",note:"Baby photography collection."},
+  maternity:{name:"Maternity",folder:"assets/images/maternity/",page:"maternity-photography.html",note:"Maternity photography collection."}
 };
 
+const IMAGE_EXTENSIONS = [".jpg",".jpeg",".png",".webp",".gif",".avif"];
+const VIDEO_EXTENSIONS = [".mp4",".webm",".mov",".m4v",".ogg"];
 
-/*
-  SERVICES
-*/
-
-const serviceMedia = [
-
-  {
-    type:"image",
-    category:"services",
-    section:"Services",
-    name:"Service 01",
-    file:"01.jpg",
-    path:"assets/images/services/01.jpg"
-  },
-
-  {
-    type:"image",
-    category:"services",
-    section:"Services",
-    name:"Service 02",
-    file:"02.jpg",
-    path:"assets/images/services/02.jpg"
-  },
-
-  {
-    type:"image",
-    category:"services",
-    section:"Services",
-    name:"Service 03",
-    file:"03.jpg",
-    path:"assets/images/services/03.jpg"
-  },
-
-  {
-    type:"image",
-    category:"services",
-    section:"Services",
-    name:"Service 04",
-    file:"04.jpg",
-    path:"assets/images/services/04.jpg"
-  }
-
-];
-
-
-/*
-  VIDEOS
-
-  These are prepared for the current website's
-  video library. Existing website versions contain
-  video assets under assets/vedeos/ and assets/videos/.
-*/
-
-const videos = [
-
-  {
-    type:"video",
-    category:"videos",
-    section:"Videos",
-    name:"Wedding Film",
-    file:"video-01.mp4",
-    path:"assets/vedeos/video-01.mp4"
-  },
-
-  {
-    type:"video",
-    category:"videos",
-    section:"Videos",
-    name:"Post Wedding Memories",
-    file:"video-02.mp4",
-    path:"assets/vedeos/video-02.mp4"
-  },
-
-  {
-    type:"video",
-    category:"videos",
-    section:"Videos",
-    name:"Beautiful Memories",
-    file:"video-03.mp4",
-    path:"assets/vedeos/video-03.mp4"
-  },
-
-  {
-    type:"video",
-    category:"videos",
-    section:"Videos",
-    name:"Wedding Story",
-    file:"vedio-04.mp4",
-    path:"assets/vedeos/vedio-04.mp4"
-  }
-
-];
-
-
-/* =========================================================
-   CREATE WEDDING SLOT LIST
-========================================================= */
-
-function makeWeddingMedia(
-  key
-){
-
-  const data =
-    weddingCollections[key];
-
-  const items=[];
-
-  /*
-    Cover is always shown first.
-  */
-
-  items.push({
-
-    type:"image",
-
-    category:key,
-
-    section:data.name,
-
-    name:data.name+" Cover",
-
-    file:data.cover
-      .split("/")
-      .pop(),
-
-    path:data.cover
-
-  });
-
-
-  /*
-    Additional numbered slots.
-
-    They are useful when the actual collection contains
-    numbered images. Missing files automatically show
-    "Asset not found" instead of a broken layout.
-  */
-
-  for(
-    let i=1;
-    i<=20;
-    i++
-  ){
-
-    const number =
-      String(i).padStart(2,"0");
-
-    items.push({
-
-      type:"image",
-
-      category:key,
-
-      section:data.name,
-
-      name:data.name+" "+number,
-
-      file:number+".jpg",
-
-      path:
-        data.folder+
-        number+
-        ".jpg"
-
-    });
-
-  }
-
-  return items;
-
+function extensionOf(path){
+  const lower=path.toLowerCase();
+  const dot=lower.lastIndexOf(".");
+  return dot>=0 ? lower.slice(dot) : "";
 }
 
+function fileNameOf(path){
+  return path.split("/").pop() || path;
+}
 
-/* =========================================================
-   CREATE PORTFOLIO SLOT LIST
-========================================================= */
+function friendlyName(value){
+  return value.replace(/\.[^.]+$/," ").replace(/[-_]+/g," ").replace(/\s+/g," ").trim().replace(/\b\w/g,c=>c.toUpperCase());
+}
 
-function makePortfolioMedia(
-  key
-){
+function classifyAsset(path){
+  const lower=path.toLowerCase();
+  const ext=extensionOf(path);
+  const type=IMAGE_EXTENSIONS.includes(ext) ? "image" : VIDEO_EXTENSIONS.includes(ext) ? "video" : null;
+  if(!type) return null;
 
-  const data =
-    portfolioCollections[key];
-
-  const items=[];
-
-
-  items.push({
-
-    type:"image",
-
-    category:key,
-
-    section:data.name,
-
-    name:data.name+" Cover",
-
-    file:data.cover
-      .split("/")
-      .pop(),
-
-    path:data.cover
-
-  });
-
-
-  for(
-    let i=1;
-    i<=20;
-    i++
-  ){
-
-    const number =
-      String(i).padStart(2,"0");
-
-    items.push({
-
-      type:"image",
-
-      category:key,
-
-      section:data.name,
-
-      name:data.name+" "+number,
-
-      file:number+".jpg",
-
-      path:
-        data.folder+
-        number+
-        ".jpg"
-
-    });
-
+  if(lower.startsWith("assets/images/main-")){
+    return {type,category:"home",section:"Home Hero",name:"Home · "+friendlyName(fileNameOf(path)),file:fileNameOf(path),path,page:"index.html"};
   }
 
-  return items;
+  for(const key of Object.keys(weddingCollections)){
+    const data=weddingCollections[key];
+    if(lower.startsWith(data.folder.toLowerCase())){
+      return {type,category:key,section:data.name,name:data.name+" · "+friendlyName(fileNameOf(path)),file:fileNameOf(path),path,page:data.page};
+    }
+  }
 
+  for(const key of Object.keys(portfolioCollections)){
+    const data=portfolioCollections[key];
+    if(lower.startsWith(data.folder.toLowerCase())){
+      return {type,category:key,section:data.name,name:data.name+" · "+friendlyName(fileNameOf(path)),file:fileNameOf(path),path,page:data.page};
+    }
+  }
+
+  if(lower.startsWith("assets/vedeos/") || lower.startsWith("assets/videos/")){
+    return {type:"video",category:"videos",section:"Videos",name:"Video · "+friendlyName(fileNameOf(path)),file:fileNameOf(path),path,page:"videos.html"};
+  }
+
+  if(lower.startsWith("assets/images/")){
+    return {type:"image",category:"other",section:"Other Website Images",name:"Other · "+friendlyName(fileNameOf(path)),file:fileNameOf(path),path,page:"index.html"};
+  }
+
+  return null;
 }
 
+async function loadAssetManifest(force=false){
+  if(assetManifestLoaded && !force) return assetManifest;
+  if(assetManifestLoading && !force) return assetManifestLoading;
+
+  assetManifestLoading=(async()=>{
+    assetLoadError="";
+    const response=await fetch(GITHUB_TREE_API,{headers:{"Accept":"application/vnd.github+json"},cache:"no-store"});
+    if(!response.ok) throw new Error(`GitHub asset list failed (${response.status}).`);
+    const data=await response.json();
+    if(!Array.isArray(data.tree)) throw new Error("GitHub returned an invalid asset tree.");
+
+    assetManifest=data.tree
+      .filter(item=>item.type === "blob")
+      .map(item=>classifyAsset(item.path))
+      .filter(Boolean)
+      .sort((a,b)=>a.path.localeCompare(b.path));
+
+    assetManifestLoaded=true;
+    return assetManifest;
+  })();
+
+  try{
+    return await assetManifestLoading;
+  }catch(error){
+    assetLoadError=error?.message || "Unable to load website assets.";
+    assetManifestLoaded=false;
+    assetManifest=[];
+    throw error;
+  }finally{
+    assetManifestLoading=null;
+  }
+}
+
+function getHeroMedia(){return assetManifest.filter(item=>item.type === "image" && item.category === "home");}
+function allImageMedia(){return assetManifest.filter(item=>item.type === "image");}
+function allVideoMedia(){return assetManifest.filter(item=>item.type === "video");}
+function allWebsiteMedia(){return assetManifest.slice();}
+
+function sectionItems(){
+  return [
+    ...Object.keys(weddingCollections).map(key=>({key,name:weddingCollections[key].name,type:"WEDDING",folder:weddingCollections[key].folder,action:`openWedding('${key}')`})),
+    ...Object.keys(portfolioCollections).map(key=>({key,name:portfolioCollections[key].name,type:"PORTFOLIO",folder:portfolioCollections[key].folder,action:`openPortfolio('${key}')`})),
+    {key:"home",name:"Home Hero",type:"HOME",folder:"assets/images/",action:"openPage('home')"},
+    {key:"videos",name:"Videos",type:"VIDEO",folder:"assets/vedeos/",action:"openPage('videos')"},
+    {key:"other",name:"Other Website Images",type:"WEBSITE",folder:"assets/images/",action:"openPage('images')"}
+  ];
+}
 
 /* =========================================================
-   ALL MEDIA
+   SECTION MEDIA
 ========================================================= */
 
-function allImageMedia(){
-
-  let result=[];
-
-  result =
-    result.concat(heroMedia);
-
-  result =
-    result.concat(serviceMedia);
-
-
-  Object.keys(weddingCollections)
-    .forEach(key=>{
-
-      result =
-        result.concat(
-          makeWeddingMedia(key)
-        );
-
-    });
-
-
-  Object.keys(portfolioCollections)
-    .forEach(key=>{
-
-      result =
-        result.concat(
-          makePortfolioMedia(key)
-        );
-
-    });
-
-
-  return result;
-
+function makeWeddingMedia(key){
+  return assetManifest.filter(item=>item.category === key && item.type === "image");
 }
 
+function makePortfolioMedia(key){
+  return assetManifest.filter(item=>item.category === key && item.type === "image");
+}
 
 /* =========================================================
    HIDDEN MEDIA
@@ -2970,19 +2625,14 @@ let hidden =
    LOCAL PREVIEW REPLACEMENTS
 ========================================================= */
 
+const localObjectPreviews = {};
+
 function previewKey(path){
-
   return "rgPreview:"+path;
-
 }
 
-
 function getPreview(path){
-
-  return localStorage.getItem(
-    previewKey(path)
-  );
-
+  return localObjectPreviews[path] || localStorage.getItem(previewKey(path));
 }
 
 
@@ -3000,8 +2650,11 @@ function createCard(
   const preview =
     getPreview(item.path);
 
+  const githubSource =
+    `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/${item.path.split("/").map(encodeURIComponent).join("/")}`;
+
   const previewSource =
-    preview || item.path;
+    preview || githubSource;
 
 
   let previewHTML="";
@@ -3014,6 +2667,8 @@ function createCard(
       <img
         src="${previewSource}"
         alt="${escapeHTML(item.name)}"
+        loading="lazy"
+        decoding="async"
         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
       >
 
@@ -3158,14 +2813,8 @@ function escapeHTML(
 ========================================================= */
 
 function renderHome(){
-
-  document.getElementById(
-    "heroGrid"
-  ).innerHTML =
-    heroMedia
-      .map(createCard)
-      .join("");
-
+  const items=getHeroMedia();
+  document.getElementById("heroGrid").innerHTML=items.length ? items.map(createCard).join("") : emptyMediaMessage("No home hero images found.");
 }
 
 
@@ -3173,140 +2822,29 @@ function renderHome(){
    IMAGE FILTERS
 ========================================================= */
 
-function renderImageFilters(){
+let currentImageFilter="all";
 
-  const categories = [
-
-    ["all","All"],
-
-    ["home","Home"],
-
-    ["haldi","Haldi"],
-
-    ["brahmin","Brahmin"],
-
-    ["christian","Christian"],
-
-    ["hindu","Hindu"],
-
-    ["muslim","Muslim"],
-
-    ["telugu","Telugu"],
-
-    ["prewedding","Pre-Wedding"],
-
-    ["postwedding","Post-Wedding"],
-
-    ["baby","Baby"],
-
-    ["maternity","Maternity"],
-
-    ["services","Services"]
-
-  ];
-
-
-  document.getElementById(
-    "imageFilters"
-  ).innerHTML =
-
-    categories
-      .map(
-        ([key,label],index)=>`
-
-          <button
-            class="filter ${index===0 ? "active":""}"
-            data-filter="${key}"
-            onclick="filterImages('${key}',this)"
-          >
-            ${label}
-          </button>
-
-        `
-      )
-      .join("");
-
+function imageFilterCategories(){
+  const labels={all:"All",home:"Home",haldi:"Haldi",brahmin:"Brahmin",christian:"Christian",hindu:"Hindu",muslim:"Muslim",telugu:"Telugu",prewedding:"Pre-Wedding",postwedding:"Post-Wedding",baby:"Baby",maternity:"Maternity",other:"Other"};
+  const images=allImageMedia();
+  return Object.keys(labels).map(key=>({key,label:labels[key],count:key === "all" ? images.length : images.filter(item=>item.category === key).length})).filter(item=>item.key === "all" || item.count>0);
 }
 
+function renderImageFilters(){
+  document.getElementById("imageFilters").innerHTML=imageFilterCategories().map((item,index)=>`<button class="filter ${index===0 ? "active":""}" data-filter="${item.key}" onclick="filterImages('${item.key}',this)">${item.label} · ${item.count}</button>`).join("");
+}
 
 /* =========================================================
    RENDER ALL IMAGES
 ========================================================= */
 
-let currentImageFilter="all";
-
-
 function renderImages(){
-
-  const query =
-    document.getElementById(
-      "imageSearch"
-    )
-    .value
-    .toLowerCase()
-    .trim();
-
-
-  let items =
-    allImageMedia();
-
-
-  if(
-    currentImageFilter !== "all"
-  ){
-
-    items =
-      items.filter(
-        item=>
-          item.category ===
-          currentImageFilter
-      );
-
-  }
-
-
-  if(query){
-
-    items =
-      items.filter(
-        item=>
-          item.name
-            .toLowerCase()
-            .includes(query)
-
-          ||
-
-          item.file
-            .toLowerCase()
-            .includes(query)
-
-          ||
-
-          item.path
-            .toLowerCase()
-            .includes(query)
-
-          ||
-
-          item.section
-            .toLowerCase()
-            .includes(query)
-      );
-
-  }
-
-
-  document.getElementById(
-    "imageGrid"
-  ).innerHTML =
-
-    items
-      .map(createCard)
-      .join("");
-
-
+  const search=document.getElementById("imageSearch")?.value.toLowerCase().trim() || "";
+  let items=allImageMedia();
+  if(currentImageFilter !== "all") items=items.filter(item=>item.category === currentImageFilter);
+  if(search) items=items.filter(item=>item.name.toLowerCase().includes(search) || item.file.toLowerCase().includes(search) || item.path.toLowerCase().includes(search) || item.section.toLowerCase().includes(search));
+  document.getElementById("imageGrid").innerHTML=items.length ? items.map(createCard).join("") : emptyMediaMessage("No matching website images found.");
 }
-
 
 function filterImages(
   category,
@@ -3463,164 +3001,64 @@ function renderPortfolioPage(){
 ========================================================= */
 
 function renderServices(){
-
-  document.getElementById(
-    "serviceGrid"
-  ).innerHTML =
-
-    serviceMedia
-      .map(createCard)
-      .join("");
-
+  const items=assetManifest.filter(item=>item.category === "services");
+  document.getElementById("serviceGrid").innerHTML=items.length ? items.map(createCard).join("") : emptyMediaMessage("No dedicated service image assets were found in the repository.");
 }
-
 
 /* =========================================================
    VIDEOS
 ========================================================= */
 
 function renderVideos(){
-
-  document.getElementById(
-    "videoGrid"
-  ).innerHTML =
-
-    videos
-      .map(createCard)
-      .join("");
-
+  const items=allVideoMedia();
+  document.getElementById("videoGrid").innerHTML=items.length ? items.map(createCard).join("") : emptyMediaMessage("No website videos found.");
 }
 
+/* =========================================================
+   ALL MEDIA PREVIEW
+========================================================= */
+
+let currentAllMediaFilter="all";
+
+function renderAllMediaFilters(){
+  const labels={all:"All Media",image:"Images",video:"Videos",home:"Home",haldi:"Haldi",brahmin:"Brahmin",christian:"Christian",hindu:"Hindu",muslim:"Muslim",telugu:"Telugu",prewedding:"Pre-Wedding",postwedding:"Post-Wedding",baby:"Baby",maternity:"Maternity",other:"Other"};
+  const items=allWebsiteMedia();
+  document.getElementById("allMediaFilters").innerHTML=Object.keys(labels).map(key=>{
+    const count=key === "all" ? items.length : (key === "image" || key === "video") ? items.filter(item=>item.type === key).length : items.filter(item=>item.category === key).length;
+    if(key !== "all" && count===0) return "";
+    return `<button class="filter ${key === currentAllMediaFilter ? "active":""}" onclick="filterAllMedia('${key}')">${labels[key]} · ${count}</button>`;
+  }).join("");
+}
+
+function filterAllMedia(filter){currentAllMediaFilter=filter;renderAllMediaPreview();}
+
+function renderAllMediaPreview(){
+  const search=document.getElementById("allMediaSearch")?.value.toLowerCase().trim() || "";
+  let items=allWebsiteMedia();
+  if(currentAllMediaFilter === "image" || currentAllMediaFilter === "video") items=items.filter(item=>item.type === currentAllMediaFilter);
+  else if(currentAllMediaFilter !== "all") items=items.filter(item=>item.category === currentAllMediaFilter);
+  if(search) items=items.filter(item=>item.name.toLowerCase().includes(search) || item.file.toLowerCase().includes(search) || item.path.toLowerCase().includes(search) || item.section.toLowerCase().includes(search));
+  renderAllMediaFilters();
+  document.getElementById("allMediaGrid").innerHTML=items.length ? items.map(createCard).join("") : emptyMediaMessage("No matching assets found.");
+}
 
 /* =========================================================
    COLLECTION DASHBOARD
 ========================================================= */
 
+function countForCategory(category){return allWebsiteMedia().filter(item=>item.category === category).length;}
+
 function renderDashboardCollections(){
-
-  const list = [
-
-    {
-      number:"01",
-      name:"Home Page",
-      description:"Three main hero images.",
-      action:"openPage('home')"
-    },
-
-    {
-      number:"02",
-      name:"Haldi",
-      description:"Haldi wedding collection.",
-      action:"openWedding('haldi')"
-    },
-
-    {
-      number:"03",
-      name:"Brahmin",
-      description:"Brahmin wedding collection.",
-      action:"openWedding('brahmin')"
-    },
-
-    {
-      number:"04",
-      name:"Christian",
-      description:"Christian wedding collection.",
-      action:"openWedding('christian')"
-    },
-
-    {
-      number:"05",
-      name:"Hindu",
-      description:"Hindu wedding collection.",
-      action:"openWedding('hindu')"
-    },
-
-    {
-      number:"06",
-      name:"Muslim",
-      description:"Muslim wedding collection.",
-      action:"openWedding('muslim')"
-    },
-
-    {
-      number:"07",
-      name:"Telugu",
-      description:"Telugu wedding collection.",
-      action:"openWedding('telugu')"
-    },
-
-    {
-      number:"08",
-      name:"Pre-Wedding",
-      description:"Pre-wedding photography.",
-      action:"openPortfolio('prewedding')"
-    },
-
-    {
-      number:"09",
-      name:"Post-Wedding",
-      description:"Post-wedding photography.",
-      action:"openPortfolio('postwedding')"
-    },
-
-    {
-      number:"10",
-      name:"Baby Shoot",
-      description:"Baby photography.",
-      action:"openPortfolio('baby')"
-    },
-
-    {
-      number:"11",
-      name:"Maternity",
-      description:"Maternity photography.",
-      action:"openPortfolio('maternity')"
-    },
-
-    {
-      number:"12",
-      name:"Videos",
-      description:"Cinematic video library.",
-      action:"openPage('videos')"
-    }
-
+  const list=[
+    {number:"01",name:"Home Page",description:`${countForCategory("home")} hero image assets.`,action:"openPage('home')"},
+    ...Object.keys(weddingCollections).map((key,index)=>({number:String(index+2).padStart(2,"0"),name:weddingCollections[key].name,description:`${countForCategory(key)} image assets.`,action:`openWedding('${key}')`})),
+    {number:"08",name:"Pre-Wedding",description:`${countForCategory("prewedding")} image assets.`,action:"openPortfolio('prewedding')"},
+    {number:"09",name:"Post-Wedding",description:`${countForCategory("postwedding")} image assets.`,action:"openPortfolio('postwedding')"},
+    {number:"10",name:"Baby Shoot",description:`${countForCategory("baby")} image assets.`,action:"openPortfolio('baby')"},
+    {number:"11",name:"Maternity",description:`${countForCategory("maternity")} image assets.`,action:"openPortfolio('maternity')"},
+    {number:"12",name:"Videos",description:`${allVideoMedia().length} video assets.`,action:"openPage('videos')"}
   ];
-
-
-  document.getElementById(
-    "dashboardCollections"
-  ).innerHTML =
-
-    list
-      .map(
-        item=>`
-
-          <div class="collection">
-
-            <div class="collection-number">
-              ${item.number}
-            </div>
-
-            <h3>
-              ${item.name}
-            </h3>
-
-            <p>
-              ${item.description}
-            </p>
-
-            <button
-              onclick="${item.action}"
-            >
-              Manage Media →
-            </button>
-
-          </div>
-
-        `
-      )
-      .join("");
-
+  document.getElementById("dashboardCollections").innerHTML=list.map(item=>`<div class="collection"><div class="collection-number">${item.number}</div><h3>${item.name}</h3><p>${item.description}</p><button onclick="${item.action}">Manage Media →</button></div>`).join("");
 }
 
 
@@ -3629,175 +3067,20 @@ function renderDashboardCollections(){
 ========================================================= */
 
 function renderSections(){
+  const sections=sectionItems();
+  document.getElementById("sectionList").innerHTML=sections.map(item=>{
+    const count=item.key === "videos" ? allVideoMedia().length : countForCategory(item.key);
+    return `<div class="section-card"><div class="section-card-head"><div><div class="type">${item.type}</div><h3>${item.name}</h3></div><span class="badge">${count} ASSETS</span></div><div class="section-path">${escapeHTML(item.folder)}</div><p>${count} live asset${count===1 ? "":"s"} currently found in this section.</p><div class="section-actions"><button class="small-btn" onclick="${item.action}">Manage</button><button class="small-btn green" onclick="previewSection('${item.key}')">Preview Assets</button></div></div>`;
+  }).join("");
+}
 
-  const sections = [
-
-    {
-      name:"Home Hero",
-      type:"HOME",
-      folder:"assets/images/",
-      example:"main-1.jpg / main-2.jpg / main-3.jpg",
-      action:"openPage('home')"
-    },
-
-    {
-      name:"Haldi",
-      type:"WEDDING",
-      folder:"assets/images/weddings/haldi/",
-      example:"cover1.webp / numbered images",
-      action:"openWedding('haldi')"
-    },
-
-    {
-      name:"Brahmin Wedding",
-      type:"WEDDING",
-      folder:"assets/images/weddings/brahmin wedding/",
-      example:"cover1.webp",
-      action:"openWedding('brahmin')"
-    },
-
-    {
-      name:"Christian Wedding",
-      type:"WEDDING",
-      folder:"assets/images/weddings/christian Wedding/",
-      example:"cover1.webp",
-      action:"openWedding('christian')"
-    },
-
-    {
-      name:"Hindu Wedding",
-      type:"WEDDING",
-      folder:"assets/images/weddings/hindu wedding/",
-      example:"cover.webp",
-      action:"openWedding('hindu')"
-    },
-
-    {
-      name:"Muslim Wedding",
-      type:"WEDDING",
-      folder:"assets/images/weddings/muslim wedding/",
-      example:"cover1.webp",
-      action:"openWedding('muslim')"
-    },
-
-    {
-      name:"Telugu Wedding",
-      type:"WEDDING",
-      folder:"assets/images/weddings/telugu wedding/",
-      example:"cover1.webp",
-      action:"openWedding('telugu')"
-    },
-
-    {
-      name:"Pre-Wedding",
-      type:"PORTFOLIO",
-      folder:"assets/images/pre-wedding/",
-      example:"cover.jpg",
-      action:"openPortfolio('prewedding')"
-    },
-
-    {
-      name:"Post-Wedding",
-      type:"PORTFOLIO",
-      folder:"assets/images/post-wedding/",
-      example:"cover.jpg",
-      action:"openPortfolio('postwedding')"
-    },
-
-    {
-      name:"Baby Shoot",
-      type:"PORTFOLIO",
-      folder:"assets/images/baby/",
-      example:"cover.jpg",
-      action:"openPortfolio('baby')"
-    },
-
-    {
-      name:"Maternity",
-      type:"PORTFOLIO",
-      folder:"assets/images/maternity/",
-      example:"cover.jpg",
-      action:"openPortfolio('maternity')"
-    },
-
-    {
-      name:"Services",
-      type:"WEBSITE",
-      folder:"assets/images/services/",
-      example:"01.jpg",
-      action:"openPage('services')"
-    },
-
-    {
-      name:"Videos",
-      type:"VIDEO",
-      folder:"assets/vedeos/",
-      example:"video-01.mp4",
-      action:"openPage('videos')"
-    }
-
-  ];
-
-
-  document.getElementById(
-    "sectionList"
-  ).innerHTML =
-
-    sections
-      .map(
-        item=>`
-
-          <div class="section-card">
-
-            <div class="section-card-head">
-
-              <div>
-
-                <div class="type">
-                  ${item.type}
-                </div>
-
-                <h3>
-                  ${item.name}
-                </h3>
-
-              </div>
-
-              <span class="badge">
-                READY
-              </span>
-
-            </div>
-
-
-            <div class="section-path">
-              ${item.folder}
-            </div>
-
-
-            <p>
-              Example:
-              ${item.example}
-            </p>
-
-
-            <div class="section-actions">
-
-              <button
-                class="small-btn"
-                onclick="${item.action}"
-              >
-                Manage
-              </button>
-
-            </div>
-
-          </div>
-
-        `
-      )
-      .join("");
-
+function previewSection(category){
+  currentAllMediaFilter=category === "videos" ? "video" : category;
+  openPage("sections");
+  const search=document.getElementById("allMediaSearch");
+  if(search) search.value="";
+  renderAllMediaPreview();
+  setTimeout(()=>document.getElementById("allMediaGrid")?.scrollIntoView({behavior:"smooth",block:"start"}),50);
 }
 
 
@@ -3877,103 +3160,63 @@ function closeUpload(){
 function processUpload(){
 
   if(!uploadTarget){
-
-    showToast(
-      "No media slot selected."
-    );
-
+    showToast("No media slot selected.");
     return;
-
   }
 
-
-  const input =
-    document.getElementById(
-      "fileInput"
-    );
-
+  const input=document.getElementById("fileInput");
 
   if(!input.files.length){
-
-    showToast(
-      "Please select a file."
-    );
-
+    showToast("Please select a file.");
     return;
-
   }
 
+  const file=input.files[0];
+  const requiredFilename=uploadTarget.split("/").pop();
 
-  const file =
-    input.files[0];
-
-
-  const requiredFilename =
-    uploadTarget
-      .split("/")
-      .pop();
-
-
-  if(
-    file.name !==
-    requiredFilename
-  ){
-
+  if(file.name !== requiredFilename){
     alert(
-
       "Filename must remain exactly:\n\n"+
       requiredFilename+
       "\n\nSelected file:\n"+
       file.name
-
     );
-
     return;
-
   }
-
 
   /*
     Local preview only.
+    Images are stored as data URLs. Videos use an object URL so
+    large MP4 files do not exceed localStorage limits.
 
     Future:
-      File
-        ↓
-      Secure Vercel API
-        ↓
-      GitHub Contents API
-        ↓
-      Commit
-        ↓
-      Vercel deployment
+      File → Secure Vercel API → GitHub Contents API → Commit → Vercel deployment
   */
 
-  const reader =
-    new FileReader();
+  if(file.type.startsWith("video/")){
 
+    if(localObjectPreviews[uploadTarget]){
+      URL.revokeObjectURL(localObjectPreviews[uploadTarget]);
+    }
+
+    localObjectPreviews[uploadTarget]=URL.createObjectURL(file);
+
+    showToast("Video replacement preview created. GitHub publishing will be connected next.");
+    closeUpload();
+    render();
+    return;
+  }
+
+  const reader=new FileReader();
 
   reader.onload=function(){
-
-    localStorage.setItem(
-      previewKey(uploadTarget),
-      reader.result
-    );
-
-
-    showToast(
-      "Replacement preview created. GitHub publishing will be connected next."
-    );
-
-
+    localStorage.setItem(previewKey(uploadTarget),reader.result);
+    showToast("Replacement preview created. GitHub publishing will be connected next.");
     closeUpload();
-
     render();
-
   };
 
-
   reader.readAsDataURL(file);
-
 }
 
 
@@ -3981,20 +3224,16 @@ function processUpload(){
    CLEAR LOCAL PREVIEW
 ========================================================= */
 
-function clearPreview(
-  path
-){
+function clearPreview(path){
 
-  localStorage.removeItem(
-    previewKey(path)
-  );
+  if(localObjectPreviews[path]){
+    URL.revokeObjectURL(localObjectPreviews[path]);
+    delete localObjectPreviews[path];
+  }
 
+  localStorage.removeItem(previewKey(path));
   render();
-
-  showToast(
-    "Local preview reset."
-  );
-
+  showToast("Local preview reset.");
 }
 
 
@@ -4048,85 +3287,12 @@ function toggleHidden(
    OPEN COLLECTION PAGE
 ========================================================= */
 
-function openCollectionPage(
-  item
-){
-
-  let page=null;
-
-
-  Object.keys(
-    weddingCollections
-  )
-  .forEach(key=>{
-
-    const data =
-      weddingCollections[key];
-
-    if(
-      item.path.startsWith(
-        data.folder
-      )
-      ||
-      item.path ===
-      data.cover
-    ){
-
-      page=data.page;
-
-    }
-
-  });
-
-
-  Object.keys(
-    portfolioCollections
-  )
-  .forEach(key=>{
-
-    const data =
-      portfolioCollections[key];
-
-    if(
-      item.path.startsWith(
-        data.folder
-      )
-      ||
-      item.path ===
-      data.cover
-    ){
-
-      page=data.page;
-
-    }
-
-  });
-
-
-  if(
-    item.category==="home"
-  ){
-
-    page="index.html";
-
-  }
-
-
-  if(page){
-
-    window.open(
-      page,
-      "_blank"
-    );
-
-  }else{
-
-    showToast(
-      "Collection page not configured."
-    );
-
-  }
-
+function openCollectionPage(item){
+  let page=item.page || null;
+  if(!page && item.category === "home") page="index.html";
+  if(!page && item.category === "videos") page="videos.html";
+  if(page) window.open(page,"_blank");
+  else showToast("Collection page not configured.");
 }
 
 
@@ -4135,57 +3301,39 @@ function openCollectionPage(
 ========================================================= */
 
 function updateCounts(){
-
-  const images =
-    allImageMedia();
-
-
-  document.getElementById(
-    "imageCount"
-  ).innerText =
-    images.length;
-
-
-  document.getElementById(
-    "videoCount"
-  ).innerText =
-    videos.length;
-
-
-  document.getElementById(
-    "hiddenCount"
-  ).innerText =
-    hidden.length;
-
+  document.getElementById("imageCount").innerText=allImageMedia().length;
+  document.getElementById("videoCount").innerText=allVideoMedia().length;
+  document.getElementById("hiddenCount").innerText=hidden.length;
 }
 
+function emptyMediaMessage(message){
+  return `<div class="notice" style="grid-column:1/-1;margin-top:0">${escapeHTML(message)}</div>`;
+}
 
-/* =========================================================
-   MASTER RENDER
-========================================================= */
+function showAssetLoading(){
+  ["heroGrid","imageGrid","serviceGrid","videoGrid","allMediaGrid","sectionList","dashboardCollections"].forEach(id=>{const element=document.getElementById(id);if(element) element.innerHTML='<div class="notice" style="grid-column:1/-1">Loading live website assets…</div>';});
+}
 
-function render(){
-
-  renderHome();
-
-  renderImageFilters();
-
-  renderImages();
-
-  renderServices();
-
-  renderVideos();
-
-  renderSections();
-
-  renderDashboardCollections();
-
-  renderWeddingPage();
-
-  renderPortfolioPage();
-
-  updateCounts();
-
+async function render(force=false){
+  showAssetLoading();
+  try{
+    await loadAssetManifest(force);
+    renderHome();
+    renderImageFilters();
+    renderImages();
+    renderServices();
+    renderVideos();
+    renderSections();
+    renderAllMediaFilters();
+    renderAllMediaPreview();
+    renderDashboardCollections();
+    renderWeddingPage();
+    renderPortfolioPage();
+    updateCounts();
+  }catch(error){
+    const message=assetLoadError || "Unable to load the live website asset list.";
+    ["heroGrid","imageGrid","serviceGrid","videoGrid","allMediaGrid","sectionList","dashboardCollections"].forEach(id=>{const element=document.getElementById(id);if(element) element.innerHTML=emptyMediaMessage(message+" Use Refresh to try again.");});
+  }
 }
 
 
