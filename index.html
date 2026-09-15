@@ -700,13 +700,15 @@
         required
       >
 
-    <div class="date-field">
-    <span class="date-placeholder">Event / Wedding Date</span>
+  <div class="rg-date-field">
     <input
         type="date"
         id="rgDate"
+        name="date"
+        aria-label="Date"
         required
     >
+    <span class="date-placeholder">Event / Wedding Date</span>
 </div>
       <input
   type="text"
@@ -751,6 +753,25 @@ Please share your availability and packages.`;
 
     window.open(whatsappURL, "_blank");
 });
+</script>
+
+      <script>
+const rgDate = document.getElementById("rgDate");
+
+function updateDatePlaceholder() {
+    const placeholder = document.querySelector(".date-placeholder");
+
+    if (rgDate.value) {
+        placeholder.style.opacity = "0";
+    } else {
+        placeholder.style.opacity = "1";
+    }
+}
+
+rgDate.addEventListener("change", updateDatePlaceholder);
+rgDate.addEventListener("input", updateDatePlaceholder);
+
+updateDatePlaceholder();
 </script>
 
   </main>
