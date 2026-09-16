@@ -1369,6 +1369,14 @@ main{
 
     <button
       class="logout"
+      style="margin-top:14px;border-color:#334960"
+      onclick="openWebsite()"
+    >
+      Public Website ↗
+    </button>
+
+    <button
+      class="logout"
       onclick="logout()"
     >
       Logout
@@ -1415,7 +1423,7 @@ main{
         class="btn"
         onclick="openWebsite()"
       >
-        Open Website ↗
+        Public Website ↗
       </button>
 
       <button
@@ -1694,7 +1702,7 @@ main{
         class="btn"
         onclick="openWebsite()"
       >
-        Open Website ↗
+        Public Website ↗
       </button>
 
     </div>
@@ -1798,7 +1806,7 @@ main{
       class="btn"
       onclick="openWebsite()"
     >
-      Open Website ↗
+      Public Website ↗
     </button>
 
   </div>
@@ -1904,7 +1912,7 @@ main{
         class="btn"
         onclick="openWebsite()"
       >
-        Open Website ↗
+        Public Website ↗
       </button>
 
       <button
@@ -1968,7 +1976,7 @@ main{
         class="btn"
         onclick="openWebsite()"
       >
-        Open Website ↗
+        Public Website ↗
       </button>
 
       <button
@@ -2030,7 +2038,7 @@ main{
       class="btn"
       onclick="openWebsite()"
     >
-      Open Website ↗
+      Public Website ↗
     </button>
 
   </div>
@@ -2371,6 +2379,11 @@ main{
 
         The filename must match the existing
         website slot exactly.
+
+        <br><br>
+
+        Preview Replacement = preview only.
+        Publish Replacement = save to GitHub and trigger the Vercel deployment.
 
       </div>
 
@@ -3098,6 +3111,7 @@ function previewSection(category){
 ========================================================= */
 
 let uploadTarget=null;
+let pendingUploadFile=null;
 
 
 function openUpload(
@@ -3161,8 +3175,20 @@ function closeUpload(){
     "uploadModal"
   ).classList.remove("show");
 
-  uploadTarget=null;
+  if(uploadTarget && localObjectPreviews[uploadTarget]){
+    URL.revokeObjectURL(localObjectPreviews[uploadTarget]);
+    delete localObjectPreviews[uploadTarget];
+  }
 
+  uploadTarget=null;
+  pendingUploadFile=null;
+
+  const publishButton=document.getElementById("publishButton");
+  if(publishButton){
+    publishButton.style.display="none";
+    publishButton.disabled=false;
+    publishButton.innerText="Publish Replacement";
+  }
 }
 
 
@@ -3174,7 +3200,6 @@ function processUpload(){
   }
 
   const input=document.getElementById("fileInput");
-
   if(!input.files.length){
     showToast("Please select a file.");
     return;
@@ -3193,39 +3218,116 @@ function processUpload(){
     return;
   }
 
-  /*
-    Local preview only.
-    Images are stored as data URLs. Videos use an object URL so
-    large MP4 files do not exceed localStorage limits.
+  pendingUploadFile=file;
 
-    Future:
-      File → Secure Vercel API → GitHub Contents API → Commit → Vercel deployment
-  */
+  if(localObjectPreviews[uploadTarget]){
+    URL.revokeObjectURL(localObjectPreviews[uploadTarget]);
+  }
+  localObjectPreviews[uploadTarget]=URL.createObjectURL(file);
 
-  if(file.type.startsWith("video/")){
+  const publishButton=document.getElementById("publishButton");
+  if(publishButton){
+    publishButton.style.display="inline-block";
+    publishButton.disabled=false;
+    publishButton.innerText="Publish Replacement";
+  }
 
-    if(localObjectPreviews[uploadTarget]){
-      URL.revokeObjectURL(localObjectPreviews[uploadTarget]);
-    }
+  showToast("Preview ready. Click Publish Replacement to update GitHub.");
+  render();
+}
 
-    localObjectPreviews[uploadTarget]=URL.createObjectURL(file);
 
-    showToast("Video replacement preview created. GitHub publishing will be connected next.");
-    closeUpload();
-    render();
+/* =========================================================
+   PUBLISH REPLACEMENT TO GITHUB
+========================================================= */
+
+function fileToDataURL(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>resolve(String(reader.result || ""));
+    reader.onerror=()=>reject(new Error("Unable to read the selected file."));
+    reader.readAsDataURL(file);
+  });
+}
+
+async function publishReplacement(){
+
+  if(!uploadTarget || !pendingUploadFile){
+    showToast("Select a replacement file first.");
     return;
   }
 
-  const reader=new FileReader();
+  const file=pendingUploadFile;
+  const path=uploadTarget;
+  const isVideo=file.type.startsWith("video/");
 
-  reader.onload=function(){
-    localStorage.setItem(previewKey(uploadTarget),reader.result);
-    showToast("Replacement preview created. GitHub publishing will be connected next.");
-    closeUpload();
-    render();
-  };
+  if(isVideo && file.size > 3 * 1024 * 1024){
+    alert("This video is too large for the current Vercel API upload method.\n\nPlease use an image here, or add dedicated video storage later.");
+    return;
+  }
 
-  reader.readAsDataURL(file);
+  const button=document.getElementById("publishButton");
+  if(button){
+    button.disabled=true;
+    button.innerText="Publishing…";
+  }
+
+  try{
+    const dataUrl=await fileToDataURL(file);
+    const commaIndex=dataUrl.indexOf(",");
+    if(commaIndex < 0) throw new Error("Invalid file encoding.");
+
+    const base64=dataUrl.slice(commaIndex+1);
+
+    const response=await fetch("/api/media",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        action:"replace",
+        path,
+        content:base64,
+        message:`Admin: replace ${path}`
+      })
+    });
+
+    let result;
+    try{
+      result=await response.json();
+    }catch{
+      throw new Error(`API returned an invalid response (${response.status}).`);
+    }
+
+    if(!response.ok || !result.ok){
+      throw new Error(result?.error || `Publishing failed (${response.status}).`);
+    }
+
+    showToast("Published to GitHub successfully. Vercel will deploy the change.");
+    pendingUploadFile=null;
+
+    if(button){
+      button.innerText="Published ✓";
+      button.disabled=true;
+    }
+
+    setTimeout(()=>{
+      closeUpload();
+      render(true);
+    },1500);
+
+  }catch(error){
+    console.error(error);
+    showToast(error?.message || "Unable to publish the replacement.");
+    alert(
+      "Unable to publish the image.\n\n"+
+      (error?.message || "Unknown error")+
+      "\n\nCheck the Vercel /api/media connection and Production environment variables."
+    );
+
+    if(button){
+      button.disabled=false;
+      button.innerText="Publish Replacement";
+    }
+  }
 }
 
 
