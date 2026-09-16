@@ -2456,23 +2456,6 @@ let assetLoadError = "";
    LOGIN
 ========================================================= */
 
-const ADMIN_USERNAME = "rgadmin";
-const ADMIN_PASSWORD = "RG@2026";
-
-function login(){
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value;
-
-  if(username === ADMIN_USERNAME && password === ADMIN_PASSWORD){
-    sessionStorage.setItem("rgAdminLogin","true");
-    document.getElementById("loginScreen").style.display="none";
-    document.getElementById("adminApp").style.display="block";
-    render();
-  }else{
-    document.getElementById("loginError").innerText = "Invalid username or password.";
-  }
-}
-
 function logout(){
   sessionStorage.removeItem("rgAdminLogin");
   location.reload();
