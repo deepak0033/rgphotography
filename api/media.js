@@ -1,103 +1,43 @@
-import crypto from "crypto";
+export default async function handler(req, res) {
+  const {
+    GITHUB_TOKEN,
+    GITHUB_OWNER,
+    GITHUB_REPO,
+    GITHUB_BRANCH,
+    ADMIN_USER,
+    ADMIN_PASSWORD,
+    ADMIN_SESSION_SECRET
+  } = process.env;
 
-const SESSION_COOKIE = "rg_admin_session";
-const SESSION_HOURS = 8;
+  const branch = GITHUB_BRANCH || "main";
 
-function json(res, status, data) {
-  return res.status(status).json(data);
-}
+  /* =========================================================
+     BASIC RESPONSE HELPERS
+  ========================================================= */
 
-function githubHeaders() {
-  return {
-    Accept: "application/vnd.github+json",
-    Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
-    "X-GitHub-Api-Version": "2022-11-28",
-    "Content-Type": "application/json"
-  };
-}
-
-function getCookie(req, name) {
-  const cookie = req.headers.cookie || "";
-
-  const part = cookie
-    .split(";")
-    .map(v => v.trim())
-    .find(v => v.startsWith(name + "="));
-
-  return part ? decodeURIComponent(part.slice(name.length + 1)) : null;
-}
-
-function signSession(username, timestamp) {
-  const secret = process.env.ADMIN_SESSION_SECRET;
-
-  return crypto
-    .createHmac("sha256", secret)
-    .update(`${username}.${timestamp}`)
-    .digest("hex");
-}
-
-function createSession(username) {
-  const timestamp = Date.now().toString();
-  const signature = signSession(username, timestamp);
-
-  return Buffer
-    .from(`${username}.${timestamp}.${signature}`)
-    .toString("base64url");
-}
-
-function verifySession(req) {
-  try {
-    const session = getCookie(req, SESSION_COOKIE);
-
-    if (!session) return false;
-
-    const decoded = Buffer
-      .from(session, "base64url")
-      .toString("utf8");
-
-    const parts = decoded.split(".");
-
-    if (parts.length !== 3) return false;
-
-    const [username, timestamp, signature] = parts;
-
-    const age = Date.now() - Number(timestamp);
-
-    if (!Number.isFinite(age)) return false;
-
-    if (age > SESSION_HOURS * 60 * 60 * 1000) {
-      return false;
-    }
-
-    const expected = signSession(username, timestamp);
-
-    return crypto.timingSafeEqual(
-      Buffer.from(signature),
-      Buffer.from(expected)
-    );
-  } catch {
-    return false;
+  function json(status, data) {
+    res.status(status).json(data);
   }
-}
 
-function setSessionCookie(res, username) {
-  const session = createSession(username);
+  function getBody() {
+    return req.body || {};
+  }
 
-  res.setHeader(
-    "Set-Cookie",
-    `${SESSION_COOKIE}=${encodeURIComponent(session)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${SESSION_HOURS * 60 * 60}`
-  );
-}
+  /* =========================================================
+     ENVIRONMENT CHECK
+  ========================================================= */
 
-function clearSessionCookie(res) {
-  res.setHeader(
-    "Set-Cookie",
-    `${SESSION_COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`
-  );
-}
+  function githubConfigured() {
+    return Boolean(
+      GITHUB_TOKEN &&
+      GITHUB_OWNER &&
+      GITHUB_REPO
+    );
+  }
 
-function allowedPath(path) {
-  if (typeof path !== "string") return false;
+  /* =========================================================
+     ALLOWED MEDIA PATHS
+  ========================================================= */
 
   const allowedPrefixes = [
     "assets/images/baby/",
@@ -105,286 +45,904 @@ function allowedPath(path) {
     "assets/images/pre-wedding/",
     "assets/images/post-wedding/",
     "assets/images/weddings/",
-    "assets/images/main-"
+    "assets/videos/"
+  ];
+
+  const allowedExactFiles = [
+    "assets/images/main-1.jpg",
+    "assets/images/main-2.jpg",
+    "assets/images/main-3.jpg"
   ];
 
   const allowedExtensions = [
     ".jpg",
     ".jpeg",
     ".png",
-    ".webp"
+    ".webp",
+    ".gif",
+    ".mp4",
+    ".webm",
+    ".mov"
   ];
 
-  const prefixOK = allowedPrefixes.some(prefix =>
-    path.startsWith(prefix)
-  );
+  function isAllowedPath(filePath) {
+    if (typeof filePath !== "string") {
+      return false;
+    }
 
-  const extensionOK = allowedExtensions.some(ext =>
-    path.toLowerCase().endsWith(ext)
-  );
+    if (filePath.includes("..")) {
+      return false;
+    }
 
-  return prefixOK && extensionOK;
-}
+    if (filePath.startsWith("/")) {
+      return false;
+    }
 
-async function githubGet(path) {
-  const owner = process.env.GITHUB_OWNER;
-  const repo = process.env.GITHUB_REPO;
-  const branch = process.env.GITHUB_BRANCH || "main";
+    const exactAllowed =
+      allowedExactFiles.includes(filePath);
 
-  const encodedPath = path
-    .split("/")
-    .map(encodeURIComponent)
-    .join("/");
+    const prefixAllowed =
+      allowedPrefixes.some(prefix =>
+        filePath.startsWith(prefix)
+      );
 
-  const url =
-    `https://api.github.com/repos/${owner}/${repo}/contents/${encodedPath}?ref=${encodeURIComponent(branch)}`;
+    const extensionAllowed =
+      allowedExtensions.some(ext =>
+        filePath.toLowerCase().endsWith(ext)
+      );
 
-  const response = await fetch(url, {
-    headers: githubHeaders()
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(
-      data.message || `GitHub request failed: ${response.status}`
+    return (
+      (exactAllowed || prefixAllowed) &&
+      extensionAllowed
     );
   }
 
-  return data;
-}
+  /* =========================================================
+     GITHUB HEADERS
+  ========================================================= */
 
-async function githubUpdate(path, content, message) {
-  const owner = process.env.GITHUB_OWNER;
-  const repo = process.env.GITHUB_REPO;
-  const branch = process.env.GITHUB_BRANCH || "main";
+  function githubHeaders() {
+    return {
+      Accept: "application/vnd.github+json",
+      Authorization: `Bearer ${GITHUB_TOKEN}`,
+      "X-GitHub-Api-Version": "2026-03-10",
+      "Content-Type": "application/json"
+    };
+  }
 
-  const current = await githubGet(path);
+  function githubUrl(path = "") {
+    const encodedPath = path
+      .split("/")
+      .map(encodeURIComponent)
+      .join("/");
 
-  const encodedPath = path
-    .split("/")
-    .map(encodeURIComponent)
-    .join("/");
+    let url =
+      `https://api.github.com/repos/` +
+      `${encodeURIComponent(GITHUB_OWNER)}/` +
+      `${encodeURIComponent(GITHUB_REPO)}/contents`;
 
-  const url =
-    `https://api.github.com/repos/${owner}/${repo}/contents/${encodedPath}`;
+    if (path) {
+      url += `/${encodedPath}`;
+    }
 
-  const response = await fetch(url, {
-    method: "PUT",
-    headers: githubHeaders(),
-    body: JSON.stringify({
-      message,
-      content,
-      branch,
-      sha: current.sha
-    })
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(
-      data.message || `GitHub update failed: ${response.status}`
+    return (
+      url +
+      `?ref=${encodeURIComponent(branch)}`
     );
   }
 
-  return data;
-}
+  /* =========================================================
+     GITHUB GET FILE
+  ========================================================= */
 
-async function githubDelete(path, message) {
-  const owner = process.env.GITHUB_OWNER;
-  const repo = process.env.GITHUB_REPO;
-  const branch = process.env.GITHUB_BRANCH || "main";
-
-  const current = await githubGet(path);
-
-  const encodedPath = path
-    .split("/")
-    .map(encodeURIComponent)
-    .join("/");
-
-  const url =
-    `https://api.github.com/repos/${owner}/${repo}/contents/${encodedPath}`;
-
-  const response = await fetch(url, {
-    method: "DELETE",
-    headers: githubHeaders(),
-    body: JSON.stringify({
-      message,
-      branch,
-      sha: current.sha
-    })
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(
-      data.message || `GitHub delete failed: ${response.status}`
+  async function getGitHubFile(path) {
+    const response = await fetch(
+      githubUrl(path),
+      {
+        method: "GET",
+        headers: githubHeaders()
+      }
     );
+
+    const text = await response.text();
+
+    let data;
+
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = {
+        message: text
+      };
+    }
+
+    if (!response.ok) {
+      throw new Error(
+        data.message ||
+        `GitHub request failed: ${response.status}`
+      );
+    }
+
+    return data;
   }
 
-  return data;
-}
+  /* =========================================================
+     GITHUB LIST DIRECTORY
+  ========================================================= */
 
-export default async function handler(req, res) {
-  try {
-    const {
-      GITHUB_TOKEN,
-      GITHUB_OWNER,
-      GITHUB_REPO,
-      ADMIN_USER,
-      ADMIN_PASSWORD,
-      ADMIN_SESSION_SECRET
-    } = process.env;
+  async function listDirectory(path) {
+    const response = await fetch(
+      githubUrl(path),
+      {
+        method: "GET",
+        headers: githubHeaders()
+      }
+    );
+
+    const text = await response.text();
+
+    let data;
+
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = {
+        message: text
+      };
+    }
+
+    if (!response.ok) {
+      throw new Error(
+        data.message ||
+        `GitHub directory request failed: ${response.status}`
+      );
+    }
+
+    return Array.isArray(data) ? data : [];
+  }
+
+  /* =========================================================
+     RECURSIVE DIRECTORY WALK
+  ========================================================= */
+
+  async function collectFiles(path) {
+    const entries = await listDirectory(path);
+
+    const results = [];
+
+    for (const entry of entries) {
+      if (entry.type === "file") {
+        const filePath = entry.path;
+
+        if (
+          isAllowedPath(filePath)
+        ) {
+          results.push({
+            path: filePath,
+            name: entry.name,
+            type: "file",
+            size: entry.size || 0,
+            sha: entry.sha || null,
+            download_url:
+              entry.download_url || null
+          });
+        }
+      }
+
+      if (entry.type === "dir") {
+        const nested = await collectFiles(
+          entry.path
+        );
+
+        results.push(...nested);
+      }
+    }
+
+    return results;
+  }
+
+  /* =========================================================
+     GITHUB CREATE / REPLACE FILE
+  ========================================================= */
+
+  async function putGitHubFile({
+    path,
+    contentBase64,
+    message,
+    sha
+  }) {
+    const encodedPath = path
+      .split("/")
+      .map(encodeURIComponent)
+      .join("/");
+
+    const url =
+      `https://api.github.com/repos/` +
+      `${encodeURIComponent(GITHUB_OWNER)}/` +
+      `${encodeURIComponent(GITHUB_REPO)}/contents/` +
+      `${encodedPath}`;
+
+    const payload = {
+      message:
+        message ||
+        `Admin update: ${path}`,
+      content: contentBase64,
+      branch
+    };
+
+    if (sha) {
+      payload.sha = sha;
+    }
+
+    const response = await fetch(
+      url,
+      {
+        method: "PUT",
+        headers: githubHeaders(),
+        body: JSON.stringify(payload)
+      }
+    );
+
+    const text = await response.text();
+
+    let data;
+
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = {
+        message: text
+      };
+    }
+
+    if (!response.ok) {
+      throw new Error(
+        data.message ||
+        `GitHub upload failed: ${response.status}`
+      );
+    }
+
+    return data;
+  }
+
+  /* =========================================================
+     GITHUB DELETE FILE
+  ========================================================= */
+
+  async function deleteGitHubFile({
+    path,
+    sha,
+    message
+  }) {
+    const encodedPath = path
+      .split("/")
+      .map(encodeURIComponent)
+      .join("/");
+
+    const url =
+      `https://api.github.com/repos/` +
+      `${encodeURIComponent(GITHUB_OWNER)}/` +
+      `${encodeURIComponent(GITHUB_REPO)}/contents/` +
+      `${encodedPath}`;
+
+    const payload = {
+      message:
+        message ||
+        `Admin remove: ${path}`,
+      sha,
+      branch
+    };
+
+    const response = await fetch(
+      url,
+      {
+        method: "DELETE",
+        headers: githubHeaders(),
+        body: JSON.stringify(payload)
+      }
+    );
+
+    const text = await response.text();
+
+    let data;
+
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = {
+        message: text
+      };
+    }
+
+    if (!response.ok) {
+      throw new Error(
+        data.message ||
+        `GitHub delete failed: ${response.status}`
+      );
+    }
+
+    return data;
+  }
+
+  /* =========================================================
+     BASE64 VALIDATION
+  ========================================================= */
+
+  function cleanBase64(value) {
+    if (typeof value !== "string") {
+      return null;
+    }
+
+    /*
+      Supports:
+      data:image/jpeg;base64,AAAA...
+      OR
+      plain Base64
+    */
+
+    if (value.includes(",")) {
+      value =
+        value.substring(
+          value.indexOf(",") + 1
+        );
+    }
+
+    value = value.replace(/\s/g, "");
+
+    return value || null;
+  }
+
+  /* =========================================================
+     OPTIONAL ADMIN SESSION
+     ========================================================= */
+
+  /*
+    This API supports ADMIN_USER / ADMIN_PASSWORD.
+    The browser-side admin portal can later use the
+    login action to receive a session cookie.
+  */
+
+  function base64UrlEncode(buffer) {
+    return Buffer.from(buffer)
+      .toString("base64")
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/g, "");
+  }
+
+  function base64UrlDecode(value) {
+    let str = value
+      .replace(/-/g, "+")
+      .replace(/_/g, "/");
+
+    while (str.length % 4) {
+      str += "=";
+    }
+
+    return Buffer.from(str, "base64");
+  }
+
+  async function hmacSha256(value) {
+    const crypto =
+      await import("node:crypto");
+
+    return crypto
+      .createHmac(
+        "sha256",
+        ADMIN_SESSION_SECRET
+      )
+      .update(value)
+      .digest();
+  }
+
+  async function createSession(username) {
+    if (!ADMIN_SESSION_SECRET) {
+      return null;
+    }
+
+    const now =
+      Math.floor(Date.now() / 1000);
+
+    const payload = {
+      user: username,
+      iat: now,
+      exp: now + 60 * 60 * 12
+    };
+
+    const encodedPayload =
+      base64UrlEncode(
+        JSON.stringify(payload)
+      );
+
+    const signature =
+      base64UrlEncode(
+        await hmacSha256(
+          encodedPayload
+        )
+      );
+
+    return `${encodedPayload}.${signature}`;
+  }
+
+  async function verifySession(req) {
+    if (!ADMIN_SESSION_SECRET) {
+      return false;
+    }
+
+    const cookieHeader =
+      req.headers.cookie || "";
+
+    const match =
+      cookieHeader.match(
+        /rj_admin_session=([^;]+)/
+      );
+
+    if (!match) {
+      return false;
+    }
+
+    const token = match[1];
+
+    const parts =
+      token.split(".");
+
+    if (parts.length !== 2) {
+      return false;
+    }
+
+    const [
+      encodedPayload,
+      suppliedSignature
+    ] = parts;
+
+    const expectedSignature =
+      base64UrlEncode(
+        await hmacSha256(
+          encodedPayload
+        )
+      );
 
     if (
-      !GITHUB_TOKEN ||
-      !GITHUB_OWNER ||
-      !GITHUB_REPO ||
+      suppliedSignature !==
+      expectedSignature
+    ) {
+      return false;
+    }
+
+    try {
+      const payload =
+        JSON.parse(
+          base64UrlDecode(
+            encodedPayload
+          ).toString("utf8")
+        );
+
+      if (
+        !payload.exp ||
+        payload.exp <
+          Math.floor(Date.now() / 1000)
+      ) {
+        return false;
+      }
+
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /* =========================================================
+     METHODS
+  ========================================================= */
+
+  if (req.method === "OPTIONS") {
+    res.setHeader(
+      "Access-Control-Allow-Origin",
+      req.headers.origin || "*"
+    );
+
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Content-Type"
+    );
+
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET,POST,OPTIONS"
+    );
+
+    return res.status(204).end();
+  }
+
+  /* =========================================================
+     GET
+  ========================================================= */
+
+  if (req.method === "GET") {
+    if (!githubConfigured()) {
+      return json(500, {
+        ok: false,
+        connected: false,
+        error:
+          "GitHub environment variables are not configured."
+      });
+    }
+
+    try {
+      /*
+        Simple health check:
+        /api/media
+      */
+
+      if (!req.query || !req.query.action) {
+        return json(200, {
+          ok: true,
+          connected: true,
+          owner: GITHUB_OWNER,
+          repo: GITHUB_REPO,
+          branch,
+          api: "RJ Photography Media API"
+        });
+      }
+
+      /*
+        List all managed media:
+        /api/media?action=list
+      */
+
+      if (
+        req.query.action === "list"
+      ) {
+        const files = [];
+
+        const roots = [
+          "assets/images/baby",
+          "assets/images/maternity",
+          "assets/images/pre-wedding",
+          "assets/images/post-wedding",
+          "assets/images/weddings",
+          "assets/videos"
+        ];
+
+        for (const root of roots) {
+          try {
+            const nested =
+              await collectFiles(root);
+
+            files.push(...nested);
+          } catch (error) {
+            console.warn(
+              `Could not read ${root}:`,
+              error.message
+            );
+          }
+        }
+
+        /*
+          Main image files
+        */
+
+        for (const mainFile of allowedExactFiles) {
+          try {
+            const file =
+              await getGitHubFile(
+                mainFile
+              );
+
+            files.push({
+              path: mainFile,
+              name:
+                mainFile.split("/").pop(),
+              type: "file",
+              size:
+                file.size || 0,
+              sha:
+                file.sha || null,
+              download_url:
+                file.download_url || null
+            });
+          } catch {
+            /*
+              Ignore missing main files
+            */
+          }
+        }
+
+        return json(200, {
+          ok: true,
+          branch,
+          count: files.length,
+          files
+        });
+      }
+
+      return json(400, {
+        ok: false,
+        error:
+          "Unknown GET action."
+      });
+
+    } catch (error) {
+      return json(500, {
+        ok: false,
+        error:
+          error.message ||
+          "Server error."
+      });
+    }
+  }
+
+  /* =========================================================
+     POST
+  ========================================================= */
+
+  if (req.method !== "POST") {
+    res.setHeader(
+      "Allow",
+      "GET, POST, OPTIONS"
+    );
+
+    return json(405, {
+      ok: false,
+      error:
+        "Method not allowed."
+    });
+  }
+
+  const body = getBody();
+
+  /* =========================================================
+     LOGIN
+  ========================================================= */
+
+  if (body.action === "login") {
+    if (
       !ADMIN_USER ||
       !ADMIN_PASSWORD ||
       !ADMIN_SESSION_SECRET
     ) {
-      return json(res, 500, {
+      return json(500, {
         ok: false,
-        error: "Required Vercel environment variables are not configured."
+        error:
+          "Admin environment variables are not configured."
       });
     }
 
-    const action = req.body?.action;
+    const username =
+      String(body.username || "");
 
-    /*
-     * LOGIN
-     */
-    if (req.method === "POST" && action === "login") {
-      const username = String(req.body?.username || "");
-      const password = String(req.body?.password || "");
+    const password =
+      String(body.password || "");
 
-      if (
-        username !== ADMIN_USER ||
-        password !== ADMIN_PASSWORD
-      ) {
-        return json(res, 401, {
-          ok: false,
-          error: "Invalid username or password."
-        });
-      }
-
-      setSessionCookie(res, username);
-
-      return json(res, 200, {
-        ok: true,
-        authenticated: true
-      });
-    }
-
-    /*
-     * LOGOUT
-     */
-    if (req.method === "POST" && action === "logout") {
-      clearSessionCookie(res);
-
-      return json(res, 200, {
-        ok: true
-      });
-    }
-
-    /*
-     * CHECK SESSION / API STATUS
-     */
-    if (req.method === "GET") {
-      return json(res, 200, {
-        ok: true,
-        connected: true,
-        authenticated: verifySession(req),
-        owner: GITHUB_OWNER,
-        repo: GITHUB_REPO,
-        branch: process.env.GITHUB_BRANCH || "main"
-      });
-    }
-
-    /*
-     * ALL WRITE ACTIONS REQUIRE LOGIN
-     */
-    if (!verifySession(req)) {
-      return json(res, 401, {
+    if (
+      username !== ADMIN_USER ||
+      password !== ADMIN_PASSWORD
+    ) {
+      return json(401, {
         ok: false,
-        error: "Admin session expired or not authenticated."
+        error:
+          "Incorrect User ID or Password."
       });
     }
 
-    if (req.method !== "POST") {
-      return json(res, 405, {
-        ok: false,
-        error: "Method not allowed."
-      });
-    }
-
-    const path = req.body?.path;
-
-    if (!allowedPath(path)) {
-      return json(res, 400, {
-        ok: false,
-        error: "This file path is not allowed."
-      });
-    }
-
-    /*
-     * REPLACE IMAGE
-     */
-    if (action === "replace") {
-      const content = String(req.body?.content || "");
-
-      if (!content) {
-        return json(res, 400, {
-          ok: false,
-          error: "Missing file content."
-        });
-      }
-
-      const result = await githubUpdate(
-        path,
-        content,
-        `Admin: replace ${path}`
+    const session =
+      await createSession(
+        username
       );
 
-      return json(res, 200, {
-        ok: true,
-        action: "replace",
-        path,
-        commit: result.commit?.sha || null
-      });
-    }
+    res.setHeader(
+      "Set-Cookie",
+      `rj_admin_session=${session}; ` +
+      `Path=/; ` +
+      `HttpOnly; ` +
+      `Secure; ` +
+      `SameSite=Lax; ` +
+      `Max-Age=43200`
+    );
 
-    /*
-     * REMOVE IMAGE
-     */
-    if (action === "remove") {
-      const result = await githubDelete(
-        path,
-        `Admin: remove ${path}`
-      );
-
-      return json(res, 200, {
-        ok: true,
-        action: "remove",
-        path,
-        commit: result.commit?.sha || null
-      });
-    }
-
-    return json(res, 400, {
-      ok: false,
-      error: "Unknown action."
-    });
-
-  } catch (error) {
-    console.error(error);
-
-    return json(res, 500, {
-      ok: false,
-      error: error?.message || "Server error."
+    return json(200, {
+      ok: true,
+      authenticated: true
     });
   }
+
+  /* =========================================================
+     LOGOUT
+  ========================================================= */
+
+  if (body.action === "logout") {
+    res.setHeader(
+      "Set-Cookie",
+      "rj_admin_session=; " +
+      "Path=/; " +
+      "HttpOnly; " +
+      "Secure; " +
+      "SameSite=Lax; " +
+      "Max-Age=0"
+    );
+
+    return json(200, {
+      ok: true,
+      authenticated: false
+    });
+  }
+
+  /* =========================================================
+     SESSION CHECK
+  ========================================================= */
+
+  if (body.action === "session") {
+    const authenticated =
+      await verifySession(req);
+
+    return json(200, {
+      ok: true,
+      authenticated
+    });
+  }
+
+  /* =========================================================
+     GITHUB CONFIG CHECK
+  ========================================================= */
+
+  if (!githubConfigured()) {
+    return json(500, {
+      ok: false,
+      error:
+        "GitHub environment variables are not configured."
+    });
+  }
+
+  /* =========================================================
+     REQUIRE ADMIN SESSION FOR MEDIA CHANGES
+  ========================================================= */
+
+  const authenticated =
+    await verifySession(req);
+
+  if (!authenticated) {
+    return json(401, {
+      ok: false,
+      error:
+        "Admin authentication required."
+    });
+  }
+
+  /* =========================================================
+     VALIDATE ACTION
+  ========================================================= */
+
+  const action =
+    String(body.action || "");
+
+  const filePath =
+    body.path;
+
+  if (
+    !filePath ||
+    !isAllowedPath(filePath)
+  ) {
+    return json(400, {
+      ok: false,
+      error:
+        "Invalid or disallowed media path.",
+      path: filePath
+    });
+  }
+
+  /* =========================================================
+     REPLACE / UPLOAD
+  ========================================================= */
+
+  if (
+    action === "replace" ||
+    action === "upload"
+  ) {
+    const content =
+      cleanBase64(
+        body.content
+      );
+
+    if (!content) {
+      return json(400, {
+        ok: false,
+        error:
+          "Base64 file content is required."
+      });
+    }
+
+    let existing;
+
+    try {
+      existing =
+        await getGitHubFile(
+          filePath
+        );
+    } catch {
+      existing = null;
+    }
+
+    const result =
+      await putGitHubFile({
+        path: filePath,
+        contentBase64: content,
+        sha:
+          existing?.sha,
+        message:
+          body.message ||
+          `Admin: ${action} ${filePath}`
+      });
+
+    return json(200, {
+      ok: true,
+      action,
+      path: filePath,
+      branch,
+      commit:
+        result.commit?.sha ||
+        null,
+      github_path:
+        result.content?.path ||
+        filePath
+    });
+  }
+
+  /* =========================================================
+     REMOVE
+  ========================================================= */
+
+  if (action === "remove") {
+    let existing;
+
+    try {
+      existing =
+        await getGitHubFile(
+          filePath
+        );
+    } catch {
+      return json(404, {
+        ok: false,
+        error:
+          "File not found in GitHub.",
+        path: filePath
+      });
+    }
+
+    if (!existing.sha) {
+      return json(500, {
+        ok: false,
+        error:
+          "GitHub file SHA could not be determined."
+      });
+    }
+
+    const result =
+      await deleteGitHubFile({
+        path: filePath,
+        sha: existing.sha,
+        message:
+          body.message ||
+          `Admin: remove ${filePath}`
+      });
+
+    return json(200, {
+      ok: true,
+      action: "remove",
+      path: filePath,
+      branch,
+      commit:
+        result.commit?.sha ||
+        null
+    });
+  }
+
+  /* =========================================================
+     UNKNOWN ACTION
+  ========================================================= */
+
+  return json(400, {
+    ok: false,
+    error:
+      `Unknown action: ${action}`
+  });
 }
