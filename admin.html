@@ -1568,10 +1568,11 @@ function createCard(
     Date.now();
 
   if(isVideo){
-
-    preview.controls=true;
-
-  }else{
+  preview.controls = true;
+  preview.preload = "metadata";
+  preview.playsInline = true;
+  preview.muted = true;
+}else{
 
     preview.loading="lazy";
 
