@@ -374,6 +374,110 @@ button{
   font-weight:700;
 }
 
+/* RG VIDEO MANAGER */
+.video-manager-panel{
+  border:1px solid #29384c;
+  background:#0a1728;
+  padding:20px;
+  margin-bottom:20px;
+}
+
+.video-manager-panel h3{
+  margin:0 0 8px;
+  font-size:22px;
+}
+
+.video-manager-panel p{
+  margin:0 0 16px;
+  color:#8ba5c4;
+  font-size:12px;
+}
+
+.video-manager-toolbar{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:10px;
+  margin-bottom:18px;
+}
+
+.video-manager-toolbar select,
+.video-manager-toolbar input[type="file"],
+.video-manager-toolbar button{
+  width:100%;
+  min-height:42px;
+  background:#0d1c2d;
+  color:#fff;
+  border:1px solid #33475f;
+  padding:10px 12px;
+}
+
+.video-manager-toolbar button{
+  background:#e7ebf1;
+  color:#07111f;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.video-manager-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:16px;
+}
+
+.video-manager-grid .media-card{
+  min-width:0;
+}
+
+.video-manager-grid .media-preview{
+  width:100%;
+  aspect-ratio:16/9;
+  display:block;
+  object-fit:cover;
+  background:#000;
+}
+
+.video-manager-grid .media-content{
+  padding:12px;
+}
+
+.video-manager-grid .filename{
+  margin-bottom:7px;
+}
+
+.video-manager-grid .path{
+  word-break:break-all;
+}
+
+.video-manager-grid .card-buttons{
+  margin-top:12px;
+}
+
+.video-manager-grid .replace-label input[type="file"]{
+  display:none;
+}
+
+@media(max-width:1200px){
+  .video-manager-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+}
+
+@media(max-width:900px){
+  .video-manager-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .video-manager-toolbar{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:600px){
+  .video-manager-grid{
+    grid-template-columns:1fr;
+  }
+}
+
 /* STATUS */
 
 .status{
@@ -1535,6 +1639,123 @@ function renderMedia(
   }
 
 
+  if(section === "videos"){
+
+    const panel =
+      document.createElement("div");
+
+    panel.className =
+      "video-manager-panel";
+
+    panel.innerHTML = `
+      <h3>Video Manager</h3>
+      <p>Existing video slots and filenames remain controlled from this portal.</p>
+
+      <div class="video-manager-toolbar">
+
+        <select class="video-target"></select>
+
+        <input
+          class="video-file"
+          type="file"
+          accept="video/mp4,video/webm,video/quicktime"
+        >
+
+        <button
+          type="button"
+          class="video-upload-btn"
+        >
+          Upload / Replace Video
+        </button>
+
+      </div>
+    `;
+
+    const select =
+      panel.querySelector(".video-target");
+
+    const fileInput =
+      panel.querySelector(".video-file");
+
+    const uploadButton =
+      panel.querySelector(".video-upload-btn");
+
+    items.forEach((item,index)=>{
+
+      const option =
+        document.createElement("option");
+
+      option.value = index;
+      option.textContent = item.name;
+
+      select.appendChild(option);
+
+    });
+
+    uploadButton.addEventListener(
+      "click",
+      async ()=>{
+
+        const file =
+          fileInput.files[0];
+
+        if(!file){
+
+          showStatus(
+            "Choose a video first.",
+            "error"
+          );
+
+          return;
+
+        }
+
+        const selected =
+          items[Number(select.value)];
+
+        if(!selected){
+
+          showStatus(
+            "Invalid video slot.",
+            "error"
+          );
+
+          return;
+
+        }
+
+        await replaceMedia(
+          selected,
+          file
+        );
+
+        fileInput.value = "";
+
+      }
+    );
+
+    mediaContainer.appendChild(panel);
+
+    const grid =
+      document.createElement("div");
+
+    grid.className =
+      "video-manager-grid";
+
+    items.forEach(item=>{
+
+      grid.appendChild(
+        createCard(item)
+      );
+
+    });
+
+    mediaContainer.appendChild(grid);
+
+    return;
+
+  }
+
   const grid =
     document.createElement("div");
 
@@ -1592,11 +1813,10 @@ function createCard(
 
   if(isVideo){
 
-    /* VIDEO CARD ONLY */
     preview.controls = true;
     preview.preload = "metadata";
     preview.playsInline = true;
-    preview.muted = false;
+    preview.controlsList = "nodownload";
 
     const source =
       document.createElement("source");
@@ -1649,7 +1869,9 @@ function createCard(
 
         <input
           type="file"
-          accept="image/jpeg,image/png,image/webp"
+          accept="${isVideo
+            ? "video/mp4,video/webm,video/quicktime"
+            : "image/jpeg,image/png,image/webp"}"
         >
 
       </label>
@@ -1799,7 +2021,7 @@ uploadBtn.addEventListener(
     if(!file){
 
       showStatus(
-        "Choose an image first.",
+        "Choose a file first.",
         "error"
       );
 
