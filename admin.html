@@ -580,6 +580,13 @@ button{
 
     <button
       class="nav-btn"
+      data-page="covers"
+    >
+      Cover Images
+    </button>
+
+    <button
+      class="nav-btn"
       data-page="baby"
     >
       Baby
@@ -966,6 +973,19 @@ const MEDIA = {
 
   ],
 
+  covers: [
+    { name:"Baby Cover", path:"assets/images/baby/cover.jpg" },
+    { name:"Maternity Cover", path:"assets/images/maternity/cover.jpg" },
+    { name:"Pre-Wedding Cover", path:"assets/images/pre-wedding/cover.jpg" },
+    { name:"Post-Wedding Cover", path:"assets/images/post-wedding/cover.jpg" },
+    { name:"Brahmin Wedding Cover", path:"assets/images/weddings/brahmin wedding/cover1.webp" },
+    { name:"Christian Wedding Cover", path:"assets/images/weddings/christian Wedding/cover1.webp" },
+    { name:"Hindu Wedding Cover", path:"assets/images/weddings/hindu wedding/cover.webp" },
+    { name:"Marwari Wedding Cover", path:"assets/images/weddings/marwari wedding/cover1.webp" },
+    { name:"Muslim Wedding Cover", path:"assets/images/weddings/muslim wedding/cover1.webp" },
+    { name:"Telugu Wedding Cover", path:"assets/images/weddings/telugu wedding/cover1.webp" }
+  ],
+
   videos: [
     "video-01.mp4",
     "video-02.mp4",
@@ -983,310 +1003,6 @@ const MEDIA = {
   }))
 
 };
-<section class="media-section" id="cover-images-section">
-  <div class="section-header">
-    <div>
-      <h2>Cover Images</h2>
-      <p>
-        Website cover images used for the different photography collections.
-      </p>
-    </div>
-  </div>
-
-  <div class="media-grid">
-
-    <div class="media-card">
-      <div class="media-preview">
-        <img
-          src="/assets/images/baby/cover.jpg"
-          alt="Baby Cover"
-          loading="lazy"
-        >
-      </div>
-      <div class="media-info">
-        <strong>Baby</strong>
-        <span>assets/images/baby/cover.jpg</span>
-      </div>
-      <div class="media-actions">
-        <button
-          type="button"
-          onclick="replaceMedia('assets/images/baby/cover.jpg')"
-        >
-          Replace
-        </button>
-
-        <button
-          type="button"
-          onclick="removeMedia('assets/images/baby/cover.jpg')"
-        >
-          Remove
-        </button>
-      </div>
-    </div>
-
-    <div class="media-card">
-      <div class="media-preview">
-        <img
-          src="/assets/images/maternity/cover.jpg"
-          alt="Maternity Cover"
-          loading="lazy"
-        >
-      </div>
-      <div class="media-info">
-        <strong>Maternity</strong>
-        <span>assets/images/maternity/cover.jpg</span>
-      </div>
-      <div class="media-actions">
-        <button
-          type="button"
-          onclick="replaceMedia('assets/images/maternity/cover.jpg')"
-        >
-          Replace
-        </button>
-
-        <button
-          type="button"
-          onclick="removeMedia('assets/images/maternity/cover.jpg')"
-        >
-          Remove
-        </button>
-      </div>
-    </div>
-
-    <div class="media-card">
-      <div class="media-preview">
-        <img
-          src="/assets/images/pre-wedding/cover.jpg"
-          alt="Pre-Wedding Cover"
-          loading="lazy"
-        >
-      </div>
-      <div class="media-info">
-        <strong>Pre-Wedding</strong>
-        <span>assets/images/pre-wedding/cover.jpg</span>
-      </div>
-      <div class="media-actions">
-        <button
-          type="button"
-          onclick="replaceMedia('assets/images/pre-wedding/cover.jpg')"
-        >
-          Replace
-        </button>
-
-        <button
-          type="button"
-          onclick="removeMedia('assets/images/pre-wedding/cover.jpg')"
-        >
-          Remove
-        </button>
-      </div>
-    </div>
-
-    <div class="media-card">
-      <div class="media-preview">
-        <img
-          src="/assets/images/post-wedding/cover.jpg"
-          alt="Post-Wedding Cover"
-          loading="lazy"
-        >
-      </div>
-      <div class="media-info">
-        <strong>Post-Wedding</strong>
-        <span>assets/images/post-wedding/cover.jpg</span>
-      </div>
-      <div class="media-actions">
-        <button
-          type="button"
-          onclick="replaceMedia('assets/images/post-wedding/cover.jpg')"
-        >
-          Replace
-        </button>
-
-        <button
-          type="button"
-          onclick="removeMedia('assets/images/post-wedding/cover.jpg')"
-        >
-          Remove
-        </button>
-      </div>
-    </div>
-
-    <div class="media-card">
-      <div class="media-preview">
-        <img
-          src="/assets/images/weddings/brahmin%20wedding/cover1.webp"
-          alt="Brahmin Wedding Cover"
-          loading="lazy"
-        >
-      </div>
-      <div class="media-info">
-        <strong>Brahmin Wedding</strong>
-        <span>assets/images/weddings/brahmin wedding/cover1.webp</span>
-      </div>
-      <div class="media-actions">
-        <button
-          type="button"
-          onclick="replaceMedia('assets/images/weddings/brahmin wedding/cover1.webp')"
-        >
-          Replace
-        </button>
-
-        <button
-          type="button"
-          onclick="removeMedia('assets/images/weddings/brahmin wedding/cover1.webp')"
-        >
-          Remove
-        </button>
-      </div>
-    </div>
-
-    <div class="media-card">
-      <div class="media-preview">
-        <img
-          src="/assets/images/weddings/christian%20Wedding/cover1.webp"
-          alt="Christian Wedding Cover"
-          loading="lazy"
-        >
-      </div>
-      <div class="media-info">
-        <strong>Christian Wedding</strong>
-        <span>assets/images/weddings/christian Wedding/cover1.webp</span>
-      </div>
-      <div class="media-actions">
-        <button
-          type="button"
-          onclick="replaceMedia('assets/images/weddings/christian Wedding/cover1.webp')"
-        >
-          Replace
-        </button>
-
-        <button
-          type="button"
-          onclick="removeMedia('assets/images/weddings/christian Wedding/cover1.webp')"
-        >
-          Remove
-        </button>
-      </div>
-    </div>
-
-    <div class="media-card">
-      <div class="media-preview">
-        <img
-          src="/assets/images/weddings/hindu%20wedding/cover.webp"
-          alt="Hindu Wedding Cover"
-          loading="lazy"
-        >
-      </div>
-      <div class="media-info">
-        <strong>Hindu Wedding</strong>
-        <span>assets/images/weddings/hindu wedding/cover.webp</span>
-      </div>
-      <div class="media-actions">
-        <button
-          type="button"
-          onclick="replaceMedia('assets/images/weddings/hindu wedding/cover.webp')"
-        >
-          Replace
-        </button>
-
-        <button
-          type="button"
-          onclick="removeMedia('assets/images/weddings/hindu wedding/cover.webp')"
-        >
-          Remove
-        </button>
-      </div>
-    </div>
-
-    <div class="media-card">
-      <div class="media-preview">
-        <img
-          src="/assets/images/weddings/marwari%20wedding/cover1.webp"
-          alt="Marwari Wedding Cover"
-          loading="lazy"
-        >
-      </div>
-      <div class="media-info">
-        <strong>Marwari Wedding</strong>
-        <span>assets/images/weddings/marwari wedding/cover1.webp</span>
-      </div>
-      <div class="media-actions">
-        <button
-          type="button"
-          onclick="replaceMedia('assets/images/weddings/marwari wedding/cover1.webp')"
-        >
-          Replace
-        </button>
-
-        <button
-          type="button"
-          onclick="removeMedia('assets/images/weddings/marwari wedding/cover1.webp')"
-        >
-          Remove
-        </button>
-      </div>
-    </div>
-
-    <div class="media-card">
-      <div class="media-preview">
-        <img
-          src="/assets/images/weddings/muslim%20wedding/cover1.webp"
-          alt="Muslim Wedding Cover"
-          loading="lazy"
-        >
-      </div>
-      <div class="media-info">
-        <strong>Muslim Wedding</strong>
-        <span>assets/images/weddings/muslim wedding/cover1.webp</span>
-      </div>
-      <div class="media-actions">
-        <button
-          type="button"
-          onclick="replaceMedia('assets/images/weddings/muslim wedding/cover1.webp')"
-        >
-          Replace
-        </button>
-
-        <button
-          type="button"
-          onclick="removeMedia('assets/images/weddings/muslim wedding/cover1.webp')"
-        >
-          Remove
-        </button>
-      </div>
-    </div>
-
-    <div class="media-card">
-      <div class="media-preview">
-        <img
-          src="/assets/images/weddings/telugu%20wedding/cover1.webp"
-          alt="Telugu Wedding Cover"
-          loading="lazy"
-        >
-      </div>
-      <div class="media-info">
-        <strong>Telugu Wedding</strong>
-        <span>assets/images/weddings/telugu wedding/cover1.webp</span>
-      </div>
-      <div class="media-actions">
-        <button
-          type="button"
-          onclick="replaceMedia('assets/images/weddings/telugu wedding/cover1.webp')"
-        >
-          Replace
-        </button>
-
-        <button
-          type="button"
-          onclick="removeMedia('assets/images/weddings/telugu wedding/cover1.webp')"
-        >
-          Remove
-        </button>
-      </div>
-    </div>
-
-  </div>
-</section>
 
 /*
 =========================================================
@@ -1678,6 +1394,8 @@ function openMediaSection(
 
     home:"Home Page",
 
+    covers:"Cover Images",
+
     baby:"Baby Photography",
 
     maternity:"Maternity Photography",
@@ -1695,6 +1413,8 @@ function openMediaSection(
   const descriptions = {
 
     home:"Manage the three main website image assets.",
+
+    covers:"Manage the cover images used for the photography collections.",
 
     baby:"Manage Baby Photography images.",
 
